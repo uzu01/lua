@@ -16,9 +16,9 @@ elseif game.PlaceId == 7549520141 then -- Anime Power Simulator
 	a = "https://pastebin.com/raw/rATuq79t"
 elseif game.PlaceId == 8554378337 then -- Weapon Fighting Simulator
 	a = "https://pastebin.com/raw/Bd6R0GaC"
-elseif game.PlaceId == then -- Anime Punching Simulator
+elseif game.PlaceId == 8357510970 then -- Anime Punching Simulator
 	a = "https://pastebin.com/raw/XuEH0Sb8"
-elseif game.PlaceId == then -- Fish Sim
+elseif game.PlaceId == 7363858705 then -- Fish Sim
 	a = "https://pastebin.com/raw/NTmmwqHj"
 end
 
