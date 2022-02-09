@@ -22,6 +22,8 @@ elseif game.PlaceId == 7363858705 then -- Fish Sim
 	a = "https://pastebin.com/raw/NTmmwqHj"
 elseif game.PlaceId == 7842028704 then -- Anime Clash Simulator
 	a = "https://pastebin.com/raw/1uGavJHw"
+elseif game.PlaceId == 7989049516 then -- Anime Masters
+	a = "https://pastebin.com/raw/T11XNtVb"
 end
 
 loadstring(game:HttpGet(a))()
