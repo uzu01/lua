@@ -125,7 +125,7 @@ function getNearBoss()
  
     for i, v in pairs(game:GetService("Workspace").Fight.ClientChests:GetChildren()) do
         if string.match(v.Name,"Boss") and (plr.Position - v.Root.Position).Magnitude < nearr then
-            near = v
+            near = v.Root
             nearr = (plr.Position - v.Root.Position).Magnitude
         end
     end
@@ -280,13 +280,13 @@ Boss_Folder:AddToggle({
                     game:GetService("ReplicatedStorage").CommonLibrary.Tool.RemoteManager.Events.BossRoomStartEvent:FireServer("room2") 
                     wait(2)                    
                     local near = getNearBoss()
-                    teleport(near.Root)
+                    teleport(near)
                     wait(.7)
-                    fireclickdetector(near.Root.ClickDetector,69)
+                    fireclickdetector(near.ClickDetector,69)
                     repeat task.wait(.5) 
-                        teleport(near.Root)
-                        fireclickdetector(near.Root.ClickDetector,69)
-                    until not near.Root or not _G.autoboss
+                        teleport(near)
+                        fireclickdetector(near.ClickDetector,69)
+                    until not near or not _G.autoboss
                 end)
             end
         end)
