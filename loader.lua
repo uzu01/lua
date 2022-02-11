@@ -15,7 +15,7 @@ elseif game.PlaceId == 8649665676 then -- Anime Punching Simulator New World
 elseif game.PlaceId == 7549520141 then -- Anime Power Simulator
 	a = "https://pastebin.com/raw/rATuq79t"
 elseif game.PlaceId == 8554378337 then -- Weapon Fighting Simulator
-	a = "https://pastebin.com/raw/Bd6R0GaC"
+	a = "https://scriptblox.com/raw/WFS-or-Autofarm_393"
 elseif game.PlaceId == 8357510970 then -- Anime Punching Simulator
 	a = "https://pastebin.com/raw/XuEH0Sb8"
 elseif game.PlaceId == 7363858705 then -- Fish Sim
