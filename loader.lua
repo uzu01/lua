@@ -22,6 +22,8 @@ elseif game.PlaceId == 7363858705 then
 	a = "https://raw.githubusercontent.com/uzu01/lua/main/games/Fish%20Sim.lua" -- Fish Sim
 elseif game.PlaceId == 7989049516 then
 	a = "https://raw.githubusercontent.com/uzu01/lua/main/games/Anime%20Masters.lua" -- Anime Masters
+elseif game.PlaceId == 8311081337 then
+	a = "https://raw.githubusercontent.com/uzu01/lua/main/games/One%20Piece%3A%20Bursting%20Rage.lua" -- One Piece:Bursting Rage
 end
 
 loadstring(game:HttpGet(a))()
