@@ -167,7 +167,7 @@ _G.autogamble = false
 _G.autoboss = false
 
 game:GetService("RunService").Stepped:Connect(function()
-    if _G.autofarm then
+    if _G.autofarm and selected_type ~= "Walk" then
         game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.new(0,0,0)
     end
 end)
