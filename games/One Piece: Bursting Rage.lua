@@ -1,4 +1,3 @@
-
 repeat wait() until game:IsLoaded()
 
 game:GetService("Players").LocalPlayer.Idled:Connect(function()
@@ -62,9 +61,15 @@ function getEnemy()
     for i, v in pairs(game:GetService("Workspace").Map.Live:GetChildren()) do
         local asd = string.split(selectedQuest,"Quest")
         if string.match(string.lower(v.Name),string.lower(asd[1])) and v:FindFirstChild("HumanoidRootPart") then
-            v:FindFirstChild("HumanoidRootPart").CFrame = plr.CFrame * CFrame.new(0,0,-2)
-            click()
-            equipTool()
+            if bringMob then
+                v:FindFirstChild("HumanoidRootPart").CFrame = plr.CFrame * CFrame.new(0,0,-2)
+                click()
+                equipTool()
+            else
+                plr.CFrame = v:FindFirstChild("HumanoidRootPart").CFrame * CFrame.new(0,5,0) * CFrame.Angles(math.rad(-90),0,0)
+                click()
+                equipTool()
+            end
         end
     end
 end
@@ -96,184 +101,168 @@ mt.__namecall = function(self,...)
 end
 
 game:GetService("RunService").Stepped:connect(function()
+    if bringMob and sethiddenproperty then
+        sethiddenproperty(game.Players.LocalPlayer, "SimulationRadius", 1000)
+    end
     game:GetService("ReplicatedStorage").RemoteEvents.CombatBase:FireServer()
-    sethiddenproperty(game.Players.LocalPlayer, "SimulationRadius", 1000)
 end)
 
-local library = loadstring(game:HttpGetAsync("https://pastebin.com/raw/znibQh36"))()
-local window = library:CreateWindow("OP:BR")
-local farming_folder = window:AddFolder('Farming')
-local stats_folder = window:AddFolder('Stats')
-local tele_folder = window:AddFolder("Teleports")
-local misc_folder = window:AddFolder('Misc')
+local library = loadstring(game:HttpGet("https://pastebin.com/raw/Uz6HijUN", true))()
+local w = library:CreateWindow("Farming")
+local b = library:CreateWindow("Stats")
+local c = library:CreateWindow("Teleports")
+local d = library:CreateWindow("Misc")
 
-farming_folder:AddToggle({
-    text = "Auto Farm", 
-    callback = function(v) 
-        _G.autofarm = v 
+w:Toggle("Auto Farm", {flag = "toggle1"}, function(v)
+    _G.autofarm = v 
 
-        task.spawn(function()
-            while task.wait() do
-                if not _G.autofarm then break end
-                pcall(function()
-                    getEnemy()
-                    doQuest()
-                end)
+    task.spawn(function()
+        while task.wait() do
+            if not _G.autofarm then break end
+            pcall(function()
+                getEnemy()
+                doQuest()
+                for i, v in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+                    if not string.match(v.Name,"BusoArm") then
+                        game:GetService("ReplicatedStorage").RemoteEvents.Busoshoku:FireServer()
+                    end
+                end
+            end)
+        end
+    end)
+end)
+
+w:Dropdown("Select Quest", { flag = "dw", list = quest}, function(v)
+    selectedQuest = v
+end)
+
+w:Toggle("Bring Mob [PC]", {flag = "toggle1"}, function(v)
+    bringMob = v 
+end)
+
+w:Dropdown("Select Tool", { flag = "dw", list = tool}, function(v)
+    selectedTool = v
+end)
+
+w:Toggle("Auto Skill", {flag = "toggle1"}, function(v)
+    _G.autoskill = v 
+
+    task.spawn(function()
+        while task.wait() do
+            if not _G.autoskill then break end
+            for i, v in pairs(keys) do
+                game:GetService('VirtualInputManager'):SendKeyEvent(true, v, false, game)
             end
-        end)
+        end
+    end)
+end)
+
+b:Toggle("Strength", {flag = "toggle1"}, function(v)
+    autoup1 = v 
+end)
+
+b:Toggle("Defense", {flag = "toggle1"}, function(v)
+    autoup2 = v 
+end)
+
+b:Toggle("Sword", {flag = "toggle1"}, function(v)
+    autoup3 = v
+end)
+
+b:Toggle("Gun", {flag = "toggle1"}, function(v)
+    autoup4 = v 
+end)
+
+c:Dropdown("Select Island", { flag = "dw", list = island}, function(v)
+    local plr = game.Players.LocalPlayer.Character.HumanoidRootPart
+    plr.CFrame = game:GetService("Workspace").Map.SpawnPoints[v].CFrame
+end)
+
+c:Dropdown("Select Npc", { flag = "dw", list = npc}, function(v)
+    local plr = game.Players.LocalPlayer.Character.HumanoidRootPart
+    plr.CFrame = game:GetService("Workspace").Map.NPCs[v].Torso.CFrame
+end)
+
+c:Dropdown("Select Shop", { flag = "dw", list = shop}, function(v)
+    local plr = game.Players.LocalPlayer.Character.HumanoidRootPart
+    for i, v in pairs(game:GetService("Workspace").Map.Shops[v]:GetChildren()) do
+        if v:IsA("Part") then
+            plr.CFrame = v.CFrame
+        end
     end
-})
+end)
 
-farming_folder:AddList({
-    text = "Select Quest", 
-    values = quest, 
-    callback = function(v) 
-        selectedQuest = v
-    end
-})
+d:Toggle("Auto Hide Name", {flag = "toggle1"}, function(v)
+    _G.autohide = v
+        
+    task.spawn(function()
+        while task.wait() do
+            if not _G.autohide then break end            
+            pcall(function()
+                if game.Players.LocalPlayer.Character.Head.NameDisplay then
+                    game.Players.LocalPlayer.Character.Head.NameDisplay:Destroy()
+                end
+            end)
+        end
+    end)  
+end)
 
-farming_folder:AddList({
-    text = "Select Tool", 
-    values = tool, 
-    callback = function(v) 
-        selectedTool = v
-    end
-})
+d:Toggle("Collect Chest", {flag = "ads"}, function(v)
+    _G.collectchest = v
 
-farming_folder:AddToggle({
-    text = "Auto Skill", 
-    callback = function(v) 
-        _G.autoskill = v 
-
-        task.spawn(function()
-            while task.wait() do
-                if not _G.autoskill then break end
-                for i, v in pairs(keys) do
-                    game:GetService('VirtualInputManager'):SendKeyEvent(true, v, false, game)
+    task.spawn(function()
+        while task.wait() do
+            if not _G.collectchest then break end
+            if game.Workspace.Map.Chests:FindFirstChild("Chest") then
+                for i, v in pairs(game.Workspace.Map.Chests.Chest:GetChildren()) do
+                    if v.Name == "ProximityPrompt" then
+                        task.wait()
+                        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.Parent.CFrame
+                        fireproximityprompt(v,.1)
+                    end
                 end
             end
-        end)
-    end
-})
+        end
+    end)
 
-stats_folder:AddToggle({
-    text = "Strength", 
-    callback = function(v) 
-        autoup1 = v
-    end
-})
+end)
 
-stats_folder:AddToggle({
-    text = "Defense", 
-    callback = function(v) 
-        autoup2 = v
-    end
-})
+d:Toggle("Auto Get Fruit", {flag = "toggle1"}, function(v)
+    _G.getitem = v
+        
+    task.spawn(function()
+        while task.wait() do
+            if not _G.getitem then break end
+            pcall(function()
+                for i, v in pairs(game.Workspace:GetChildren()) do
+                    if v:IsA("Tool") then
+                        game.Players.LocalPlayer.Character.Humanoid:EquipTool(v)
+                    end
+                end
+            end)
+        end
+    end)   
+end)
 
-stats_folder:AddToggle({
-    text = "Sword", 
-    callback = function(v) 
-        autoup3 = v 
-    end
-})
-
-stats_folder:AddToggle({
-    text = "Gun", 
-    callback = function(v) 
-        autoup4 = v
-    end
-})
-
-tele_folder:AddList({
-    text = "Select Island",
-    values = island,
-    callback = function(v)
-        local plr = game.Players.LocalPlayer.Character.HumanoidRootPart
-        plr.CFrame = game:GetService("Workspace").Map.SpawnPoints[v].CFrame
-    end
-})
-
-tele_folder:AddList({
-    text = "Select Npc",
-    values = npc,
-    callback = function(v)
-        local plr = game.Players.LocalPlayer.Character.HumanoidRootPart
-        plr.CFrame = game:GetService("Workspace").Map.NPCs[v].Torso.CFrame
-    end
-})
-
-tele_folder:AddList({
-    text = "Select Shop",
-    values = shop,
-    callback = function(v)
-        local plr = game.Players.LocalPlayer.Character.HumanoidRootPart
-        for i, v in pairs(game:GetService("Workspace").Map.Shops[v]:GetChildren()) do
-            if v:IsA("Part") then
-                plr.CFrame = v.CFrame
+d:Button("Server Hop", function()
+    while wait() do
+        local Servers = game.HttpService:JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/' .. game.PlaceId .. '/servers/Public?sortOrder=Asc&limit=100'))
+        for i,v in pairs(Servers.data) do
+            if v.id ~= game.JobId then
+                wait()
+                game:GetService('TeleportService'):TeleportToPlaceInstance(game.PlaceId, v.id)
             end
         end
     end
-})
+end)
 
-misc_folder:AddToggle({
-    text = "Auto Hide NameTag", 
-    callback = function(v) 
-        _G.autohide = v
-        
-        task.spawn(function()
-            while task.wait() do
-                if not _G.autohide then break end            
-                pcall(function()
-                    if game.Players.LocalPlayer.Character.Head.NameDisplay then
-                        game.Players.LocalPlayer.Character.Head.NameDisplay:Destroy()
-                    end
-                end)
-            end
-        end)   
-    end
-})
+d:Button("Script by Uzu", function()
+    print("Balls")
+end)
 
-misc_folder:AddToggle({
-    text = "Auto Get Fruit", 
-    callback = function(v) 
-        _G.getitem = v
-        
-        task.spawn(function()
-            while task.wait() do
-                if not _G.getitem then break end
-                pcall(function()
-                    for i, v in pairs(game.Workspace:GetChildren()) do
-                        if v:IsA("Tool") then
-                            game.Players.LocalPlayer.Character.Humanoid:EquipTool(v)
-                        end
-                    end
-                end)
-            end
-        end)    
-    end
-})
-
-misc_folder:AddBind({
-    text = "Toggle GUI", 
-    key = "LeftControl", 
-    callback = function() 
-        library:Close()
-    end
-})
- 
-misc_folder:AddButton({
-    text = "Script by Uzu",
-    callback = function()
-        print('a')
-    end
-})
- 
-misc_folder:AddButton({
-    text = "Discord",
-    callback = function()
-        setclipboard("discord.gg/waAsQFwcBn")
-    end
-})
+d:Button("Copy Discord Link", function()
+    setclipboard("discord.gg/waAsQFwcBn")
+end)
 
 task.spawn(function()
     while task.wait() do
@@ -320,5 +309,3 @@ task.spawn(function()
         end
     end
 end)
-
-library:Init()
