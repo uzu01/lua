@@ -42,7 +42,7 @@ w:Toggle("Enabled", {flag = "toggle1"}, function(v)
                     wait(1.5)
                     repeat task.wait()
                         game:GetService("ReplicatedStorage").Remotes.Flick:FireServer(tonumber(mic()))
-                    until fire.Value < 1 or not _G.autofarm
+                    until fire.Value == 0 or not _G.autofarm
                     wait(1.5)
                     game:GetService("ReplicatedStorage").Remotes.ToStage:FireServer()
                 end
