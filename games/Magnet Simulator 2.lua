@@ -61,13 +61,6 @@ for i, v in pairs(game:GetService("Workspace").Rings:GetChildren()) do
 end
    
 local sellArea = sell[1]
-local world = {}
-
-for i, v in pairs(workspace.CollectibleCoins:GetChildren()) do
-    table.insert(world,v.Name)
-end
-
-local selectedWorld = world[1]
 
 function getPets()
     local pet = {}
@@ -81,10 +74,12 @@ end
 
 function getCoins()
     local toFarm = {}
-    for i, v in pairs(game.Workspace.CollectibleCoins[selectedWorld]:GetChildren()) do
-        for i2, v2 in pairs(v:GetChildren()) do
-            table.insert(toFarm,v2)
-        end
+    for i, v in pairs(game.Workspace.CollectibleCoins:GetChildren()) do
+		for i2, v2 in pairs(v:GetChildren()) do
+			for i3, v3 in pairs(v2:GetChildren()) do
+            	table.insert(toFarm,v3)
+        	end
+		end
     end
     return toFarm
 end
@@ -156,14 +151,6 @@ Farm_Folder:AddToggle({
                 end)
             end
         end)
-    end
-})
-
-Farm_Folder:AddList({
-    text = "Select Area", 
-    values = world, 
-    callback = function(value)
-        selectedWorld = value 
     end
 })
 
