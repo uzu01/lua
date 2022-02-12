@@ -60,3 +60,21 @@ w:Toggle("Enabled", {flag = "toggle1"}, function(v)
         end
     end)
 end)
+
+w:Toggle("Buy Stand/Held", {flag = "a"}, function(v)
+    _G.autobuy = v
+
+    task.spawn(function()
+        while task.wait(.5) do
+            if not _G.autobuy then break end
+            -- Buy Stand
+            for i, v in pairs(game:GetService("Workspace").UpgradeInt.Stand:GetChildren()) do
+                game:GetService("ReplicatedStorage").Remotes.BuyStand:FireServer(tonumber(v.Name))
+            end
+            -- Buy Held
+            for i, v in pairs(game:GetService("Workspace").UpgradeInt.Held:GetChildren()) do
+                game:GetService("ReplicatedStorage").Remotes.BuyHeld:FireServer(tonumber(v.Name))
+            end
+        end
+    end)
+end)
