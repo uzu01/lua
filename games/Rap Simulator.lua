@@ -38,7 +38,7 @@ w:Toggle("Enabled", {flag = "toggle1"}, function(v)
                     until fire.Value == fire_space.Value or not _G.autofarm
                 end
                 -- Rap thingy??
-                if area.Value == "House" and fire.Value >= 1 then 
+                if area.Value == "House" then 
                     wait(1.5)
                     repeat task.wait()
                         game:GetService("ReplicatedStorage").Remotes.Flick:FireServer(tonumber(mic()))
@@ -47,7 +47,7 @@ w:Toggle("Enabled", {flag = "toggle1"}, function(v)
                     game:GetService("ReplicatedStorage").Remotes.ToStage:FireServer()
                 end
                 -- Tele to House
-                if fire.Value > 0 and fire.Value == fire_space.Value and area.Value ~= "House" then
+                if fire.Value == fire_space.Value and area.Value ~= "House" then
                     wait(1.5)
                     game:GetService("ReplicatedStorage").Remotes.ToHouse:FireServer()
                 end
