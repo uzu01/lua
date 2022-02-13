@@ -8,14 +8,27 @@ local player =      game:GetService("Players").LocalPlayer
 local area =        player.Area
 local fire =        player.Fire
 local fire_space =  player.FireSpace
-local chest = {}
 local selected_producer = 1
 local selected_computer = 1
+local prod = {}
+local comp = {}
 
-for i, v in pairs(require(game:GetService("ReplicatedStorage").Modules.Chests)) do
-    table.insert(chest,i)
+for i, v in pairs(game:GetService("Workspace"):GetDescendants()) do
+    if v.Name == "Producer" and v:IsA("NumberValue") then
+        table.insert(prod,v.Parent.Parent.Parent.Name..' '..v.Value)
+    end
 end
- 
+
+
+for i, v in pairs(game:GetService("Workspace"):GetDescendants()) do
+    if v.Name == "Computer" and v:IsA("NumberValue") then
+        table.insert(comp,v.Parent.Parent.Parent.Name..' '..v.Value)
+    end
+end
+
+table.sort(prod, function(a,b) return string.match(a,"%d") < string.match(b,"%d") end)
+table.sort(comp, function(a,b) return string.match(a,"%d") < string.match(b,"%d") end)
+
 function mic()
     local asd
     for i, v in pairs(game:GetService("Workspace").Studio.Items:GetChildren()) do
@@ -127,8 +140,8 @@ d:Toggle("Producer Chest", {flag = "a"}, function(v)
     end)
 end)
 
-d:Dropdown("Select Chest", {flag = "a", list = chest}, function(v)
-    selected_producer = v
+d:Dropdown("Select Chest", {flag = "a", list = prod}, function(v)
+    selected_producer = string.match(v,"%d")
 end)
 
 d:Toggle("Computer Chest", {flag = "a"}, function(v)
@@ -143,8 +156,8 @@ d:Toggle("Computer Chest", {flag = "a"}, function(v)
     end)
 end)
 
-d:Dropdown("Select Chest", {flag = "a", list = chest}, function(v)
-    selected_computer = v
+d:Dropdown("Select Chest", {flag = "a", list = comp}, function(v)
+    selected_computer = string.match(v,"%d")
 end)
 
 for i, v in pairs(require(game:GetService("ReplicatedStorage").Modules.Towns)) do
