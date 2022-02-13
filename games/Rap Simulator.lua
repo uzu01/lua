@@ -1,3 +1,4 @@
+
 repeat wait() until game:IsLoaded()
  
 game:GetService("Players").LocalPlayer.Idled:Connect(function()
@@ -8,16 +9,13 @@ local player =      game:GetService("Players").LocalPlayer
 local area =        player.Area
 local fire =        player.Fire
 local fire_space =  player.FireSpace
-local shopMod = require(game:GetService("ReplicatedStorage").Modules.Chests)
 local chest = {}
 local selected_producer = 1
 local selected_computer = 1
 
-for i, v in pairs(shopMod) do
+for i, v in pairs(require(game:GetService("ReplicatedStorage").Modules.Chests)) do
     table.insert(chest,i)
 end
-
-
  
 function mic()
     local asd
@@ -150,3 +148,15 @@ end)
 w:Dropdown("Select Chest", {flag = "a", list = chest}, function(v)
     selected_computer = v
 end)
+
+w:Section("Teleports")
+
+for i, v in pairs(require(game:GetService("ReplicatedStorage").Modules.Towns)) do
+    for a, b in pairs(v) do
+        if a == "Name" then
+            w:Button(b, function()
+                game:GetService("ReplicatedStorage").Remotes.Fly:FireServer(b)
+            end)
+        end
+    end
+end
