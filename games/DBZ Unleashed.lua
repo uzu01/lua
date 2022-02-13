@@ -38,12 +38,6 @@ function click()
     task.spawn(function()
         local plr = game.Players.LocalPlayer.Character.HumanoidRootPart
         game:GetService("ReplicatedStorage").RemoteEvents.BladeCombatRemote:FireServer(false,plr.CFrame.p,plr.CFrame)
-        if autoSkill then
-            for i, v in pairs(keys) do
-                game:GetService('VirtualInputManager'):SendKeyEvent(true, v, false, game) task.wait()
-                game:GetService('VirtualInputManager'):SendKeyEvent(false, v, false, game)
-            end
-        end
     end)
 end
 
@@ -149,7 +143,16 @@ w:Dropdown("Select Tool", { flag = "dw", list = tool}, function(v)
 end)
 
 w:Toggle("Auto Skill", { flag = "a"}, function(v)
-    autoSkill = v 
+    _G.autoSkill = v 
+
+    task.spawn(function()
+        while task.wait() do
+            if not _G.autoSkill then break end
+            for i, v in pairs(keys) do
+                game:GetService('VirtualInputManager'):SendKeyEvent(true, v, false, game)
+            end
+        end
+    end)
 end)
 
 w:Button("Discord", function()
