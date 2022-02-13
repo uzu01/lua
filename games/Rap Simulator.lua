@@ -61,16 +61,26 @@ w:Toggle("Enabled", {flag = "toggle1"}, function(v)
     end)
 end)
 
-w:Toggle("Buy Stand/Held", {flag = "a"}, function(v)
+w:Toggle("Buy Stand", {flag = "a"}, function(v)
     _G.autobuy = v
 
     task.spawn(function()
-        while task.wait(.5) do
+        while task.wait(1) do
             if not _G.autobuy then break end
             -- Buy Stand
             for i, v in pairs(game:GetService("Workspace").UpgradeInt.Stand:GetChildren()) do
                 game:GetService("ReplicatedStorage").Remotes.BuyStand:FireServer(tonumber(v.Name))
             end
+        end
+    end)
+end)
+
+w:Toggle("Buy Mic", {flag = "a"}, function(v)
+    _G.autobuy2 = v
+
+    task.spawn(function()
+        while task.wait(1) do
+            if not _G.autobuy2 then break end
             -- Buy Held
             for i, v in pairs(game:GetService("Workspace").UpgradeInt.Held:GetChildren()) do
                 game:GetService("ReplicatedStorage").Remotes.BuyHeld:FireServer(tonumber(v.Name))
@@ -79,10 +89,16 @@ w:Toggle("Buy Stand/Held", {flag = "a"}, function(v)
     end)
 end)
 
-w:Button("Get Trash", function()
-    for i = 1, 999 do
-        for _, v in pairs({"Bottle", "Water Bottle", "Solo Cup"}) do
-            game:GetService("ReplicatedStorage").Remotes.PickUpItem:FireServer(v)
+w:Toggle("Get Trash", {flag = "a"}, function(v)
+    _G.trash = v
+
+    task.spawn(function()
+        while task.wait() do
+            if not _G.trash then break end
+            for _, v in pairs({"Bottle", "Water Bottle", "Solo Cup"}) do
+                game:GetService("ReplicatedStorage").Remotes.PickUpItem:FireServer(v)
+                game:GetService("ReplicatedStorage").Remotes.TrashItem:FireServer(v)
+            end
         end
-    end
+    end)
 end)
