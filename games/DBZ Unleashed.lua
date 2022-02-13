@@ -1,7 +1,6 @@
 repeat wait() until game:IsLoaded()
 
 game:GetService("Players").LocalPlayer.Idled:Connect(function()
-    game:GetService("VirtualUser"):CaptureController()
     game:GetService("VirtualUser"):ClickButton2(Vector2.new())
 end)
 
@@ -63,8 +62,8 @@ function doQuest()
     for i, v in pairs(game:GetService("ReplicatedStorage").Quests:GetChildren()) do
         local a = string.split(v.Name," ")
         local b = string.split(selectedMob," ")
-        if string.find(a[3],b[1]) then
-            if game.Players.LocalPlayer.PlayerGui.Menu.QuestFrame.Visible == false or game.Players.LocalPlayer.PlayerGui.Menu.QuestFrame.QuestName.Text ~= v.Name then
+        if string.find(string.lower(a[3]),string.lower(b[1])) then
+            if game.Players.LocalPlayer.PlayerGui.Menu.QuestFrame.Visible == false then
                 game:GetService("ReplicatedStorage").RemoteEvents.ChangeQuestRemote:FireServer(v)
             end
         end
@@ -86,7 +85,14 @@ function bring()
 
     for i, v in pairs(game.Workspace.Live:GetChildren()) do
         if v.Name == selectedMob and v:IsA("Model") then
-            v.HumanoidRootPart.CFrame = plr.CFrame * CFrame.new(0,0,-2)
+            for i2, v2 in pairs(game:GetService("Workspace").QuestMarkers:GetChildren()) do
+                local a = string.split(v2.Name," ")
+                local b = string.split(selectedMob," ")
+                if string.find(string.lower(a[3]),string.lower(b[1])) then
+                    plr.CFrame = v2.CFrame
+                    v.HumanoidRootPart.CFrame = plr.CFrame * CFrame.new(0,0,-2)
+                end
+            end
         end
     end
 end
@@ -123,9 +129,9 @@ w:Toggle("Enabled", {flag = "toggle1"}, function(v)
     end)
 
     task.spawn(function()
-        while wait(2) do
+        while true do
             if not _G.autofarm then break end
-            pcall(function() doQuest() end)
+            pcall(function() doQuest() wait(4) end)
         end
     end)
 end)
