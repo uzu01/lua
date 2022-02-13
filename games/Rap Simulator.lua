@@ -8,6 +8,16 @@ local player =      game:GetService("Players").LocalPlayer
 local area =        player.Area
 local fire =        player.Fire
 local fire_space =  player.FireSpace
+local shopMod = require(game:GetService("ReplicatedStorage").Modules.Chests)
+local chest = {}
+local selected_producer = 1
+local selected_computer = 1
+
+for i, v in pairs(shopMod) do
+    table.insert(chest,i)
+end
+
+
  
 function mic()
     local asd
@@ -22,6 +32,8 @@ end
 local library = loadstring(game:HttpGet("https://pastebin.com/raw/Uz6HijUN", true))()
 local w = library:CreateWindow("Rap Simulator")
  
+w:Section("Farming")
+
 w:Toggle("Enabled", {flag = "toggle1"}, function(v)
     _G.autofarm = v
  
@@ -61,6 +73,22 @@ w:Toggle("Enabled", {flag = "toggle1"}, function(v)
     end)
 end)
 
+w:Toggle("Get Trash", {flag = "a"}, function(v)
+    _G.trash = v
+
+    task.spawn(function()
+        while task.wait() do
+            if not _G.trash then break end
+            for _, v in pairs({"Bottle", "Water Bottle", "Solo Cup"}) do
+                game:GetService("ReplicatedStorage").Remotes.PickUpItem:FireServer(v)
+                game:GetService("ReplicatedStorage").Remotes.TrashItem:FireServer(v)
+            end
+        end
+    end)
+end)
+
+w:Section("Shop")
+
 w:Toggle("Buy Stand", {flag = "a"}, function(v)
     _G.autobuy = v
 
@@ -89,16 +117,36 @@ w:Toggle("Buy Mic", {flag = "a"}, function(v)
     end)
 end)
 
-w:Toggle("Get Trash", {flag = "a"}, function(v)
-    _G.trash = v
+w:Section("Chest")
+
+w:Toggle("Open Producer Chest", {flag = "a"}, function(v)
+    open_producer = v
 
     task.spawn(function()
         while task.wait() do
-            if not _G.trash then break end
-            for _, v in pairs({"Bottle", "Water Bottle", "Solo Cup"}) do
-                game:GetService("ReplicatedStorage").Remotes.PickUpItem:FireServer(v)
-                game:GetService("ReplicatedStorage").Remotes.TrashItem:FireServer(v)
-            end
+            if not open_producer then break end
+            game:GetService("ReplicatedStorage").Remotes.RequestSpin:FireServer(tonumber(selected_producer),false)
+            game:GetService("ReplicatedStorage").Remotes.SpinFinish:FireServer()
         end
     end)
+end)
+
+w:Dropdown("Select Chest", {flag = "a", list = chest}, function(v)
+    selected_producer = v
+end)
+
+w:Toggle("Open Computer Chest", {flag = "a"}, function(v)
+    open_computer= v
+
+    task.spawn(function()
+        while task.wait() do
+            if not open_computer then break end
+            game:GetService("ReplicatedStorage").Remotes.RequestSpin:FireServer(tonumber(selected_computer),true)
+            game:GetService("ReplicatedStorage").Remotes.SpinFinish:FireServer()
+        end
+    end)
+end)
+
+w:Dropdown("Select Chest", {flag = "a", list = chest}, function(v)
+    selected_computer = v
 end)
