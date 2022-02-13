@@ -11,6 +11,14 @@ local selectedMob = "Thug (lvl. 5)"
 local selectedTool = "Strategy to Defeat the Emperor Vegeta"
 local mob = {}
 local tool = {}
+local keys = {
+    "E";
+    "C";
+    "R";
+    "V";
+    "X";
+    "Y";
+}
 
 for i, v in pairs(game.Workspace.Live:GetChildren()) do
     if v:IsA("Model") and v.Name ~= "Training Dummy" and not table.find(mob,v.Name) then
@@ -31,12 +39,10 @@ function click()
         local plr = game.Players.LocalPlayer.Character.HumanoidRootPart
         game:GetService("ReplicatedStorage").RemoteEvents.BladeCombatRemote:FireServer(false,plr.CFrame.p,plr.CFrame)
         if autoSkill then
-            game:GetService('VirtualInputManager'):SendKeyEvent(true, "E", false, game)
-            game:GetService('VirtualInputManager'):SendKeyEvent(true, "R", false, game)
-            game:GetService('VirtualInputManager'):SendKeyEvent(true, "X", false, game) task.wait(.5)
-            game:GetService('VirtualInputManager'):SendKeyEvent(false, "E", false, game)
-            game:GetService('VirtualInputManager'):SendKeyEvent(false, "R", false, game)
-            game:GetService('VirtualInputManager'):SendKeyEvent(false, "X", false, game)
+            for i, v in pairs(keys) do
+                game:GetService('VirtualInputManager'):SendKeyEvent(true, v, false, game) task.wait()
+                game:GetService('VirtualInputManager'):SendKeyEvent(false, v, false, game)
+            end
         end
     end)
 end
@@ -71,88 +77,77 @@ function doQuest()
     end
 end
 
-function getNear()
-    local nearr,near = math.huge
+function getEnemy()
     local plr = game.Players.LocalPlayer.Character.HumanoidRootPart
 
     for i, v in pairs(game.Workspace.Live:GetChildren()) do
-        if v.Name == selectedMob and v:IsA("Model") and (plr.CFrame.p - v.HumanoidRootPart.CFrame.p).Magnitude < nearr then
-            near = v.HumanoidRootPart
-            nearr = (plr.CFrame.p - v.HumanoidRootPart.CFrame.p).Magnitude
+        if v.Name == selectedMob and v:IsA("Model") then
+            plr.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0,0,2)
         end
     end
-    return near
 end
 
-local library = loadstring(game:HttpGetAsync("https://pastebin.com/raw/znibQh36"))()
-local MainWindow = library:CreateWindow("DBZ Unleashed")
-local FarmingFolder = MainWindow:AddFolder("Farming")
-local MiscFolder = MainWindow:AddFolder("Misc")
+function bring()
+    local plr = game.Players.LocalPlayer.Character.HumanoidRootPart
 
-FarmingFolder:AddToggle({
-    text = "Auto Farm", 
-    state = false,
-    callback = function(v) 
-        _G.autofarm = v 
-
-        task.spawn(function()
-            while task.wait() do
-                if not _G.autofarm then break end
-				teleport(getNear())
-				click()
-				equipTool()
-            end
-        end)
-
-        task.spawn(function()
-            while wait(2) do
-                if not _G.autofarm then break end
-                doQuest()
-            end
-        end)
+    for i, v in pairs(game.Workspace.Live:GetChildren()) do
+        if v.Name == selectedMob and v:IsA("Model") then
+            v.HumanoidRootPart.CFrame = plr.CFrame * CFrame.new(0,0,-2)
+        end
     end
-})
+end
 
-FarmingFolder:AddList({
-    text = "Select Mob", 
-    value = selectedMob,
-    values = mob, 
-    callback = function(v) 
-        selectedMob = v 
+game:GetService("RunService").Stepped:Connect(function()
+    if bringMob then
+        sethiddenproperty(game.Players.LocalPlayer, "SimulationRadius", 1000)
     end
-})
-
-FarmingFolder:AddList({
-    text = "Select Tool", 
-    value = selectedTool,
-    values = tool, 
-    callback = function(v) 
-        selectedTool = v 
-    end
-})
-
-FarmingFolder:AddToggle({
-    text = "Auto Skill", 
-    state = false,
-    callback = function(v) 
-        autoSkill = v
-    end
-})
-
-MiscFolder:AddBind({
-    text = "Toggle GUI", 
-    key = "LeftControl", 
-    callback = function() 
-        library:Close()
-    end
-})
-
-MiscFolder:AddButton({
-    text = "Rejoin", 
-    callback = function()
-        game:GetService'TeleportService':TeleportToPlaceInstance(game.PlaceId,game.JobId,game:GetService'Players'.LocalPlayer)
-    end
-})
+end)
 
 
-library:Init()
+local library = loadstring(game:HttpGet("https://pastebin.com/raw/Uz6HijUN", true))()
+local w = library:CreateWindow("Farming")
+
+w:Toggle("Enabled", {flag = "toggle1"}, function(v)
+    _G.autofarm = v 
+
+    task.spawn(function()
+        while task.wait() do
+            if not _G.autofarm then break end
+            pcall(function()
+                if bringMob then
+                    getEnemy()
+                    bring()
+                    click()
+                    equipTool()
+                else
+                    getEnemy()
+                    click()
+                    equipTool()
+                end
+            end)
+        end
+    end)
+
+    task.spawn(function()
+        while wait(2) do
+            if not _G.autofarm then break end
+            pcall(function() doQuest() end)
+        end
+    end)
+end)
+
+w:Toggle("Bring Mob [PC]", { flag = "a"}, function(v)
+    bringMob = v 
+end)
+
+w:Dropdown("Select Mob", { flag = "dw", list = mob}, function(v)
+    selectedMob = v 
+end)
+
+w:Dropdown("Select Tool", { flag = "dw", list = tool}, function(v)
+    selectedTool = v 
+end)
+
+w:Toggle("Auto Skill", { flag = "a"}, function(v)
+    autoSkill = v 
+end)
