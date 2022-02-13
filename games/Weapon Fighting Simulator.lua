@@ -271,6 +271,10 @@ Boss_Folder:AddToggle({
             while task.wait() do
                 if not _G.autoboss then break end
                 pcall(function()
+                    if open_chest then
+                        local area_number = string.match(selected_boss_area,"%d")
+                        game:GetService("ReplicatedStorage").CommonLibrary.Tool.RemoteManager.Funcs.DataPullFunc:InvokeServer("ArenaOpenChestChannel", area_number-1, "c1", false)
+                    end
                     wait(1)
                     game:GetService("ReplicatedStorage").CommonLibrary.Tool.RemoteManager.Funcs.DataPullFunc:InvokeServer("ArenaTeleportLeaveChannel", "Out")   
                     wait(1)
@@ -298,6 +302,14 @@ Boss_Folder:AddList({
     values = boss_area, 
     callback = function(v) 
         selected_boss_area = v
+    end
+})
+
+Boss_Folder:AddToggle({
+    text = "Open Boss Chest", 
+    state = open_chest,
+    callback = function(v) 
+        open_chest = v
     end
 })
 
