@@ -151,3 +151,7 @@ end)
 w:Toggle("Auto Skill", { flag = "a"}, function(v)
     autoSkill = v 
 end)
+
+w:Button("Discord", function()
+    setclipboard("discord.gg/waAsQFwcBn")
+end)
