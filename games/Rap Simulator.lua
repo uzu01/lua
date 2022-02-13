@@ -78,3 +78,11 @@ w:Toggle("Buy Stand/Held", {flag = "a"}, function(v)
         end
     end)
 end)
+
+w:Button("Get Trash", function()
+    for i = 1, 999 do
+        for _, v in pairs({"Bottle", "Water Bottle", "Solo Cup"}) do
+            game:GetService("ReplicatedStorage").Remotes.PickUpItem:FireServer(v)
+        end
+    end
+end)
