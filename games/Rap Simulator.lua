@@ -1,4 +1,3 @@
-
 repeat wait() until game:IsLoaded()
  
 game:GetService("Players").LocalPlayer.Idled:Connect(function()
@@ -28,11 +27,12 @@ function mic()
 end
  
 local library = loadstring(game:HttpGet("https://pastebin.com/raw/Uz6HijUN", true))()
-local w = library:CreateWindow("Rap Simulator")
+local w = library:CreateWindow("Farming")
+local c = library:CreateWindow("Upgrades")
+local d = library:CreateWindow("Chest")
+local e = library:CreateWindow("Teleports")
  
-w:Section("Farming")
-
-w:Toggle("Enabled", {flag = "toggle1"}, function(v)
+w:Toggle("Full Auto Farm", {flag = "toggle1"}, function(v)
     _G.autofarm = v
  
     task.spawn(function()
@@ -71,11 +71,11 @@ w:Toggle("Enabled", {flag = "toggle1"}, function(v)
     end)
 end)
 
-w:Toggle("Get Trash", {flag = "a"}, function(v)
+w:Toggle("Auto Get Trash", {flag = "a"}, function(v)
     _G.trash = v
 
     task.spawn(function()
-        while task.wait() do
+        while task.wait(.2) do
             if not _G.trash then break end
             for _, v in pairs({"Bottle", "Water Bottle", "Solo Cup"}) do
                 game:GetService("ReplicatedStorage").Remotes.PickUpItem:FireServer(v)
@@ -85,39 +85,37 @@ w:Toggle("Get Trash", {flag = "a"}, function(v)
     end)
 end)
 
-w:Section("Shop")
-
-w:Toggle("Buy Stand", {flag = "a"}, function(v)
+c:Toggle("Buy Stand", {flag = "a"}, function(v)
     _G.autobuy = v
 
     task.spawn(function()
-        while task.wait(1) do
+        while task.wait() do
             if not _G.autobuy then break end
             -- Buy Stand
             for i, v in pairs(game:GetService("Workspace").UpgradeInt.Stand:GetChildren()) do
                 game:GetService("ReplicatedStorage").Remotes.BuyStand:FireServer(tonumber(v.Name))
+                task.wait(.2)
             end
         end
     end)
 end)
 
-w:Toggle("Buy Mic", {flag = "a"}, function(v)
+c:Toggle("Buy Mic", {flag = "a"}, function(v)
     _G.autobuy2 = v
 
     task.spawn(function()
-        while task.wait(1) do
+        while task.wait() do
             if not _G.autobuy2 then break end
             -- Buy Held
             for i, v in pairs(game:GetService("Workspace").UpgradeInt.Held:GetChildren()) do
                 game:GetService("ReplicatedStorage").Remotes.BuyHeld:FireServer(tonumber(v.Name))
+                task.wait(.2)
             end
         end
     end)
 end)
 
-w:Section("Chest")
-
-w:Toggle("Open Producer Chest", {flag = "a"}, function(v)
+d:Toggle("Producer Chest", {flag = "a"}, function(v)
     open_producer = v
 
     task.spawn(function()
@@ -129,11 +127,11 @@ w:Toggle("Open Producer Chest", {flag = "a"}, function(v)
     end)
 end)
 
-w:Dropdown("Select Chest", {flag = "a", list = chest}, function(v)
+d:Dropdown("Select Chest", {flag = "a", list = chest}, function(v)
     selected_producer = v
 end)
 
-w:Toggle("Open Computer Chest", {flag = "a"}, function(v)
+d:Toggle("Computer Chest", {flag = "a"}, function(v)
     open_computer= v
 
     task.spawn(function()
@@ -145,16 +143,14 @@ w:Toggle("Open Computer Chest", {flag = "a"}, function(v)
     end)
 end)
 
-w:Dropdown("Select Chest", {flag = "a", list = chest}, function(v)
+d:Dropdown("Select Chest", {flag = "a", list = chest}, function(v)
     selected_computer = v
 end)
-
-w:Section("Teleports")
 
 for i, v in pairs(require(game:GetService("ReplicatedStorage").Modules.Towns)) do
     for a, b in pairs(v) do
         if a == "Name" then
-            w:Button(b, function()
+            e:Button(b, function()
                 game:GetService("ReplicatedStorage").Remotes.Fly:FireServer(b)
             end)
         end
