@@ -19,7 +19,11 @@ elseif game.PlaceId == 8649665676 then -- Anime Punching Simulator New World
 elseif game.PlaceId == 7549520141 then -- Anime Power Simulator
     a = "https://raw.githubusercontent.com/uzu01/lua/main/games/Anime%20Power%20Simulator.lua"
 elseif game.PlaceId == 8554378337 then -- Weapon Fighting Simulator
-    a = "https://raw.githubusercontent.com/uzu01/lua/main/games/Weapon%20Fighting%20Simulator.lua" 
+    if game:GetService("UserInputService").TouchEnabled and game:GetService("UserInputService").KeyboardEnabled == false then
+        a = "https://raw.githubusercontent.com/uzu01/lua/main/games/mobile/Weapon%20Fighting%20Simulator%20Mobile.lua"
+    else
+        a = "https://raw.githubusercontent.com/uzu01/lua/main/games/Weapon%20Fighting%20Simulator.lua" 
+    end
 elseif game.PlaceId == 8357510970 then -- Anime Punching Simulator
     if game:GetService("UserInputService").TouchEnabled and game:GetService("UserInputService").KeyboardEnabled == false then
         a = "https://raw.githubusercontent.com/uzu01/lua/main/games/mobile/Anime%20Punching%20Simulator%20Mobile.lua"
