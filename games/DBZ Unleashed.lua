@@ -63,7 +63,7 @@ function doQuest()
         local a = string.split(v.Name," ")
         local b = string.split(selectedMob," ")
         if string.find(string.lower(a[3]),string.lower(b[1])) then
-            if game.Players.LocalPlayer.PlayerGui.Menu.QuestFrame.Visible == false then
+            if game.Players.LocalPlayer.PlayerGui.Menu.QuestFrame.Visible == false or game.Players.LocalPlayer.PlayerGui.Menu.QuestFrame.QuestName.Text ~= v.Name then
                 game:GetService("ReplicatedStorage").RemoteEvents.ChangeQuestRemote:FireServer(v)
             end
         end
