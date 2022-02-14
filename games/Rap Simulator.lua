@@ -19,7 +19,6 @@ for i, v in pairs(game:GetService("Workspace"):GetDescendants()) do
     end
 end
 
-
 for i, v in pairs(game:GetService("Workspace"):GetDescendants()) do
     if v.Name == "Computer" and v:IsA("NumberValue") then
         table.insert(comp,v.Parent.Parent.Parent.Name..' '..v.Value)
@@ -107,7 +106,6 @@ c:Toggle("Buy Stand", {flag = "a"}, function(v)
             -- Buy Stand
             for i, v in pairs(game:GetService("Workspace").UpgradeInt.Stand:GetChildren()) do
                 game:GetService("ReplicatedStorage").Remotes.BuyStand:FireServer(tonumber(v.Name))
-                task.wait(.2)
             end
         end
     end)
@@ -122,7 +120,6 @@ c:Toggle("Buy Mic", {flag = "a"}, function(v)
             -- Buy Held
             for i, v in pairs(game:GetService("Workspace").UpgradeInt.Held:GetChildren()) do
                 game:GetService("ReplicatedStorage").Remotes.BuyHeld:FireServer(tonumber(v.Name))
-                task.wait(.2)
             end
         end
     end)
