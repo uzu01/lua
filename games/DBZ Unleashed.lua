@@ -57,8 +57,7 @@ end
 function quest()
     for i, v in pairs(game.Workspace.Live:GetChildren()) do
         if v.Name == selectedMob and v:IsA("Model") then
-            local qFrame = game.Players.LocalPlayer.PlayerGui.Menu.QuestFrame
-            if qFrame.Visible == false or qFrame.QuestName.Text ~= v.Quest.Value then
+            if game.Players.LocalPlayer.PlayerGui.Menu.QuestFrame.Visible == false or game.Players.LocalPlayer.PlayerGui.Menu.QuestFrame.QuestName.Text ~= v.Quest.Value then
                 game:GetService("ReplicatedStorage").RemoteEvents.ChangeQuestRemote:FireServer(game:GetService("ReplicatedStorage").Quests[v.Quest.Value])
             end
         end
