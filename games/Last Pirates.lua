@@ -1,7 +1,6 @@
 repeat wait() until game:IsLoaded()
 
 game:GetService("Players").LocalPlayer.Idled:Connect(function()
-    game:GetService("VirtualUser"):CaptureController()
     game:GetService("VirtualUser"):ClickButton2(Vector2.new())
 end)
 
@@ -11,6 +10,7 @@ _G.Melee = false
 _G.Sword = false
 _G.Defense = false
 _G.Devil = false
+_G.autoget = false
 
 local selectedMob = "Bandit [Lv:5]"
 local selectedTool = "Combat"
@@ -248,6 +248,23 @@ for i, v in pairs(game:GetService("Workspace")["Spawn island"]:GetChildren()) do
         plr.CFrame = v.CFrame
     end)
 end
+
+e:Toggle("Auto Get Fruit", {flag = "a"}, function(v)
+    _G.autoget = v
+    
+    task.spawn(function()
+        while task.wait() do
+            if not _G.autoget then break end
+            for i, v in pairs(game.Workspace.Maps:GetDescendants()) do
+                if v.Name == "ProximityPrompt" then
+                    local plr = game.Players.LocalPlayer.Character.HumanoidRootPart
+                    plr.CFrame = v.Parent.CFrame    
+                    fireproximityprompt(v)
+                end
+            end
+        end 
+    end)
+end)
 
 e:Button("Inventory", function()
     local plr = game.Players.LocalPlayer.Character.HumanoidRootPart
