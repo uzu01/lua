@@ -254,6 +254,18 @@ e:Button("Inventory", function()
     plr.CFrame = CFrame.new(413.05569458008, 40.559078216553, -1830.5759277344)
 end)
 
+e:Button("Serverhop", function()
+    while task.wait() do
+        local Servers = game.HttpService:JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/' .. game.PlaceId .. '/servers/Public?sortOrder=Asc&limit=100'))
+        for i,v in pairs(Servers.data) do
+            if v.id ~= game.JobId then
+                wait()
+                game:GetService('TeleportService'):TeleportToPlaceInstance(game.PlaceId, v.id)
+            end
+        end
+    end
+end)
+
 e:Button("Script by Uzu", function()
     print('a')
 end)
