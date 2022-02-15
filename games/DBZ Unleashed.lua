@@ -7,7 +7,7 @@ end)
 _G.autofarm = false
 
 local selectedMob = "Thug (lvl. 5)"
-local selectedTool = "Strategy to Defeat the Emperor Vegeta"
+local selectedQuest = "Defeat 10 Thugs"
 local mob = {}
 local tool = {}
 local keys = {
@@ -41,9 +41,12 @@ function click()
 end
 
 function equipTool()
-	game.Players.LocalPlayer.Character.Humanoid:EquipTool(game.Players.LocalPlayer.Backpack:FindFirstChild(selectedTool))
+    for i, v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
+        if v:IsA("Tool") then
+            game.Players.LocalPlayer.Character.Humanoid:EquipTool(v)
+        end
+    end
 end
-
 
 function teleport(ene)
     local plr = game.Players.LocalPlayer.Character.HumanoidRootPart
@@ -58,24 +61,17 @@ function noclip()
     end
 end
 
-function doQuest()
-    for i, v in pairs(game:GetService("ReplicatedStorage").Quests:GetChildren()) do
-        local a = string.split(v.Name," ")
-        local b = string.split(selectedMob," ")
-        if string.find(string.lower(a[3]),string.lower(b[1])) then
-            if game.Players.LocalPlayer.PlayerGui.Menu.QuestFrame.Visible == false or game.Players.LocalPlayer.PlayerGui.Menu.QuestFrame.QuestName.Text ~= v.Name then
-                game:GetService("ReplicatedStorage").RemoteEvents.ChangeQuestRemote:FireServer(v)
-            end
-        end
-    end
-end
-
 function getEnemy()
     local plr = game.Players.LocalPlayer.Character.HumanoidRootPart
 
     for i, v in pairs(game.Workspace.Live:GetChildren()) do
         if v.Name == selectedMob and v:IsA("Model") then
             plr.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0,0,2)
+
+            local qFrame = game.Players.LocalPlayer.PlayerGui.Menu.QuestFrame
+            if qFrame.QuestName.Text ~= v.Quest.Value then
+                game:GetService("ReplicatedStorage").RemoteEvents.ChangeQuestRemote:FireServer(game:GetService("ReplicatedStorage").Quests[v.Quest.Value])
+            end
         end
     end
 end
@@ -86,9 +82,7 @@ function bring()
     for i, v in pairs(game.Workspace.Live:GetChildren()) do
         if v.Name == selectedMob and v:IsA("Model") then
             for i2, v2 in pairs(game:GetService("Workspace").QuestMarkers:GetChildren()) do
-                local a = string.split(v2.Name," ")
-                local b = string.split(selectedMob," ")
-                if string.find(string.lower(a[3]),string.lower(b[1])) then
+                if v2.Name == v.Quest.Value then
                     plr.CFrame = v2.CFrame
                     v.HumanoidRootPart.CFrame = plr.CFrame * CFrame.new(0,0,-2)
                 end
@@ -114,24 +108,13 @@ w:Toggle("Enabled", {flag = "toggle1"}, function(v)
         while task.wait() do
             if not _G.autofarm then break end
             pcall(function()
+                getEnemy()
+                click()
+                equipTool()
                 if bringMob then
-                    getEnemy()
                     bring()
-                    click()
-                    equipTool()
-                else
-                    getEnemy()
-                    click()
-                    equipTool()
                 end
             end)
-        end
-    end)
-
-    task.spawn(function()
-        while true do
-            if not _G.autofarm then break end
-            pcall(function() doQuest() wait(4) end)
         end
     end)
 end)
@@ -142,10 +125,6 @@ end)
 
 w:Dropdown("Select Mob", { flag = "dw", list = mob}, function(v)
     selectedMob = v 
-end)
-
-w:Dropdown("Select Tool", { flag = "dw", list = tool}, function(v)
-    selectedTool = v 
 end)
 
 w:Toggle("Auto Skill", { flag = "a"}, function(v)
