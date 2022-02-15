@@ -14,27 +14,19 @@ _G.Devil = false
 
 local selectedMob = "Bandit [Lv:5]"
 local selectedTool = "Combat"
-local mob = {"-- Select Mob --"}
-local tool = {"-- Select Tool --"}
-local players = {}
+local mob = {}
+local tool = {}
+local keys = {
+    "Z";
+    "X";
+    "C";
+    "V"
+}
 
-function check(a,b)
-	for i, v in pairs(b) do
-		if v == a then
-			return true
-		end
-	end
-end
-
-for i, v in pairs(game.Players:GetPlayers()) do
-	table.insert(players,v.Name)
-end
-
-for i, v in pairs(game.Workspace.Lives:GetChildren()) do
-	if v:IsA("Model") and not check(v.Name,players) and not table.find(mob,v.Name) then
-		table.insert(mob,v.Name)
-		table.sort(mob)
-	end
+for i, v in pairs(game:GetService("Workspace").Lives:GetChildren()) do
+    if v:IsA("Model") and v:FindFirstChild("Folder") and not table.find(mob,v.Name) then
+        table.insert(mob,v.Name)
+    end
 end
 
 for i, v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
@@ -45,7 +37,6 @@ end
 
 function click()
     game:GetService("VirtualUser"):CaptureController()
-    game:GetService("VirtualUser"):Button1Down(Vector2.new(69, 69))		
     game:GetService("VirtualUser"):Button1Down(Vector2.new(69, 69))		
 end
 
@@ -72,23 +63,22 @@ end
 function useSkill()
     task.spawn(function()
         local VIM = game:GetService('VirtualInputManager')
-        VIM:SendKeyEvent(true, "Z", false, game)
-        VIM:SendKeyEvent(true, "X", false, game)
-        VIM:SendKeyEvent(true, "C", false, game)
-        VIM:SendKeyEvent(true, "V", false, game) task.wait(.5)
-        VIM:SendKeyEvent(false, "Z", false, game)
-        VIM:SendKeyEvent(false, "X", false, game)
-        VIM:SendKeyEvent(false, "C", false, game)
-        VIM:SendKeyEvent(false, "V", false, game)
+
+        for i, v in pairs(keys) do
+            VIM:SendKeyEvent(true, v, false, game) task.wait()
+            VIM:SendKeyEvent(true, v, false, game)
+        end
     end)
 end
 
 local library = loadstring(game:HttpGet("https://pastebin.com/raw/Uz6HijUN", true))()
-local w = library:CreateWindow("Last Pirates")
+local w = library:CreateWindow("Farming")
+local b = library:CreateWindow("Stats")
+local c = library:CreateWindow("Shop")
+local d = library:CreateWindow("Teleports")
+local e = library:CreateWindow("Misc")
 
-w:Section("Farming")
-
-w:Toggle("Enabled", {flag = "a"}, function(a)
+w:Toggle("Auto Farm", {flag = "a"}, function(a)
 	_G.autofarm = a
 	
 	task.spawn(function()
@@ -100,7 +90,7 @@ w:Toggle("Enabled", {flag = "a"}, function(a)
                 autoHaki()
 				for i, v in pairs(game.Workspace.Lives:GetChildren()) do
 					if v.Name == selectedMob and v:FindFirstChild("Humanoid") then
-                        plr.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0,7.8,0) * CFrame.Angles(math.rad(-90),0,0)
+                        plr.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0,7,0) * CFrame.Angles(math.rad(-90),0,0)
                         equipTool()
                         click()
                         if _G.autoSkill then
@@ -117,17 +107,33 @@ w:Dropdown("Select Mob", { flag = "b", list = mob}, function(a)
 	selectedMob = a
 end)
 
+w:Button("Refresh Mob", function()
+    table.clear(mob)
+    for i, v in pairs(game:GetService("Workspace").Lives:GetChildren()) do
+        if v:IsA("Model") and v:FindFirstChild("Folder") and not table.find(mob,v.Name) then
+            table.insert(mob,v.Name)
+        end
+    end
+end)
+
 w:Dropdown("Select Tool", { flag = "b", list = tool}, function(a)
     selectedTool = a
+end)
+
+w:Button("Refresh Tool", function()
+    table.clear(tool)
+    for i, v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
+        if v:IsA("Tool") then
+            table.insert(tool,v.Name)
+        end
+    end
 end)
 
 w:Toggle("Auto Skill", {flag = "v"}, function(a)
     _G.autoSkill = a
 end)
 
-w:Section("Stats")
-
-w:Toggle("Melee",{flag = b}, function(a)
+b:Toggle("Melee",{flag = b}, function(a)
 	_G.Melee = a
 	
 	task.spawn(function()
@@ -138,7 +144,7 @@ w:Toggle("Melee",{flag = b}, function(a)
 	end)
 end)
 
-w:Toggle("Sword",{flag = b}, function(a)
+b:Toggle("Sword",{flag = b}, function(a)
 	_G.Sword = a
 	
 	task.spawn(function()
@@ -149,7 +155,7 @@ w:Toggle("Sword",{flag = b}, function(a)
 	end)
 end)
 
-w:Toggle("Defense",{flag = b}, function(a)
+b:Toggle("Defense",{flag = b}, function(a)
 	_G.Defense = a
 	
 	task.spawn(function()
@@ -160,7 +166,7 @@ w:Toggle("Defense",{flag = b}, function(a)
 	end)
 end)
 
-w:Toggle("Devil Fruit",{flag = b}, function(a)
+b:Toggle("Devil Fruit",{flag = b}, function(a)
 	_G.Devil = a
 	
 	task.spawn(function()
@@ -171,8 +177,93 @@ w:Toggle("Devil Fruit",{flag = b}, function(a)
 	end)
 end)
 
-w:Section("Script by Uzu")
+c:Button("Buso Haki", function()
+    local plr = game.Players.LocalPlayer.Character.HumanoidRootPart
+    plr.CFrame = game:GetService("Workspace").HakiSeller.AAA.BusoHaki.CFrame
+end)
 
-w:Button("discord.gg/waAsQFwcBn",function()
+c:Button("Ken Haki", function()
+    local plr = game.Players.LocalPlayer.Character.HumanoidRootPart
+    plr.CFrame = CFrame.new(-6278.6826171875, 32.993167877197, 3832.9084472656)
+end)
+
+c:Button("Random Color Haki", function()
+    local plr = game.Players.LocalPlayer.Character.HumanoidRootPart
+    plr.CFrame = game:GetService("Workspace")["Random Color haki"]["Random Color haki"].Head.CFrame
+end)
+
+c:Button("Random Fruit", function()
+    local plr = game.Players.LocalPlayer.Character.HumanoidRootPart
+    plr.CFrame = game:GetService("Workspace").RandomFruit.HumanoidRootPart.CFrame
+end)
+
+c:Button("Black Leg", function()
+    local plr = game.Players.LocalPlayer.Character.HumanoidRootPart
+    plr.CFrame = game:GetService("Workspace").Blackleg.Click.CFrame
+end)
+
+c:Button("Pole", function()
+    local plr = game.Players.LocalPlayer.Character.HumanoidRootPart
+    plr.CFrame = game:GetService("Workspace")["Pole Seller"].PoleClick.CFrame
+end)
+
+c:Button("Cutlass", function()
+    local plr = game.Players.LocalPlayer.Character.HumanoidRootPart
+    plr.CFrame = game:GetService("Workspace").cutlass.Click.CFrame
+end)
+
+c:Button("Bisento", function()
+    local plr = game.Players.LocalPlayer.Character.HumanoidRootPart
+    plr.CFrame = game:GetService("Workspace").Bisento.Part.CFrame
+end)
+
+c:Button("Bisento v2", function()
+    local plr = game.Players.LocalPlayer.Character.HumanoidRootPart
+    plr.CFrame = game:GetService("Workspace")["BisenV2 NPC"].Model.Model.BisenV2["Right Leg"].CFrame
+end)
+
+c:Button("Saber", function()
+    local plr = game.Players.LocalPlayer.Character.HumanoidRootPart
+    plr.CFrame = CFrame.new(3138.58984375, 71.283683776855, -2338.1533203125)
+end)
+
+c:Button("Shisui", function()
+    local plr = game.Players.LocalPlayer.Character.HumanoidRootPart
+    plr.CFrame = game:GetService("Workspace").MISC.Handle.CFrame
+end)
+
+c:Button("Katana", function()
+    local plr = game.Players.LocalPlayer.Character.HumanoidRootPart
+    plr.CFrame = game:GetService("Workspace").KatanaShop.KatanaShop.Head.CFrame
+end)
+
+d:Button("Factory", function()
+    local plr = game.Players.LocalPlayer.Character.HumanoidRootPart
+    plr.CFrame = game:GetService("Workspace").Factory.Block.CFrame
+end)
+
+for i, v in pairs(game:GetService("Workspace")["Spawn island"]:GetChildren()) do
+    d:Button(v.Name,function()
+        local plr = game.Players.LocalPlayer.Character.HumanoidRootPart
+        plr.CFrame = v.CFrame
+    end)
+end
+
+e:Button("Inventory", function()
+    local plr = game.Players.LocalPlayer.Character.HumanoidRootPart
+    plr.CFrame = CFrame.new(413.05569458008, 40.559078216553, -1830.5759277344)
+end)
+
+e:Button("Script by Uzu", function()
+    print('a')
+end)
+
+e:Button("Discord",function()
     setclipboard(tostring("discord.gg/waAsQFwcBn"))
 end)
+
+for i, v in pairs(game:GetService("Players").LocalPlayer.GPOwned:GetChildren()) do
+    if v:IsA("BoolValue") then
+        v.Value = true
+    end
+end
