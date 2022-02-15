@@ -9,7 +9,6 @@ _G.autofarm = false
 local selectedMob = "Thug (lvl. 5)"
 local selectedQuest = "Defeat 10 Thugs"
 local mob = {}
-local tool = {}
 local keys = {
     "E";
     "C";
@@ -26,12 +25,6 @@ for i, v in pairs(game.Workspace.Live:GetChildren()) do
 end
 
 table.sort(mob, function(a,b) return tonumber(string.match(a,"%d+")) < tonumber(string.match(b,"%d+")) end)
-
-for i, v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
-    if v:IsA("Tool") then
-        table.insert(tool,v.Name)
-    end
-end
 
 function click()
     task.spawn(function()
