@@ -54,17 +54,27 @@ function noclip()
     end
 end
 
+function quest()
+    for i, v in pairs(game.Workspace.Live:GetChildren()) do
+        if v.Name == selectedMob and v:IsA("Model") then
+            local qFrame = game.Players.LocalPlayer.PlayerGui.Menu.QuestFrame
+            if qFrame.Visible == false or qFrame.QuestName.Text ~= v.Quest.Value then
+                game:GetService("ReplicatedStorage").RemoteEvents.ChangeQuestRemote:FireServer(game:GetService("ReplicatedStorage").Quests[v.Quest.Value])
+            end
+        end
+    end
+end
+
 function getEnemy()
     local plr = game.Players.LocalPlayer.Character.HumanoidRootPart
 
     for i, v in pairs(game.Workspace.Live:GetChildren()) do
         if v.Name == selectedMob and v:IsA("Model") then
-            plr.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0,0,2)
-
             local qFrame = game.Players.LocalPlayer.PlayerGui.Menu.QuestFrame
             if qFrame.QuestName.Text ~= v.Quest.Value then
                 game:GetService("ReplicatedStorage").RemoteEvents.ChangeQuestRemote:FireServer(game:GetService("ReplicatedStorage").Quests[v.Quest.Value])
             end
+            plr.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0,0,2)
         end
     end
 end
@@ -101,6 +111,7 @@ w:Toggle("Enabled", {flag = "toggle1"}, function(v)
         while task.wait() do
             if not _G.autofarm then break end
             pcall(function()
+                quest()
                 getEnemy()
                 click()
                 equipTool()
