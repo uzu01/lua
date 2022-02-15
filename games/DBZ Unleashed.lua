@@ -143,6 +143,10 @@ w:Toggle("Auto Skill", { flag = "a"}, function(v)
     end)
 end)
 
+w:Button("Disable Effects", function()
+    pcall(function() game.Workspace.Effects:Destroy() end)
+end)
+
 w:Button("Discord", function()
     setclipboard("discord.gg/waAsQFwcBn")
 end)
