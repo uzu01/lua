@@ -93,9 +93,6 @@ w:Toggle("Auto Farm", {flag = "a"}, function(a)
                         plr.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0,7,0) * CFrame.Angles(math.rad(-90),0,0)
                         equipTool()
                         click()
-                        if _G.autoSkill then
-                            useSkill()
-                        end
 					end
 				end
 			end)
@@ -131,6 +128,13 @@ end)
 
 w:Toggle("Auto Skill", {flag = "v"}, function(a)
     _G.autoSkill = a
+
+    task.spawn(function()
+        while task.wait() do
+            if not _G.autoSkill then break end
+            useSkill()
+        end
+    end)
 end)
 
 b:Toggle("Melee",{flag = b}, function(a)
