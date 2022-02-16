@@ -88,13 +88,17 @@ function doQuest()
     end
 end
 
-old = hookmetamethod(game, "__namecall", function(...)
-    if getnamecallmethod() == "Kick" then
-        return
-    end
+local mt = getrawmetatable(game)
+local oldnc = mt.__namecall
+setreadonly(mt,false)
 
-    return old(...)
-end)
+mt.__namecall = function(self,...)
+	local method = getnamecallmethod()
+	if method == "Kick" and self == game:GetService("Players").LocalPlayer then
+		return
+	end
+	return oldnc(self,...)
+end
 
 game:GetService("RunService").Stepped:connect(function()
     if bringMob and sethiddenproperty then
