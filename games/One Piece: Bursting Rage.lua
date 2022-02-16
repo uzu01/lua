@@ -104,7 +104,9 @@ game:GetService("RunService").Stepped:connect(function()
     if bringMob and sethiddenproperty then
         sethiddenproperty(game.Players.LocalPlayer, "SimulationRadius", 1000)
     end
-    game:GetService("ReplicatedStorage").RemoteEvents.CombatBase:FireServer()
+    if _G.autofarm then
+		game:GetService("ReplicatedStorage").RemoteEvents.CombatBase:FireServer()		
+	end
 end)
 
 local library = loadstring(game:HttpGet("https://pastebin.com/raw/Uz6HijUN", true))()
