@@ -1,3 +1,4 @@
+
 repeat wait() until game:IsLoaded()
 
 game:GetService("Players").LocalPlayer.Idled:Connect(function()
@@ -140,6 +141,12 @@ w:Toggle("Auto Skill", { flag = "a"}, function(v)
                 game:GetService('VirtualInputManager'):SendKeyEvent(true, v, false, game)
             end
         end
+    end)
+end)
+
+w:Button("God Mode", function()
+    pcall(function()
+        game.Players.LocalPlayer.Character.CharacterValues.DamageDivider:Destroy()
     end)
 end)
 
