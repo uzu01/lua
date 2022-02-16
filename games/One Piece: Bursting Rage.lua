@@ -88,25 +88,21 @@ function doQuest()
     end
 end
 
-local mt = getrawmetatable(game)
-local oldnc = mt.__namecall
-setreadonly(mt,false)
+old = hookmetamethod(game, "__namecall", function(...)
+    if getnamecallmethod() == "Kick" then
+        return
+    end
 
-mt.__namecall = function(self,...)
-	local method = getnamecallmethod()
-	if method == "Kick" and self == game:GetService("Players").LocalPlayer then
-		return
-	end
-	return oldnc(self,...)
-end
+    return old(...)
+end)
 
 game:GetService("RunService").Stepped:connect(function()
     if bringMob and sethiddenproperty then
         sethiddenproperty(game.Players.LocalPlayer, "SimulationRadius", 1000)
     end
     if _G.autofarm then
-		game:GetService("ReplicatedStorage").RemoteEvents.CombatBase:FireServer()		
-	end
+        game:GetService("ReplicatedStorage").RemoteEvents.CombatBase:FireServer()		
+    end
 end)
 
 local library = loadstring(game:HttpGet("https://pastebin.com/raw/Uz6HijUN", true))()
