@@ -1,4 +1,3 @@
-
 repeat wait() until game:IsLoaded()
 
 game:GetService("Players").LocalPlayer.Idled:Connect(function()
@@ -144,9 +143,18 @@ w:Toggle("Auto Skill", { flag = "a"}, function(v)
     end)
 end)
 
-w:Button("God Mode", function()
-    pcall(function()
-        game.Players.LocalPlayer.Character.CharacterValues.DamageDivider:Destroy()
+w:Toggle("God Mode", {flag = "a"}, function(v)
+    _G.godmode = v
+    
+    task.spawn(function()
+        while task.wait() do
+            if not _G.godmode then break end
+            pcall(function()
+                if game.Players.LocalPlayer.Character.CharacterValues.DamageDivider then
+                    game.Players.LocalPlayer.Character.CharacterValues.DamageDivider:Destroy()
+                end
+            end)
+        end
     end)
 end)
 
