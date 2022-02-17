@@ -3,7 +3,6 @@ if game.GameId == 2655311011 then
     repeat wait() until game:IsLoaded()
 
     game:GetService("Players").LocalPlayer.Idled:Connect(function()
-        game:GetService("VirtualUser"):CaptureController()
         game:GetService("VirtualUser"):ClickButton2(Vector2.new())
     end)
 
@@ -113,10 +112,6 @@ if game.GameId == 2655311011 then
             end
         end
     end
-        
-    pcall(function()
-        game.Players.LocalPlayer.Character.Humanoid.Animator:Destroy()
-    end)
 
     game:GetService("RunService").Stepped:Connect(function()
         if _G.Settings.AutoFarm then
