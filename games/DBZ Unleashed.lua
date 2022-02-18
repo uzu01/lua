@@ -234,11 +234,32 @@ MiscTab:Toggle("Auto Delete Common Bag", "", false, function(v)
     task.spawn(function()
         while task.wait() do
             if not _G.deleteCommon then break end
-            for i, v in pairs(Player.Backpack:GetChildren()) do 
-                if v.Name == "Bag" and v.BagPart.Overhead.Rarity.Text == "Common" then
-                    v:Destroy()
+            pcall(function()
+                for i, v in pairs(Player.Backpack:GetChildren()) do 
+                    if v.Name == "Bag" and v.BagPart.Overhead.Rarity.Text == "Common" then
+                        v.Parent = Player.Character
+                        v:Destroy()
+                    end
                 end
-            end
+            end)
+        end
+    end)
+end)
+
+MiscTab:Toggle("Auto Delete Rare Bag", "", false, function(v)
+    _G.deleteRare = v
+
+    task.spawn(function()
+        while task.wait() do
+            if not _G.deleteRare then break end
+            pcall(function()
+                for i, v in pairs(Player.Backpack:GetChildren()) do 
+                    if v.Name == "Bag" and v.BagPart.Overhead.Rarity.Text == "Rare" then
+                        v.Parent = Player.Character
+                        v:Destroy()
+                    end
+                end
+            end)
         end
     end)
 end)
