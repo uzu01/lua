@@ -1,3 +1,4 @@
+
 repeat wait() until game:IsLoaded()
 
 game:GetService("Players").LocalPlayer.Idled:Connect(function()
@@ -6,6 +7,8 @@ end)
 
 _G.autofarm = false
 
+local Player = game:GetService("Players").LocalPlayer
+local ReplicatedStoragee = game:GetService("ReplicatedStorage")
 local selectedMob = "Thug (lvl. 5)"
 local selectedQuest = "Defeat 10 Thugs"
 local mob = {}
@@ -28,26 +31,26 @@ table.sort(mob, function(a,b) return tonumber(string.match(a,"%d+")) < tonumber(
 
 function click()
     task.spawn(function()
-        local plr = game.Players.LocalPlayer.Character.HumanoidRootPart
-        game:GetService("ReplicatedStorage").RemoteEvents.BladeCombatRemote:FireServer(false,plr.CFrame.p,plr.CFrame)
+        local plr = Player.Character.HumanoidRootPart
+        ReplicatedStoragee.RemoteEvents.BladeCombatRemote:FireServer(false,plr.CFrame.p,plr.CFrame)
     end)
 end
 
 function equipTool()
-    for i, v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
-        if v:IsA("Tool") then
-            game.Players.LocalPlayer.Character.Humanoid:EquipTool(v)
+    for i, v in pairs(Player.Backpack:GetChildren()) do
+        if v:IsA("Tool") and v:FindFirstChild("Experience") then
+            Player.Character.Humanoid:EquipTool(v)
         end
     end
 end
 
 function teleport(ene)
-    local plr = game.Players.LocalPlayer.Character.HumanoidRootPart
+    local plr = Player.Character.HumanoidRootPart
     plr.CFrame = ene.CFrame * CFrame.new(0,0,5)
 end
 
 function noclip()
-    for i, v in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
+    for i, v in pairs(Player.Character:GetDescendants()) do
         if v:IsA("BasePart") and v.CanCollide == true then
             v.CanCollide = false
         end
@@ -57,21 +60,21 @@ end
 function quest()
     for i, v in pairs(game.Workspace.Live:GetChildren()) do
         if v.Name == selectedMob and v:IsA("Model") then
-            if game.Players.LocalPlayer.PlayerGui.Menu.QuestFrame.Visible == false or game.Players.LocalPlayer.PlayerGui.Menu.QuestFrame.QuestName.Text ~= v.Quest.Value then
-                game:GetService("ReplicatedStorage").RemoteEvents.ChangeQuestRemote:FireServer(game:GetService("ReplicatedStorage").Quests[v.Quest.Value])
+            if Player.PlayerGui.Menu.QuestFrame.Visible == false or Player.PlayerGui.Menu.QuestFrame.QuestName.Text ~= v.Quest.Value then
+                ReplicatedStoragee.RemoteEvents.ChangeQuestRemote:FireServer(game:GetService("ReplicatedStorage").Quests[v.Quest.Value])
             end
         end
     end
 end
 
 function getEnemy()
-    local plr = game.Players.LocalPlayer.Character.HumanoidRootPart
+    local plr = Player.Character.HumanoidRootPart
 
     for i, v in pairs(game.Workspace.Live:GetChildren()) do
-        if v.Name == selectedMob and v:IsA("Model") then
-            local qFrame = game.Players.LocalPlayer.PlayerGui.Menu.QuestFrame
+        if v.Name == selectedMob and v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") then
+            local qFrame = Player.PlayerGui.Menu.QuestFrame
             if qFrame.QuestName.Text ~= v.Quest.Value then
-                game:GetService("ReplicatedStorage").RemoteEvents.ChangeQuestRemote:FireServer(game:GetService("ReplicatedStorage").Quests[v.Quest.Value])
+                ReplicatedStoragee.RemoteEvents.ChangeQuestRemote:FireServer(game:GetService("ReplicatedStorage").Quests[v.Quest.Value])
             end
             plr.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0,0,2)
         end
@@ -79,12 +82,13 @@ function getEnemy()
 end
 
 function bring()
-    local plr = game.Players.LocalPlayer.Character.HumanoidRootPart
+    local plr = Player.Character.HumanoidRootPart
 
     for i, v in pairs(game.Workspace.Live:GetChildren()) do
-        if v.Name == selectedMob and v:IsA("Model") then
+        if v.Name == selectedMob and v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") then
             for i2, v2 in pairs(game:GetService("Workspace").QuestMarkers:GetChildren()) do
                 if v2.Name == v.Quest.Value then
+                    sethiddenproperty(game.Players.LocalPlayer, "SimulationRadius", 1000)
                     plr.CFrame = v2.CFrame
                     v.HumanoidRootPart.CFrame = plr.CFrame * CFrame.new(0,0,-2)
                 end
@@ -93,18 +97,32 @@ function bring()
     end
 end
 
-game:GetService("RunService").Stepped:Connect(function()
-    if bringMob then
-        sethiddenproperty(game.Players.LocalPlayer, "SimulationRadius", 1000)
-    end
+local library = loadstring(game:HttpGet"https://pastebin.com/raw/CNw4eMqu")()
+local w = library:Window("Uzu Scripts", "v1.0.0", Color3.fromRGB(66, 134, 245), Enum.KeyCode.LeftControl)
+
+local HomeTab = w:Tab("Home", 6026568198)
+local FarmingTab = w:Tab("Farming", 6034287535)
+local ShopTab = w:Tab("Shop", 6031265987)
+local MiscTab = w:Tab("Misc", 6031215984)
+
+HomeTab:Button("Update:", "", function()
+    library:Notification("[+] New Gui [+] Shop Tab", "Thanks")
 end)
 
+HomeTab:Line()
 
-local library = loadstring(game:HttpGet("https://pastebin.com/raw/Uz6HijUN", true))()
-local w = library:CreateWindow("Farming")
+HomeTab:Button("Discord","", function()
+    setclipboard("discord.gg/waAsQFwcBn")
+    library:Notification("discord.gg/waAsQFwcBn", "Alright")
+end)
 
-w:Toggle("Enabled", {flag = "toggle1"}, function(v)
-    _G.autofarm = v 
+HomeTab:Button("Script by Uzu","", function()
+    setclipboard("discord.gg/waAsQFwcBn")
+    library:Notification("discord.gg/waAsQFwcBn", "Alright")
+end)
+
+FarmingTab:Toggle("Auto Farm", "", false, function(t)
+    _G.autofarm = t
 
     task.spawn(function()
         while task.wait() do
@@ -122,16 +140,16 @@ w:Toggle("Enabled", {flag = "toggle1"}, function(v)
     end)
 end)
 
-w:Toggle("Bring Mob [PC]", { flag = "a"}, function(v)
-    bringMob = v 
+FarmingTab:Toggle("Bring Mob", "", false, function(t)
+    bringMob = t
 end)
 
-w:Dropdown("Select Mob", { flag = "dw", list = mob}, function(v)
+FarmingTab:Dropdown("Select Mob", mob, function(v)
     selectedMob = v 
 end)
 
-w:Toggle("Auto Skill", { flag = "a"}, function(v)
-    _G.autoSkill = v 
+FarmingTab:Toggle("Auto Skill", "", false, function(t)
+    _G.autoSkill = t
 
     task.spawn(function()
         while task.wait() do
@@ -143,25 +161,124 @@ w:Toggle("Auto Skill", { flag = "a"}, function(v)
     end)
 end)
 
-w:Toggle("God Mode", {flag = "a"}, function(v)
-    _G.godmode = v
+FarmingTab:Line()
+
+FarmingTab:Toggle("God Mode", "", false, function(t)
+    _G.godmode = t
     
     task.spawn(function()
         while task.wait() do
             if not _G.godmode then break end
             pcall(function()
-                if game.Players.LocalPlayer.Character.CharacterValues.DamageDivider then
-                    game.Players.LocalPlayer.Character.CharacterValues.DamageDivider:Destroy()
+                if Player.Character.CharacterValues.DamageDivider then
+                    Player.Character.CharacterValues.DamageDivider:Destroy()
                 end
             end)
         end
     end)
 end)
 
-w:Button("Disable Effects", function()
-    pcall(function() game.Workspace.Effects:Destroy() end)
+FarmingTab:Button("Disable Effects", "", function()
+    pcall(function() 
+        game.Workspace.Effects:Destroy() 
+    end)
 end)
 
-w:Button("Discord", function()
-    setclipboard("discord.gg/waAsQFwcBn")
+ShopTab:Toggle("Auto Buy Arrow", "", false, function(t)
+    _G.autoArrow = t
+
+    task.spawn(function()
+        while task.wait() do
+            if not _G.autoArrow then break end
+            ReplicatedStoragee.RemoteEvents.BuyItemRemote:FireServer("Arrow")
+        end
+    end)
+end)
+
+ShopTab:Toggle("Auto Buy Bag", "", false, function(t)
+    _G.autoArmor = t
+
+    task.spawn(function()
+        while task.wait() do
+            if not _G.autoArmor then break end
+            ReplicatedStoragee.RemoteEvents.BuyItemRemote:FireServer("Random Armor")
+        end
+    end)
+end)
+
+ShopTab:Toggle("Auto Buy Heart", "", false, function(t)
+    _G.autoHeart = t
+
+    task.spawn(function()
+        while task.wait() do
+            if not _G.autoHeart then break end
+            ReplicatedStoragee.RemoteEvents.BuyItemRemote:FireServer("Heart")
+        end
+    end)
+end)
+
+ShopTab:Toggle("Auto Buy Random Specialization", "", false, function(t)
+    _G.autoSpec = t
+
+    task.spawn(function()
+        while task.wait() do
+            if not _G.autoSpec then break end
+            ReplicatedStoragee.RemoteEvents.BuyItemRemote:FireServer("Random Specialization")
+        end
+    end)
+end)
+
+MiscTab:Toggle("Auto Delete Common Bag", "", false, function(v)
+    _G.deleteCommon = v
+
+    task.spawn(function()
+        while task.wait() do
+            if not _G.deleteCommon then break end
+            for i, v in pairs(Player.Backpack:GetChildren()) do 
+                if v.Name == "Bag" and v.BagPart.Overhead.Rarity.Text == "Common" then
+                    v:Destroy()
+                end
+            end
+        end
+    end)
+end)
+
+MiscTab:Line()
+
+MiscTab:Slider("Walk Speed", "",18, 100, 0, function(v)
+    Player.Character.Humanoid.WalkSpeed = v
+end)
+
+MiscTab:Slider("Jump Height", "", 7.5, 100, 0, function(v)
+    Player.Character.Humanoid.JumpHeight = v
+end)
+
+MiscTab:Line()
+
+MiscTab:Button("Rejoin", "", function()
+    game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId,game.JobId,game.Players.LocalPlayer)
+end)
+
+MiscTab:Button("Serverhop", "", function()
+    while task.wait() do
+        local Servers = game.HttpService:JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/' .. game.PlaceId .. '/servers/Public?sortOrder=Asc&limit=100'))
+        for i,v in pairs(Servers.data) do
+            if v.id ~= game.JobId then
+                task.wait()
+                game:GetService('TeleportService'):TeleportToPlaceInstance(game.PlaceId, v.id)
+            end
+        end
+    end
+end)
+
+MiscTab:Button("Serverhop Low Server", "", function()
+    while task.wait() do
+        local Servers = game.HttpService:JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/' .. game.PlaceId .. '/servers/Public?sortOrder=Asc&limit=100'))
+        for i,v in pairs(Servers.data) do
+            if v.id ~= game.JobId and v.playing <= 3 then
+                task.wait()
+                game:GetService('TeleportService'):TeleportToPlaceInstance(game.PlaceId, v.id)
+            end
+        end
+    end
 end)
