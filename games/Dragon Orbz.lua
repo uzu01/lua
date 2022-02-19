@@ -84,7 +84,7 @@ FarmingTab:Toggle("Auto Farm", "", false, function(t)
                         repeat task.wait()
                             Player.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0,5,0) * CFrame.Angles(math.rad(-90),0,0)
                             if Player.PlayerGui.ActiveQuest.Background.Background.Visible == false then
-                                ReplicatedStorage.Packages.Knit.Services.QuestService.RF.AcceptQuest:InvokeServer(v.Name.." Quest")
+                                ReplicatedStorage.Packages.Knit.Services.QuestService.RF.AcceptQuest:InvokeServer(selectedMob.." Quest")
                             end
                             equipTool()
                         until not v.PlayerTag or not _G.autofarm
