@@ -40,6 +40,8 @@ elseif game.PlaceId == 8607531509 then -- Rap Simulator
     a = "https://raw.githubusercontent.com/uzu01/lua/main/games/Rap%20Simulator.lua" 
 elseif game.PlaceId == 7114303730 then -- Dragon Orbz
     a = "https://raw.githubusercontent.com/uzu01/lua/main/games/Dragon%20Orbz.lua"
+elseif game.PlaceId == 8540346411 then -- Rebirth Champions X
+    a = "https://raw.githubusercontent.com/uzu01/lua/main/games/RebirthChampionsX.lua"
 end
 
 loadstring(game:HttpGet(a))()
