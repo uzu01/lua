@@ -1,3 +1,8 @@
+repeat wait() until game:IsLoaded()
+
+game:GetService("Players").LocalPlayer.Idled:Connect(function()
+    game:GetService("VirtualUser"):ClickButton2(Vector2.new())
+end)
 
 local Player = game:GetService("Players").LocalPlayer
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -17,119 +22,171 @@ function GetNearestEgg()
     return near
 end
 
-local library = loadstring(game:HttpGet(('https://raw.githubusercontent.com/bloodball/-back-ups-for-libs/main/wall%20v3')))()
-local w = library:CreateWindow("Rebirth Champions X")
+local lib = loadstring(game:GetObjects("rbxassetid://7657867786")[1].Source)()
+local Wait = lib.subs.Wait
 
-local b = w:CreateFolder("Farming")
-local c = w:CreateFolder("Pet")
-local d = w:CreateFolder("Shop")
-local e = w:CreateFolder("Teleports")
-local f = w:CreateFolder("Misc")
+local w = lib:CreateWindow({
+    Name = "Rebirth Champions X",
+    Themeable = {
+       Info = "Script by Uzu#6389"
+    }
+})
 
-b:Button("Rebirth Gamepass",function()
-    for i, v in pairs(Player.Passes:GetChildren()) do
-        v.Value = true
+local GeneralTab = w:CreateTab({
+    Name = "General"
+})
+
+local FarmingSection = GeneralTab:CreateSection({
+    Name = "Farming"
+})
+
+local PetSection = GeneralTab:CreateSection({
+    Name = "Pets"
+})
+
+local ShopSection = GeneralTab:CreateSection({
+    Name = "Shop"
+})
+
+local TeleSection = GeneralTab:CreateSection({
+    Name = "Teleports",
+    Side = "Right"
+})
+
+local MiscSection = GeneralTab:CreateSection({
+    Name = "Misc",
+    Side = "Right"
+})
+
+FarmingSection:AddToggle({
+    Name = "Auto Click",
+    Callback = function(v)
+        _G.autoclick = v
+
+        task.spawn(function()
+            while task.wait() do
+                if not _G.autoclick then break end
+                ReplicatedStorage.Events.Click:FireServer()
+            end
+        end)
     end
-end)
+})
 
-b:Toggle("Auto Click",function(a)
-    autoclick = a
-end)
-
-c:Toggle("Open Nearest Egg",function(a)
-    autoegg = a
-end)
-
-c:Toggle("Triple Egg",function(a)
-    asd = a
-
-    if asd then
-        isTriple = "Triple"
-    else
-        isTriple = "Single"
+FarmingSection:AddButton({
+    Name = "Rebirth Gamepass",
+    Callback = function()
+        for i, v in pairs(Player.Passes:GetChildren()) do
+            v.Value = true
+        end
     end
-end)
+})
 
-c:Toggle("Equip Best (10 sec)",function(a)
-    autobest = a
-end)
+PetSection:AddToggle({
+    Name = "Open Nearest Egg",
+    Callback = function(v)
+        _G.autoegg = v
 
-c:Toggle("Auto Craft (3 sec)",function(a)
-    autocraft = a
-end)
+        task.spawn(function()
+            while task.wait() do
+                if not _G.autoegg then break end
+                ReplicatedStorage.Functions.Unbox:InvokeServer(GetNearestEgg(),isTriple)
+            end
+        end)
+    end
+})
 
-d:Toggle("Auto Upgrade",function(a)
-    autoupgrade = a
-end)
+PetSection:AddToggle({
+    Name = "Triple Egg",
+    Callback = function(v)
+        asd = a
 
-d:Toggle("Buy Potion",function(a)
-    autopotion = a
-end)
+        if asd then
+            isTriple = "Triple"
+        else
+            isTriple = "Single"
+        end
+    end
+})
+
+PetSection:AddToggle({
+    Name = "Equip Best (10 sec)",
+    Callback = function(v)
+        _G.autobest = v
+
+        task.spawn(function()
+            while task.wait(10) do
+                if not _G.autobest then break end
+                firesignal(Player.PlayerGui.MainUI.PetsFrame.Additional.EquipBest.Click.MouseButton1Up)
+            end
+        end)
+    end
+})
+
+PetSection:AddToggle({
+    Name = "Craft All (3 sec)",
+    Callback = function(v)
+        _G.autocraft = v
+
+        task.spawn(function()
+            while task.wait(3) do
+                if not _G.autocraft then break end
+                firesignal(Player.PlayerGui.MainUI.PetsFrame.Additional.CraftAll.Click.MouseButton1Up)
+            end
+        end)
+    end
+})
+
+ShopSection:AddToggle({
+    Name = "Auto Upgrade",
+    Callback = function(v)
+        _G.autoupgrade = v
+
+        task.spawn(function()
+            while task.wait() do
+                if not _G.autoupgrade then break end
+                for i, v in pairs(require(ReplicatedStorage.Modules.UpgradesShop)) do
+                    ReplicatedStorage.Functions.Upgrade:InvokeServer(tostring(i))
+                end
+            end
+        end)
+    end
+})
+
+ShopSection:AddToggle({
+    Name = "Auto Buy Potion",
+    Callback = function(v)
+        _G.autopotion = v
+
+        task.spawn(function()
+            while task.wait() do
+                if not _G.autopotion then break end
+                for i, v in pairs(require(ReplicatedStorage.Modules.Potions)) do
+                    ReplicatedStorage.Events.Potion:FireServer(tostring(i))
+                end
+            end
+        end)
+    end
+})
 
 for i, v in pairs(game:GetService("Workspace").Scripts.TeleportTo:GetChildren()) do
-    e:Button(v.Name, function()
-        Player.Character.HumanoidRootPart.CFrame = v.CFrame
-    end)
+    TeleSection:AddButton({
+        Name = v.Name,
+        Callback = function()
+            Player.Character.HumanoidRootPart.CFrame = v.CFrame
+        end
+    })
 end
 
-f:Button("Script by Uzu", function()
-    setclipboard("Uzu#6389")
-end)
-
-f:Button("Discord", function()
-    setclipboard("discord.gg/waAsQFwcBn")
-end)
-
-f:DestroyGui()
-
-task.spawn(function()
-    while task.wait() do
-        if autoclick then
-            ReplicatedStorage.Events.Click:FireServer()
-        end
+MiscSection:AddButton({
+    Name = "Script by Uzu",
+    Callback = function()
+        setclipboard("Uzu#6389")
     end
-end)
+})
 
-task.spawn(function()
-    while task.wait() do
-        if autoegg then
-            ReplicatedStorage.Functions.Unbox:InvokeServer(GetNearestEgg(),isTriple)
-        end
+MiscSection:AddButton({
+    Name = "Discord Link",
+    Callback = function()
+        setclipboard("discord.gg/waAsQFwcBn")
     end
-end)
-
-task.spawn(function()
-    while task.wait(10) do
-        if autobest then
-            firesignal(Player.PlayerGui.MainUI.PetsFrame.Additional.EquipBest.Click.MouseButton1Up)
-        end
-    end
-end)
-
-task.spawn(function()
-    while task.wait(3) do
-        if autocraft then
-            firesignal(Player.PlayerGui.MainUI.PetsFrame.Additional.CraftAll.Click.MouseButton1Up)
-        end
-    end
-end)
-
-task.spawn(function()
-    while task.wait() do
-        if autoupgrade then
-            for i, v in pairs(require(ReplicatedStorage.Modules.UpgradesShop)) do
-                ReplicatedStorage.Functions.Upgrade:InvokeServer(tostring(i))
-            end
-        end
-    end
-end)
-
-task.spawn(function()
-    while task.wait() do
-        if autopotion then
-            for i, v in pairs(require(ReplicatedStorage.Modules.Potions)) do
-                ReplicatedStorage.Events.Potion:FireServer(tostring(i))
-            end
-        end
-    end
-end)
+})
