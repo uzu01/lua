@@ -1,7 +1,6 @@
 repeat wait() until game:IsLoaded()
 
 game:GetService("Players").LocalPlayer.Idled:Connect(function()
-    game:GetService("VirtualUser"):CaptureController()
     game:GetService("VirtualUser"):ClickButton2(Vector2.new())
 end)
 
@@ -155,7 +154,6 @@ if game.PlaceId == 8357510970 then
                                     teleport(v)
                                     game:GetService('VirtualInputManager'):SendKeyEvent(true, "E", false, game) task.wait()
                                     game:GetService('VirtualInputManager'):SendKeyEvent(false, "E", false, game)
-                                    game:GetService("ReplicatedStorage").Remotes.ClientRemote:InvokeServer("Practice",v)
                                 until not _G.Settings.autoPractice
                             end)
                         end
@@ -185,23 +183,17 @@ if game.PlaceId == 8357510970 then
                     pcall(function() 
                         teleport(selectedEgg)
                         repeat task.wait()
-                            game:GetService("ReplicatedStorage").Remotes.ClientRemote:InvokeServer("EGG",selectedEgg,_G.Settings.tripleEgg,{})
+                            game:GetService('VirtualInputManager'):SendKeyEvent(true, "E", false, game) task.wait()
+                            game:GetService('VirtualInputManager'):SendKeyEvent(false, "E", false, game)
+                            if _G.Settings.tripleEgg == "1" then
+                                firesignal(game.Players.LocalPlayer.PlayerGui.Ui.CenterFrame.BuyEgg.Frame.Buy1.Button.MouseButton1Click)
+                            elseif _G.Settings.tripleEgg == "2" then
+                                firesignal(game.Players.LocalPlayer.PlayerGui.Ui.CenterFrame.BuyEgg.Frame.Buy3.Button.MouseButton1Click)
+                            end
                         until not _G.Settings.autoEgg
                     end)
                 end
             end)
-        end
-    })
-
-    HeroFolder:AddList({
-        text = "Select Egg", 
-        values = egg, 
-        callback = function(value) 
-            for i, v in pairs(game.Workspace.__SETTINGS.__INTERACT:GetChildren()) do
-                if v.Name == "EGG" and v.Tier.Value == value then 
-                    selectedEgg = v
-                end
-            end  
         end
     })
 
@@ -216,6 +208,18 @@ if game.PlaceId == 8357510970 then
             else
                 _G.Settings.tripleEgg = "1"
             end 
+        end
+    })
+
+    HeroFolder:AddList({
+        text = "Select Egg", 
+        values = egg, 
+        callback = function(value) 
+            for i, v in pairs(game.Workspace.__SETTINGS.__INTERACT:GetChildren()) do
+                if v.Name == "EGG" and v.Tier.Value == value then 
+                    selectedEgg = v
+                end
+            end  
         end
     })
 
