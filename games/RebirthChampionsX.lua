@@ -89,6 +89,7 @@ PetSection:AddToggle({
         task.spawn(function()
             while task.wait() do
                 if not _G.autoegg then break end
+                print(isTriple)
                 ReplicatedStorage.Functions.Unbox:InvokeServer(GetNearestEgg(),isTriple)
             end
         end)
@@ -98,7 +99,7 @@ PetSection:AddToggle({
 PetSection:AddToggle({
     Name = "Triple Egg",
     Callback = function(v)
-        asd = a
+        asd = v
 
         if asd then
             isTriple = "Triple"
