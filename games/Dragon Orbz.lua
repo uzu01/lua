@@ -25,12 +25,14 @@ for i, v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
 end
 
 for i, v in pairs(game:GetService("Workspace").Resources.SpawnedAI:GetChildren()) do
-    if not table.find(mob, v.Name) then
-        table.insert(mob, v.Name)
+    if not table.find(mob, v.PlayerTag.TextLabel.Text) then
+        table.insert(mob, v.PlayerTag.TextLabel.Text)
     end
 end
 
-table.sort(mob)
+table.sort(mob, function(a,b)
+    return tonumber(string.match(a,"%d+")) < tonumber(string.match(b,"%d+"))
+end)
 
 function click()
     game:GetService("VirtualUser"):Button1Down(Vector2.new(69, 69))		
@@ -93,8 +95,31 @@ FarmingTab:Toggle("Auto Farm", "", false, function(t)
     end)
 end)
 
-FarmingTab:Dropdown("Select Mob", mob, function(v)
-    selectedMob = v
+local mobdrop = FarmingTab:Dropdown("Select Mob", mob, function(v)
+    local eelol = string.split(v," (")
+    selectedMob = eelol[1]
+end)
+
+FarmingTab:Button("Refresh Mob", "", function()
+    library:Notification("Success!", "Ok")
+
+    mobdrop:Clear()
+
+    local mob = {}
+
+    for i, v in pairs(game:GetService("Workspace").Resources.SpawnedAI:GetChildren()) do
+        if not table.find(mob, v.PlayerTag.TextLabel.Text) then
+            table.insert(mob, v.PlayerTag.TextLabel.Text)
+        end
+    end
+
+    table.sort(mob, function(a,b)
+        return tonumber(string.match(a,"%d+")) < tonumber(string.match(b,"%d+"))
+    end)
+    
+    for i, v in pairs(mob) do
+        mobdrop:Add(v)
+    end
 end)
 
 FarmingTab:Dropdown("Select Tool", tool, function(v)
@@ -175,7 +200,7 @@ end)
 
 local shopTab = w:Tab("Shop", 6031265987)
 
-shopTab:Toggle("Auto Random Orb", "25k Zen", false, function(v)
+shopTab:Toggle("Auto Random Orb", "25k Zen [Lvl. 50 Required]", false, function(v)
     _G.randomOrb = v
     
     task.spawn(function()
