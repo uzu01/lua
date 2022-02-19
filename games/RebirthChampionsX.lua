@@ -1,9 +1,3 @@
-repeat wait() until game:IsLoaded()
-
-game:GetService("Players").LocalPlayer.Idled:Connect(function()
-    game:GetService("VirtualUser"):ClickButton2(Vector2.new())
-end)
-
 local Player = game:GetService("Players").LocalPlayer
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local isTriple = "Single"
@@ -88,9 +82,9 @@ PetSection:AddToggle({
 
         task.spawn(function()
             while task.wait() do
-                if not _G.autoegg then break end
-                print(isTriple)
-                ReplicatedStorage.Functions.Unbox:InvokeServer(GetNearestEgg(),isTriple)
+                if not _G.autoegg then break end    
+                local eggy = GetNearestEgg() 
+                ReplicatedStorage.Functions.Unbox:InvokeServer(eggy,isTriple)
             end
         end)
     end
@@ -98,8 +92,8 @@ PetSection:AddToggle({
 
 PetSection:AddToggle({
     Name = "Triple Egg",
-    Callback = function(v)
-        asd = v
+    Callback = function(a)
+        asd = a
 
         if asd then
             isTriple = "Triple"
@@ -177,6 +171,15 @@ for i, v in pairs(game:GetService("Workspace").Scripts.TeleportTo:GetChildren())
         end
     })
 end
+
+MiscSection:AddButton({
+    Name = "Hide Errors",
+    Callback = function()
+        pcall(function()
+            Player.PlayerGui.MainUI.Error:Destroy()
+        end)
+    end
+})
 
 MiscSection:AddButton({
     Name = "Script by Uzu",
