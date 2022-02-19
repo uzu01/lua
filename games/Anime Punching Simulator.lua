@@ -232,7 +232,7 @@ if game.PlaceId == 8357510970 then
             task.spawn(function()
                 while task.wait() do
                     if not _G.Settings.autoMaxElite then break end
-                    game:GetService("ReplicatedStorage").Remotes.NPCSystem:InvokeServer(true,"MAXELITE")
+					game:GetService("ReplicatedStorage").Remotes.NPCSystem:FireServer(true, "MAXELITE")
                 end
             end)
         end
