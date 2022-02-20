@@ -170,8 +170,8 @@ FarmingTab:Toggle("Farm Mobs", "", false, function(t)
     task.spawn(function()
         while task.wait() do
             if not _G.automob then break end
-            local hrp = Player.Character.HumanoidRootPart
             pcall(function()
+                local hrp = Player.Character.HumanoidRootPart
                 for i, v in pairs(game:GetService("Workspace").Enemies:GetChildren()) do
                     if v:FindFirstChild("Units") then
                         for i2, v2 in pairs(v.Units:GetChildren()) do
