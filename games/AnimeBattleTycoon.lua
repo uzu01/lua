@@ -1,4 +1,3 @@
-
 repeat wait() until game:IsLoaded()
 
 game:GetService("Players").LocalPlayer.Idled:Connect(function()
@@ -8,6 +7,12 @@ end)
 pcall(function()
     game.Players.LocalPlayer.PlayerGui.Hatching:Destroy()
 end)
+
+for i, v in pairs(game:GetDescendants()) do
+    if v:IsA("ParticleEmitter") then
+        v.Lifetime = NumberRange.new(0)
+    end
+end
 
 local Player = game:GetService("Players").LocalPlayer
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -76,6 +81,11 @@ function GetNearestMob()
     return near
 end
 
+function teleport(mob)
+    local plr = Player.Character.HumanoidRootPart
+    plr.CFrame = mob.CFrame
+end
+
 game:GetService("RunService").Stepped:Connect(function()
     if _G.automob then
         for i, v in pairs(Player.Character:GetDescendants()) do
@@ -93,7 +103,7 @@ local w = library:Window("Uzu Scripts", "ABT", Color3.fromRGB(66, 134, 245), Enu
 local HomeTab = w:Tab("Home", 6026568198)
 
 HomeTab:Button("Update:", "", function()
-    library:Notification("Fixed Bugs", "Thanks")
+    library:Notification("Fixed Bugs\n [+] Collect Drops", "Thanks")
 end)
 
 HomeTab:Line()
@@ -190,7 +200,7 @@ local FarmingTab = w:Tab("Farming", 6034287535)
 
 FarmingTab:Toggle("Farm Mobs", "", false, function(t)
     _G.automob = t
-    
+
     task.spawn(function()
         while task.wait() do
             if not _G.automob then break end
@@ -198,6 +208,9 @@ FarmingTab:Toggle("Farm Mobs", "", false, function(t)
                 local hrp = Player.Character.HumanoidRootPart
                 hrp.CFrame = GetNearestMob().CFrame * CFrame.new(0,-5,0) * CFrame.Angles(math.rad(90),0,0)
                 ReplicatedStorage.Modules.ServiceLoader.NetworkService.Events.Objects.UpdateMelee:FireServer("RequestAction","Combat","Combat")
+                for i, v in pairs(game.Workspace.Collectibles:GetChildren()) do 
+                    ReplicatedStorage.Modules.ServiceLoader.NetworkService.Events.Objects.UpdateUnits:FireServer("CollectCollectible",v.Name)
+                end
             end)
         end
     end)
@@ -243,6 +256,22 @@ FarmingTab:Toggle("Auto Skill", "", false, function(v)
                 game:GetService('VirtualInputManager'):SendKeyEvent(true, v, false, game) task.wait()
                 game:GetService('VirtualInputManager'):SendKeyEvent(false, v, false, game)
             end
+        end
+    end)
+end)
+
+FarmingTab:Toggle("Auto Collect Yen", "", false, function(t)
+    _G.collect = t
+    
+    task.spawn(function()
+        while task.wait(.5) do
+            if not _G.collect then break end
+            pcall(function()
+                for i, v in pairs(game.Workspace.Collectibles:GetChildren()) do 
+                    v.CFrame = Player.Character.HumanoidRootPart.CFrame
+                    ReplicatedStorage.Modules.ServiceLoader.NetworkService.Events.Objects.UpdateUnits:FireServer("CollectCollectible",v.Name)
+                end
+            end)
         end
     end)
 end)
@@ -354,7 +383,7 @@ MiscTab:Slider("Walk Speed", "",18, 100, 0, function(v)
 end)
 
 MiscTab:Slider("Jump Height", "", 7.5, 100, 0, function(v)
-    Player.Character.Humanoid.JumpHeight = v
+    Player.Character.Humanoid.JumpPower = v
 end)
 
 MiscTab:Line()
