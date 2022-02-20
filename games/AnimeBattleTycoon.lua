@@ -40,13 +40,9 @@ end
 for i, v in pairs(game:GetService("Workspace").Enemies:GetChildren()) do
     if v:FindFirstChild("Units") and not table.find(mob,'> '..v.Name..' <') then
         table.insert(mob,'> '..v.Name..' <')
-        for i2, v2 in pairs(v.Units:GetChildren()) do
-            if v2:FindFirstChild("Head") and v2.Head:FindFirstChild("Overhead") then
-                for i3, v3 in pairs(v2.Head.Overhead:GetChildren()) do
-                    if v3.Name == "Name" and not table.find(mob,v3.Text) then
-                        table.insert(mob,v3.Text)
-                    end
-                end
+        for i2, v2 in pairs(v:GetDescendants()) do
+            if v2.Name == "Name" and v2.Parent.Name == "Overhead" and v2.Parent.Parent.Name == "Head" and not table.find(mob,v2.Text) then
+                table.insert(mob,v2.Text)
             end
         end
     end
@@ -208,9 +204,6 @@ FarmingTab:Toggle("Farm Mobs", "", false, function(t)
                 local hrp = Player.Character.HumanoidRootPart
                 hrp.CFrame = GetNearestMob().CFrame * CFrame.new(0,-5,0) * CFrame.Angles(math.rad(90),0,0)
                 ReplicatedStorage.Modules.ServiceLoader.NetworkService.Events.Objects.UpdateMelee:FireServer("RequestAction","Combat","Combat")
-                for i, v in pairs(game.Workspace.Collectibles:GetChildren()) do 
-                    ReplicatedStorage.Modules.ServiceLoader.NetworkService.Events.Objects.UpdateUnits:FireServer("CollectCollectible",v.Name)
-                end
             end)
         end
     end)
@@ -228,13 +221,9 @@ FarmingTab:Button("Refresh Mob", "", function()
     for i, v in pairs(game:GetService("Workspace").Enemies:GetChildren()) do
         if v:FindFirstChild("Units") and not table.find(mob,'> '..v.Name..' <') then
             table.insert(mob,'> '..v.Name..' <')
-            for i2, v2 in pairs(v.Units:GetChildren()) do
-                if v2.Head:FindFirstChild("Overhead") then
-                    for i2, v3 in pairs(v2.Head.Overhead:GetChildren()) do
-                        if v3.Name == "Name" and not table.find(mob,v3.Text) then
-                            table.insert(mob,v3.Text)
-                        end
-                    end
+            for i2, v2 in pairs(v:GetDescendants()) do
+                if v2.Name == "Name" and v2.Parent.Name == "Overhead" and v2.Parent.Parent.Name == "Head" and not table.find(mob,v2.Text) then
+                    table.insert(mob,v2.Text)
                 end
             end
         end
