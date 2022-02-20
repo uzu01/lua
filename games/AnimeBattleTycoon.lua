@@ -83,7 +83,7 @@ game:GetService("RunService").Stepped:Connect(function()
                 v.CanCollide = false
             end
         end
-        Player.Character.HumanoidRootPart.Velocity =  Vector3.new(0,10,0)
+        Player.Character.HumanoidRootPart.Velocity =  Vector3.new(0,5,0)
     end
 end)
 
