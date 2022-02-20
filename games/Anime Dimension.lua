@@ -214,7 +214,7 @@ if game.GameId == 2655311011 then
             saveSettings()
 
             task.spawn(function()
-                while task.wait() do
+                while task.wait(.7) do
                     if not _G.Settings.AutoSkill then break end
                     skill()
                 end
