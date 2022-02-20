@@ -97,6 +97,7 @@ TycTab:Toggle("Spawn Workers", "", false, function(t)
                 if (hrp.CFrame.p -  Spawner.Parent.Parent.CFrame.p).Magnitude > 50 then
                     hrp.CFrame =  Spawner.Parent.Parent.CFrame
                 end
+                local Spawner = Plot.Tycoon.Objects[1].Spawners.Start.Model.Proximity.Attachment.TycoonSpawn
                 fireproximityprompt(Spawner) 
             end)
         end
