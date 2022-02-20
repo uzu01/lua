@@ -7,7 +7,6 @@ end)
 
 pcall(function()
     game:GetService("Workspace").Effects:Destroy()
-    game.Players.LocalPlayer.Character.Effects:Destroy()
     game.Players.LocalPlayer.PlayerGui.Hatching:Destroy()
 end)
 
@@ -15,7 +14,7 @@ local Player = game:GetService("Players").LocalPlayer
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local hrp = Player.Character.HumanoidRootPart
 local isTriple = "Single"
-local selectedMob = "G General"
+local selectedMob = "G Admiral"
 local Plot
 local mob = {}
 local egg = {}
@@ -38,7 +37,7 @@ for i, v in pairs(game:GetService("Workspace").Enemies:GetChildren()) do
     if v:FindFirstChild("Units") and not table.find(mob,'> '..v.Name..' <') then
         table.insert(mob,'> '..v.Name..' <')
         for i2, v2 in pairs(v.Units:GetChildren()) do
-            if v2.Head:FindFirstChild("Overhead") then
+            if v2:FindFirstChild("Head") then
                 for i2, v3 in pairs(v2.Head.Overhead:GetChildren()) do
                     if v3.Name == "Name" and not table.find(mob,v3.Text) then
                         table.insert(mob,v3.Text)
@@ -52,8 +51,6 @@ end
 for i, v in pairs(game:GetService("ReplicatedStorage").Assets.Prisms:GetChildren()) do
     table.insert(egg,v.Name)
 end
-
-local Spawner = Plot.Tycoon.Objects[1].Spawners.Start.Model.Proximity.Attachment.TycoonSpawn
 
 game:GetService("RunService").Stepped:Connect(function()
     if _G.automob then
@@ -72,7 +69,7 @@ local w = library:Window("Uzu Scripts", "ABT", Color3.fromRGB(66, 134, 245), Enu
 local HomeTab = w:Tab("Home", 6026568198)
 
 HomeTab:Button("Update:", "", function()
-    library:Notification("[+] New Gui [+] Shop Tab", "Thanks")
+    library:Notification("Nothing", "Thanks")
 end)
 
 HomeTab:Line()
@@ -120,7 +117,7 @@ TycTab:Toggle("Auto Sell", "", false, function(v)
 end)
 
 TycTab:Toggle("Auto Buy Buttons", "", false, function(t)
-    _G.autobuy = v
+    _G.autobuy = t
 
     task.spawn(function()
         while task.wait() do
@@ -135,14 +132,14 @@ TycTab:Toggle("Auto Buy Buttons", "", false, function(t)
 end)
 
 TycTab:Toggle("Auto Buy New Hero", "", false, function(t)
-    _G.autohero = v
+    _G.autohero = t
 
     task.spawn(function()
         while task.wait() do
             if not _G.autohero then break end
             pcall(function()
-                for i, v in pairs(ReplicatedStorage.Modules.ServiceLoader.EffectsService.Handlers.Heroes:GetChildren()) do
-                    ReplicatedStorage.Modules.ServiceLoader.NetworkService.Events.Objects.UpdateHeroes:FireServer("BuyHero",v.Name)
+                for i, v in pairs({"Luffy","Goku","Naruto"}) do
+                    ReplicatedStorage.Modules.ServiceLoader.NetworkService.Events.Objects.UpdateHeroes:FireServer("BuyHero",v)
                 end
             end)
         end
@@ -150,15 +147,13 @@ TycTab:Toggle("Auto Buy New Hero", "", false, function(t)
 end)
 
 TycTab:Toggle("Auto Buy New World", "", false, function(t)
-    _G.autoworld = v
+    _G.autoworld = t
 
     task.spawn(function()
         while task.wait() do
             if not _G.autoworld then break end
             pcall(function()
-                for i, v in pairs(ReplicatedStorage.Modules.Handlers.Zones.Worlds:GetChildren()) do
-                    ReplicatedStorage.Modules.ServiceLoader.NetworkService.Events.Objects.UpdateZones:FireServer("BuyWorld",v.Name)
-                end
+                ReplicatedStorage.Modules.ServiceLoader.NetworkService.Events.Objects.UpdateZones:FireServer("BuyWorld","Red Line")
             end)
         end
     end)
@@ -172,19 +167,17 @@ FarmingTab:Toggle("Farm Mobs", "", false, function(t)
     task.spawn(function()
         while task.wait() do
             if not _G.automob then break end
-            local hrp = Player.Character.HumanoidRootPart
             pcall(function()
+                local hrp = Player.Character.HumanoidRootPart
                 for i, v in pairs(game:GetService("Workspace").Enemies:GetChildren()) do
                     if v:FindFirstChild("Units") then
                         for i2, v2 in pairs(v.Units:GetChildren()) do
-                            if v2:FindFirstChild("HumanoidRootPart") then
-                                for i2, v3 in pairs(v2.Head.Overhead:GetChildren()) do
-                                    if v3.Name == "Name" and v3.Text == selectedMob and _G.automob then
-                                        repeat task.wait() 
-                                            hrp.CFrame = v3.Parent.Parent.Parent.HumanoidRootPart.CFrame * CFrame.new(0,-5,0) * CFrame.Angles(math.rad(90),0,0)
-                                            ReplicatedStorage.Modules.ServiceLoader.NetworkService.Events.Objects.UpdateMelee:FireServer("RequestAction","Combat","Combat")
-                                        until v3.Parent == nil or not _G.automob or v3.Text ~= selectedMob
-                                    end
+                            for i2, v3 in pairs(v2.Head.Overhead:GetChildren()) do
+                                if v3.Name == "Name" and v3.Text == selectedMob and _G.automob then
+                                    repeat task.wait() 
+                                        hrp.CFrame = v3.Parent.Parent.Parent.HumanoidRootPart.CFrame * CFrame.new(0,-5,0) * CFrame.Angles(math.rad(90),0,0)
+                                        ReplicatedStorage.Modules.ServiceLoader.NetworkService.Events.Objects.UpdateMelee:FireServer("RequestAction","Combat","Combat")
+                                    until v3.Parent == nil or not _G.automob or v3.Text ~= selectedMob
                                 end
                             end
                         end
@@ -333,10 +326,6 @@ MiscTab:Toggle("Auto Hide Nametag", "", false, function(t)
             end 
         end
     end)
-end)
-
-MiscTab:Button("Hide Notifications", "", function()
-    Player.PlayerGui.Display.Notifications.Visible = false
 end)
 
 MiscTab:Line()
