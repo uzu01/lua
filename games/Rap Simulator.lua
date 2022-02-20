@@ -138,7 +138,7 @@ d:Toggle("Producer Chest", {flag = "a"}, function(v)
 end)
 
 d:Dropdown("Select Chest", {flag = "a", list = prod}, function(v)
-    selected_producer = string.match(v,"%d")
+    selected_producer = string.match(v,"%d+")
 end)
 
 d:Toggle("Computer Chest", {flag = "a"}, function(v)
