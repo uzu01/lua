@@ -141,8 +141,8 @@ TycTab:Toggle("Auto Buy New Hero", "", false, function(t)
         while task.wait() do
             if not _G.autohero then break end
             pcall(function()
-                for i, v in pairs({"Luffy","Goku","Naruto"}) do
-                    ReplicatedStorage.Modules.ServiceLoader.NetworkService.Events.Objects.UpdateHeroes:FireServer("BuyHero",v)
+                for i, v in pairs(ReplicatedStorage.Modules.ServiceLoader.EffectsService.Handlers.Heroes:GetChildren()) do
+                    ReplicatedStorage.Modules.ServiceLoader.NetworkService.Events.Objects.UpdateHeroes:FireServer("BuyHero",v.Name)
                 end
             end)
         end
@@ -156,7 +156,9 @@ TycTab:Toggle("Auto Buy New World", "", false, function(t)
         while task.wait() do
             if not _G.autoworld then break end
             pcall(function()
-                ReplicatedStorage.Modules.ServiceLoader.NetworkService.Events.Objects.UpdateZones:FireServer("BuyWorld","Red Line")
+                for i, v in pairs(ReplicatedStorage.Modules.Handlers.Zones.Worlds:GetChildren()) do
+                    ReplicatedStorage.Modules.ServiceLoader.NetworkService.Events.Objects.UpdateZones:FireServer("BuyWorld",v.Name)
+                end
             end)
         end
     end)
@@ -170,8 +172,8 @@ FarmingTab:Toggle("Farm Mobs", "", false, function(t)
     task.spawn(function()
         while task.wait() do
             if not _G.automob then break end
+            local hrp = Player.Character.HumanoidRootPart
             pcall(function()
-                local hrp = Player.Character.HumanoidRootPart
                 for i, v in pairs(game:GetService("Workspace").Enemies:GetChildren()) do
                     if v:FindFirstChild("Units") then
                         for i2, v2 in pairs(v.Units:GetChildren()) do
@@ -331,6 +333,10 @@ MiscTab:Toggle("Auto Hide Nametag", "", false, function(t)
             end 
         end
     end)
+end)
+
+MiscTab:Button("Hide Notifications", "", function()
+    Player.PlayerGui.Display.Notifications.Visible = false
 end)
 
 MiscTab:Line()
