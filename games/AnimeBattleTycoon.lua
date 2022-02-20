@@ -6,8 +6,6 @@ game:GetService("Players").LocalPlayer.Idled:Connect(function()
 end)
 
 pcall(function()
-    game:GetService("Workspace").Effects:Destroy()
-    game.Players.LocalPlayer.Character.Effects:Destroy()
     game.Players.LocalPlayer.PlayerGui.Hatching:Destroy()
 end)
 
@@ -38,8 +36,8 @@ for i, v in pairs(game:GetService("Workspace").Enemies:GetChildren()) do
     if v:FindFirstChild("Units") and not table.find(mob,'> '..v.Name..' <') then
         table.insert(mob,'> '..v.Name..' <')
         for i2, v2 in pairs(v.Units:GetChildren()) do
-            if v2:FindFirstChild("Head") then
-                for i2, v3 in pairs(v2.Head.Overhead:GetChildren()) do
+            if v2:FindFirstChild("Head") and v2.Head:FindFirstChild("Overhead") then
+                for i3, v3 in pairs(v2.Head.Overhead:GetChildren()) do
                     if v3.Name == "Name" and not table.find(mob,v3.Text) then
                         table.insert(mob,v3.Text)
                     end
