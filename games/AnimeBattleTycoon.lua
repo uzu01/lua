@@ -51,6 +51,31 @@ for i, v in pairs(game:GetService("ReplicatedStorage").Assets.Prisms:GetChildren
     table.insert(egg,v.Name)
 end
 
+function GetNearestMob()
+    local nearr = math.huge
+    local near
+    local plr = Player.Character.HumanoidRootPart
+
+    for i, v in pairs(game:GetService("Workspace").Enemies:GetChildren()) do
+        if v:FindFirstChild("Units") then
+            for i2, v2 in pairs(v.Units:GetChildren()) do
+                if v2:FindFirstChild("Head") and v2.Head:FindFirstChild("Overhead") then
+                    for i3, v3 in pairs(v2.Head.Overhead:GetChildren()) do
+                        if v3.Name == "Name" and v3.Text == selectedMob then
+                            local mag = (plr.CFrame.p - v3.Parent.Parent.Parent.HumanoidRootPart.CFrame.p).Magnitude
+                            if mag < nearr then
+                                near = v3.Parent.Parent.Parent.HumanoidRootPart
+                                nearr = mag
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+    return near
+end
+
 game:GetService("RunService").Stepped:Connect(function()
     if _G.automob then
         for i, v in pairs(Player.Character:GetDescendants()) do
@@ -58,7 +83,7 @@ game:GetService("RunService").Stepped:Connect(function()
                 v.CanCollide = false
             end
         end
-        Player.Character.HumanoidRootPart.Velocity =  Vector3.new(0,0,0)
+        Player.Character.HumanoidRootPart.Velocity =  Vector3.new(0,10,0)
     end
 end)
 
@@ -165,28 +190,14 @@ local FarmingTab = w:Tab("Farming", 6034287535)
 
 FarmingTab:Toggle("Farm Mobs", "", false, function(t)
     _G.automob = t
-
+    
     task.spawn(function()
         while task.wait() do
             if not _G.automob then break end
             pcall(function()
                 local hrp = Player.Character.HumanoidRootPart
-                for i, v in pairs(game:GetService("Workspace").Enemies:GetChildren()) do
-                    if v:FindFirstChild("Units") then
-                        for i2, v2 in pairs(v.Units:GetChildren()) do
-                            if v2:FindFirstChild("HumanoidRootPart") then
-                                for i2, v3 in pairs(v2.Head.Overhead:GetChildren()) do
-                                    if v3.Name == "Name" and v3.Text == selectedMob and _G.automob then
-                                        repeat task.wait() 
-                                            hrp.CFrame = v3.Parent.Parent.Parent.HumanoidRootPart.CFrame * CFrame.new(0,-5,0) * CFrame.Angles(math.rad(90),0,0)
-                                            ReplicatedStorage.Modules.ServiceLoader.NetworkService.Events.Objects.UpdateMelee:FireServer("RequestAction","Combat","Combat")
-                                        until v3.Parent == nil or not _G.automob or v3.Text ~= selectedMob
-                                    end
-                                end
-                            end
-                        end
-                    end
-                end
+                hrp.CFrame = GetNearestMob().CFrame * CFrame.new(0,-5,0) * CFrame.Angles(math.rad(90),0,0)
+                ReplicatedStorage.Modules.ServiceLoader.NetworkService.Events.Objects.UpdateMelee:FireServer("RequestAction","Combat","Combat")
             end)
         end
     end)
