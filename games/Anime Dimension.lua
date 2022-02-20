@@ -19,7 +19,7 @@ if game.GameId == 2655311011 then
     }
 
     local foldername = "Uzu"
-    local filename = "AnimeDimension.lua"
+    local filename = "AnimeDimension2.lua"
      
     function saveSettings()
         local HttpService,json = game:GetService("HttpService")
@@ -133,14 +133,17 @@ if game.GameId == 2655311011 then
             _G.Settings.AutoFarm = a
             saveSettings()
 
+            startGame()
+
             task.spawn(function()
                 while task.wait() do
                     if not _G.Settings.AutoFarm then break end
                     pcall(function()
-                        startGame()
                         for i, v in pairs(game:GetService("Workspace").Folders.Monsters:GetChildren()) do 
-                            if v.Monster then
-                                tween(v.HumanoidRootPart);click()
+                            if v.EnemyHealthBarGui then
+                                repeat task.wait() 
+                                    tween(v.HumanoidRootPart);click()
+                                until v.EnemyHealthBarGui == nil or not _G.Settings.AutoFarm
                             end
                         end
                     end)
@@ -257,7 +260,7 @@ if game.GameId == 2655311011 then
     })
 
     CreditsFolder:AddButton({
-        text = "discord.gg/waAsQFwcBn",
+        text = "Discord",
         callback = function()
             setclipboard("discord.gg/waAsQFwcBn")
         end
