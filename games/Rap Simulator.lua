@@ -154,7 +154,7 @@ d:Toggle("Computer Chest", {flag = "a"}, function(v)
 end)
 
 d:Dropdown("Select Chest", {flag = "a", list = comp}, function(v)
-    selected_computer = string.match(v,"%d")
+    selected_computer = string.match(v,"%d+")
 end)
 
 for i, v in pairs(require(game:GetService("ReplicatedStorage").Modules.Towns)) do
