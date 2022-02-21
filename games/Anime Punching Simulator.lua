@@ -88,7 +88,7 @@ if game.PlaceId == 8357510970 then
         game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = mob.CFrame
     end
     
-    local library = loadstring(game:HttpGetAsync("https://pastebin.com/raw/znibQh36"))()
+    local library = loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/uzu01/lua/main/ui/uwuware.lua"))()
     local MainWindow = library:CreateWindow("Main")
     local TeleWindow = library:CreateWindow("Teleport")
     local MiscWindow = library:CreateWindow("Misc")
