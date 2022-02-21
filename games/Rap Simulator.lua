@@ -38,7 +38,7 @@ function mic()
     return asd
 end
  
-local library = loadstring(game:HttpGet("https://pastebin.com/raw/Uz6HijUN", true))()
+local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/uzu01/lua/main/ui/wallyv2.lua", true))()
 local w = library:CreateWindow("Farming")
 local c = library:CreateWindow("Upgrades")
 local d = library:CreateWindow("Chest")
