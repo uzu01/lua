@@ -75,7 +75,7 @@ if game.PlaceId == 8357510970 then
         end
     end
 
-    local library = loadstring(game:HttpGet("https://pastebin.com/raw/Uz6HijUN", true))()
+    local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/uzu01/lua/main/ui/wallyv2.lua", true))()
     local b = library:CreateWindow("Farming")
     local c = library:CreateWindow("Heroes")
     local d = library:CreateWindow("Shop")
