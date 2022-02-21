@@ -49,7 +49,7 @@ function teleport(mob)
     plr.CFrame = mob.CFrame * CFrame.new(0,0,5)
 end
 
-local library = loadstring(game:HttpGetAsync(""https://raw.githubusercontent.com/uzu01/lua/main/ui/uwuware.lua""))()
+local library = loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/uzu01/lua/main/ui/uwuware.lua"))()
 local window = library:CreateWindow("Anime Punching")
 local farming_folder = window:AddFolder('Farming')
 local egg_folder = window:AddFolder('Pets')
