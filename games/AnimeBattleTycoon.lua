@@ -16,8 +16,10 @@ end
 
 local Player = game:GetService("Players").LocalPlayer
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local VirtualInputManager = game:GetService('VirtualInputManager')
 local hrp = Player.Character.HumanoidRootPart
 local isTriple = "Single"
+local isBoss = false
 local selectedMob = "G General"
 local Plot
 local mob = {}
@@ -48,7 +50,7 @@ for i, v in pairs(game:GetService("Workspace").Enemies:GetChildren()) do
     end
 end
 
-for i, v in pairs(game:GetService("ReplicatedStorage").Assets.Prisms:GetChildren()) do
+for i, v in pairs(ReplicatedStorage.Assets.Prisms:GetChildren()) do
     table.insert(egg,v.Name)
 end
 
@@ -77,29 +79,51 @@ function GetNearestMob()
     return near
 end
 
+function GetNearestBoss()
+    local nearr = math.huge
+    local near
+    local plr = Player.Character.HumanoidRootPart
+
+    for i, v in pairs(game:GetService("Workspace").Enemies:GetChildren()) do
+        if v:FindFirstChild("Boss") then
+            for i2, v2 in pairs(v.Boss:GetChildren()) do
+                if (plr.CFrame.p - v2.HumanoidRootPart.CFrame.p).Magnitude < nearr then
+                    near = v2.HumanoidRootPart
+                    nearr = (plr.CFrame.p - v2.HumanoidRootPart.CFrame.p).Magnitude
+                end
+            end
+        end
+    end
+    return near
+end
+
 function teleport(mob)
     local plr = Player.Character.HumanoidRootPart
     plr.CFrame = mob.CFrame
 end
 
+function noclip()
+    for i, v in pairs(Player.Character:GetDescendants()) do
+        if v:IsA("BasePart") and v.CanCollide == true then
+            v.CanCollide = false
+        end
+    end
+    Player.Character.HumanoidRootPart.Velocity =  Vector3.new(0,1,0)
+end
+
 game:GetService("RunService").Stepped:Connect(function()
     if _G.automob then
-        for i, v in pairs(Player.Character:GetDescendants()) do
-            if v:IsA("BasePart") and v.CanCollide == true then
-                v.CanCollide = false
-            end
-        end
-        Player.Character.HumanoidRootPart.Velocity =  Vector3.new(0,1,0)
+        noclip()
     end
 end)
 
-local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/uzu01/lua/main/ui/flux.lua"))()
+local library = loadstring(game:HttpGet"https://pastebin.com/raw/CNw4eMqu")()
 local w = library:Window("Uzu Scripts", "ABT", Color3.fromRGB(66, 134, 245), Enum.KeyCode.LeftControl)
 
 local HomeTab = w:Tab("Home", 6026568198)
 
 HomeTab:Button("Update:", "", function()
-    library:Notification("Fixed Bugs\n [+] Collect Drops", "Thanks")
+    library:Notification("Fixed Bugs\n [+] Auto Boss [+] Teleports", "Thanks")
 end)
 
 HomeTab:Line()
@@ -123,12 +147,14 @@ TycTab:Toggle("Spawn Workers", "", false, function(t)
         while task.wait() do
             if not _G.autospawn then break end
             pcall(function() 
-                local Spawner = Plot.Tycoon.Objects[1].Spawners.Start.Model.Proximity.Attachment.TycoonSpawn
-                local hrp = Player.Character.HumanoidRootPart
-                if (hrp.CFrame.p -  Spawner.Parent.Parent.CFrame.p).Magnitude > 50 then
-                    hrp.CFrame =  Spawner.Parent.Parent.CFrame
+                if isBoss == false then
+                    local Spawner = Plot.Tycoon.Objects[1].Spawners.Start.Model.Proximity.Attachment.TycoonSpawn
+                    local hrp = Player.Character.HumanoidRootPart
+                    if (hrp.CFrame.p -  Spawner.Parent.Parent.CFrame.p).Magnitude > 50 then
+                        hrp.CFrame =  Spawner.Parent.Parent.CFrame
+                    end
+                    fireproximityprompt(Spawner) 
                 end
-                fireproximityprompt(Spawner) 
             end)
         end
     end)
@@ -161,6 +187,8 @@ TycTab:Toggle("Auto Buy Buttons", "", false, function(t)
         end
     end)
 end)
+
+TycTab:Line()
 
 TycTab:Toggle("Auto Buy New Hero", "", false, function(t)
     _G.autohero = t
@@ -201,9 +229,11 @@ FarmingTab:Toggle("Farm Mobs", "", false, function(t)
         while task.wait() do
             if not _G.automob then break end
             pcall(function()
-                local hrp = Player.Character.HumanoidRootPart
-                hrp.CFrame = GetNearestMob().CFrame * CFrame.new(0,-5,0) * CFrame.Angles(math.rad(90),0,0)
-                ReplicatedStorage.Modules.ServiceLoader.NetworkService.Events.Objects.UpdateMelee:FireServer("RequestAction","Combat","Combat")
+                if isBoss == false then
+                    local hrp = Player.Character.HumanoidRootPart
+                    hrp.CFrame = GetNearestMob().CFrame * CFrame.new(0,-5,0) * CFrame.Angles(math.rad(90),0,0)
+                    ReplicatedStorage.Modules.ServiceLoader.NetworkService.Events.Objects.UpdateMelee:FireServer("RequestAction","Combat","Combat")
+                end
             end)
         end
     end)
@@ -234,6 +264,18 @@ FarmingTab:Button("Refresh Mob", "", function()
     end
 end)
 
+FarmingTab:Line()
+
+FarmingTab:Toggle("Auto Punch", "", false, function(v)
+    _G.autopunch = v
+
+    task.spawn(function()
+        while task.wait() do
+            if not _G.autopunch then break end
+            ReplicatedStorage.Modules.ServiceLoader.NetworkService.Events.Objects.UpdateMelee:FireServer("RequestAction","Combat","Combat")
+        end
+    end)
+end)
 
 FarmingTab:Toggle("Auto Skill", "", false, function(v)
     _G.autoskill = v
@@ -242,8 +284,8 @@ FarmingTab:Toggle("Auto Skill", "", false, function(v)
         while task.wait() do
             if not _G.autoskill then break end
             for i, v in pairs(keys) do
-                game:GetService('VirtualInputManager'):SendKeyEvent(true, v, false, game) task.wait()
-                game:GetService('VirtualInputManager'):SendKeyEvent(false, v, false, game)
+                VirtualInputManager:SendKeyEvent(true, v, false, game) task.wait()
+                VirtualInputManager:SendKeyEvent(false, v, false, game)
             end
         end
     end)
@@ -265,6 +307,29 @@ FarmingTab:Toggle("Auto Collect Yen", "", false, function(t)
     end)
 end)
 
+FarmingTab:Line()
+
+FarmingTab:Toggle("Farm All Boss", "", false, function(t)
+    _G.autoboss = t
+
+    task.spawn(function()
+        while task.wait() do
+            if not _G.autoboss then break end
+            pcall(function()
+                if GetNearestBoss() ~= nil then
+                    isBoss = true
+                    local plr = Player.Character.HumanoidRootPart
+                    plr.CFrame = GetNearestBoss().CFrame * CFrame.new(0,-10,0) * CFrame.Angles(math.rad(90),0,0)
+                    ReplicatedStorage.Modules.ServiceLoader.NetworkService.Events.Objects.UpdateMelee:FireServer("RequestAction","Combat","Combat")
+                    noclip()
+                else 
+                    isBoss = false
+                end
+            end)
+        end
+    end)
+end)
+
 local PetTab = w:Tab("Companions", 6031260792)
 
 PetTab:Toggle("Auto Hatch Egg", "", false, function(v)
@@ -273,7 +338,7 @@ PetTab:Toggle("Auto Hatch Egg", "", false, function(v)
     task.spawn(function()
         while task.wait() do
             if not _G.autoegg then break end
-            game:GetService("ReplicatedStorage").Modules.ServiceLoader.NetworkService.Events.Objects.UpdatePets:FireServer("HatchEgg",selectedEgg,isTriple)
+            ReplicatedStorage.Modules.ServiceLoader.NetworkService.Events.Objects.UpdatePets:FireServer("HatchEgg",selectedEgg,isTriple)
         end
     end)
 end)
@@ -346,6 +411,16 @@ StatsTab:Toggle("Defense", "", false, function(t)
     end)
 end)
 
+local TeleTab = w:Tab("Teleports", 6035202055)
+
+for i, v in pairs(game:GetService("Workspace").Zones:GetChildren()) do
+    TeleTab:Button(v.Name, "", function()
+        pcall(function()
+            ReplicatedStorage.Modules.ServiceLoader.NetworkService.Functions.Objects.TeleportPlayer:InvokeServer(v.CFrame,v.Name)
+        end)
+    end)
+end
+
 local MiscTab = w:Tab("Misc", 6031215984)
 
 MiscTab:Toggle("Auto Hide Nametag", "", false, function(t)
@@ -354,9 +429,11 @@ MiscTab:Toggle("Auto Hide Nametag", "", false, function(t)
     task.spawn(function()
         while task.wait() do
             if not _G.nametag then break end
-            if Player.Character.Head:FindFirstChild("PlayerOverhead") then
-                Player.Character.Head:FindFirstChild("PlayerOverhead"):Destroy()
-            end 
+            pcall(function()
+                if Player.Character.Head:FindFirstChild("PlayerOverhead") then
+                    Player.Character.Head:FindFirstChild("PlayerOverhead"):Destroy()
+                end 
+            end)
         end
     end)
 end)
