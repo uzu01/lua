@@ -1,4 +1,4 @@
-MouseButton1 if game:GetService("CoreGui"):FindFirstChild("ScreenGui") then
+if game:GetService("CoreGui"):FindFirstChild("ScreenGui") then
     game:GetService("CoreGui"):FindFirstChild("ScreenGui"):Destroy()
 end
 
