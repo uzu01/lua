@@ -131,7 +131,7 @@ function getCoins()
     return toFarm
 end
 
-local library = loadstring(game:HttpGet"https://pastebin.com/raw/CNw4eMqu")()
+local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/uzu01/lua/main/ui/flux.lua"))()
 local w = library:Window("Uzu Scripts", "Magnet Simulator 2", Color3.fromRGB(66, 134, 245), Enum.KeyCode.LeftControl)
 local HomeTab = w:Tab("Home", 6026568198)
 
