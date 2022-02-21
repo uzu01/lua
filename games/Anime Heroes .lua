@@ -38,7 +38,7 @@ function teleport(enemy)
     plr.CFrame = enemy.CFrame * CFrame.new(0,0,4)
 end
 
-local library = loadstring(game:HttpGet("https://pastebin.com/raw/Uz6HijUN", true))()
+local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/uzu01/lua/main/ui/wallyv2.lua", true))()
 local w = library:CreateWindow("Farming")
 local b = library:CreateWindow("Egg")
 local c = library:CreateWindow("Teleport")
