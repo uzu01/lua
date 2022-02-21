@@ -172,7 +172,7 @@ game:GetService("RunService").Stepped:Connect(function()
     end
 end)
 
-local library = loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/uzu01/lua/main/ui/uwuware.lua))()
+local library = loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/uzu01/lua/main/ui/uwuware.lua"))()
 local Window = library:CreateWindow("Weapon Fighting")
 local Farming_Folder = Window:AddFolder("Farming")
 local Boss_Folder = Window:AddFolder("Boss")
