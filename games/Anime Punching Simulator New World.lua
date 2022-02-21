@@ -50,7 +50,7 @@ function noclip()
     end
 end
 
-local library = loadstring(game:HttpGet("https://pastebin.com/raw/Uz6HijUN", true))()
+local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/uzu01/lua/main/ui/wallyv2.lua", true))()
 local w = library:CreateWindow("Farming")
 
 w:Toggle("Enabled", {flag = "a"}, function(value)
