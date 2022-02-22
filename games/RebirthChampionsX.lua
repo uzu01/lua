@@ -174,6 +174,7 @@ for i, v in pairs(game:GetService("Workspace").Scripts.TeleportTo:GetChildren())
         Name = v.Name,
         Callback = function()
             Player.Character.HumanoidRootPart.CFrame = v.CFrame
+            ReplicatedStorage.Events.WorldBoost:FireServer(v.Name)
         end
     })
 end
