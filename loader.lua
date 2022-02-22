@@ -2,12 +2,6 @@ local UserInputService = game:GetService("UserInputService")
 
 if game.GameId == 2655311011 then -- Anime Dimension
     a = "https://raw.githubusercontent.com/uzu01/lua/main/games/Anime%20Dimension.lua"
-elseif game.PlaceId == 8357510970 then -- Anime Punching Simulator
-    if UserInputService.TouchEnabled and UserInputService.KeyboardEnabled == false then
-        a = "https://raw.githubusercontent.com/uzu01/lua/main/games/mobile/Anime%20Punching%20Simulator%20Mobile.lua"
-    else
-        a = "https://raw.githubusercontent.com/uzu01/lua/main/games/Anime%20Punching%20Simulator.lua"
-    end
 elseif game.PlaceId == 8592863835 then -- Magnet Simulator 2
     if UserInputService.TouchEnabled and UserInputService.KeyboardEnabled == false then
         a = "https://raw.githubusercontent.com/uzu01/lua/main/games/mobile/Magnet%20Simulator%202%20Mobile.lua"
@@ -46,6 +40,8 @@ elseif game.PlaceId == 8540346411 then -- Rebirth Champions X
     a = "https://raw.githubusercontent.com/uzu01/lua/main/games/RebirthChampionsX.lua"
 elseif game.PlaceId == 7107498084 then -- Anime Battle Tycoon
     a = "https://raw.githubusercontent.com/uzu01/lua/main/games/AnimeBattleTycoon.lua"
+elseif game.PlaceId == 8357510970 then -- Anime Punching Simulator
+    a = "https://raw.githubusercontent.com/uzu01/lua/main/games/Anime%20Punching%20Simulator.lua"
 end
 
 loadstring(game:HttpGet(a))()
