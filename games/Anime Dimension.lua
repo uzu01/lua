@@ -89,13 +89,6 @@ if game.GameId == 2655311011 then
         game:GetService("ReplicatedStorage").RemoteEvents.MainRemoteEvent:FireServer("UseSkill",{["hrpCFrame"] = hrp.CFrame,["attackNumber"] = 1},"BasicAttack")
     end
 
-    function skill()
-        local VIM = game:GetService('VirtualInputManager')
-        for i, v in pairs(keys) do
-            VIM:SendKeyEvent(true, v, false, game)
-        end
-    end
-
     function startGame()
         task.spawn(function()
             local args = {"CreateRoom",{["Difficulty"] = _G.Settings.Difficulty,["FriendsOnly"] = _G.Settings.FriendsOnly,["MapName"] = _G.Settings.MapName,["Hardcore"] = _G.Settings.Hardcore}}
@@ -216,7 +209,11 @@ if game.GameId == 2655311011 then
             task.spawn(function()
                 while task.wait(.5) do
                     if not _G.Settings.AutoSkill then break end
-                    skill()
+                    for i, v in pairs(keys) do
+                        task.spawn(function()
+                            game:GetService('VirtualInputManager'):SendKeyEvent(true, v, false, game) 
+                        end)
+                    end
                 end
             end)
         end
