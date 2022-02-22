@@ -70,7 +70,7 @@ function teleport(mob)
 end
 
 local library = loadstring(game:HttpGet"https://pastebin.com/raw/CNw4eMqu")()
-local w = library:Window("Uzu Scripts", "APS", Color3.fromRGB(66, 134, 245), Enum.KeyCode.LeftControl)
+local w = library:Window("Uzu Scripts", "Anime Punching", Color3.fromRGB(66, 134, 245), Enum.KeyCode.LeftControl)
 
 local HomeTab = w:Tab("Home", 6026568198)
 
@@ -146,8 +146,6 @@ end)
 FarmingTab:Dropdown("Select Practice Area", area, function(v)
     selectedArea = string.match(v,"%d+")
 end)
-
-FarmingTab:Line()
 
 local HeroesTab = w:Tab("Heroes", 6031260792)
 
