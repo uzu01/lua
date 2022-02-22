@@ -1,7 +1,6 @@
 repeat wait() until game:IsLoaded()
 
 game:GetService("Players").LocalPlayer.Idled:Connect(function()
-    game:GetService("VirtualUser"):CaptureController()
     game:GetService("VirtualUser"):ClickButton2(Vector2.new())
 end)
 
@@ -75,7 +74,7 @@ for i, v in pairs(game.CoreGui:GetChildren()) do
     end
 end
 
-local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/zxciaz/VenyxUI/main/Reuploaded"))()
+local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/uzu01/lua/main/ui/venyx.lua"))()
 local venyx = library.new(tostring(name), 5012544693)
 
 local themes = {
