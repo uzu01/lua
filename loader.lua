@@ -3,17 +3,9 @@ local UserInputService = game:GetService("UserInputService")
 if game.GameId == 2655311011 then -- Anime Dimension
     a = "https://raw.githubusercontent.com/uzu01/lua/main/games/Anime%20Dimension.lua"
 elseif game.PlaceId == 8592863835 then -- Magnet Simulator 2
-    if UserInputService.TouchEnabled and UserInputService.KeyboardEnabled == false then
-        a = "https://raw.githubusercontent.com/uzu01/lua/main/games/mobile/Magnet%20Simulator%202%20Mobile.lua"
-    else
-        a = "https://raw.githubusercontent.com/uzu01/lua/main/games/Magnet%20Simulator%202.lua"
-    end
+    a = "https://raw.githubusercontent.com/uzu01/lua/main/games/Magnet%20Simulator%202.lua"
 elseif game.PlaceId == 8554378337 then -- Weapon Fighting Simulator
-    if UserInputService.TouchEnabled and UserInputService.KeyboardEnabled == false then
-        a = "https://raw.githubusercontent.com/uzu01/lua/main/games/mobile/Weapon%20Fighting%20Simulator%20Mobile.lua"
-    else
-        a = "https://raw.githubusercontent.com/uzu01/lua/main/games/Weapon%20Fighting%20Simulator.lua"
-    end
+    a = "https://raw.githubusercontent.com/uzu01/lua/main/games/Weapon%20Fighting%20Simulator.lua"
 elseif game.PlaceId == 8448735476 then -- DBZ Unleashed
     a = "https://raw.githubusercontent.com/uzu01/lua/main/games/DBZ%20Unleashed.lua"
 elseif game.PlaceId == 6329844902 then -- Last Pirates
