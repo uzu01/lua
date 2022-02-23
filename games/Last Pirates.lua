@@ -326,7 +326,7 @@ shopTab:Button("Katana"," ", function()
     plr.CFrame = game:GetService("Workspace").KatanaShop.KatanaShop.Head.CFrame
 end)
 
-local teleTab = w:Tab("Teleports", 6035202055)
+local teleTab = w:Tab("Teleports", 8916261998)
 
 teleTab:Button("Factory"," ", function()
     local plr = Player.Character.HumanoidRootPart
@@ -340,7 +340,7 @@ for i, v in pairs(game:GetService("Workspace")["Spawn island"]:GetChildren()) do
     end)
 end
 
-local MiscTab = w:Tab("Misc", 6031215984)
+local MiscTab = w:Tab("Misc", 8916127218)
 
 MiscTab:Toggle("Auto Get Devil Fruit", "", false, function(t)
     _G.Settings.autoget = t
