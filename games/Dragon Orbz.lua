@@ -211,7 +211,7 @@ shopTab:Toggle("Auto Random Orb", "25k Zen [Lvl. 50 Required]", false, function(
     end)
 end)
 
-local MiscTab = w:Tab("Misc", 6031215984)
+local MiscTab = w:Tab("Misc", 8916127218)
 
 MiscTab:Toggle("Auto Get Orb", "", false, function(v)
     _G.autoOrb = v
