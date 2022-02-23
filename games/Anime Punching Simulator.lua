@@ -316,7 +316,7 @@ for i, v in pairs(game:GetService("Workspace")["__SETTINGS"]["__AREAS"]:GetChild
     end)
 end
 
-local MiscTab = w:Tab("Misc", 6031215984)
+local MiscTab = w:Tab("Misc", 8916127218)
 
 MiscTab:Toggle("Claim Group Reward", "", false, function(v)
     _G.Settings.autoClaim = v
