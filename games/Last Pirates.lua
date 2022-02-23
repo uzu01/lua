@@ -326,7 +326,7 @@ shopTab:Button("Katana"," ", function()
     plr.CFrame = game:GetService("Workspace").KatanaShop.KatanaShop.Head.CFrame
 end)
 
-local teleTab = w:Tab("Teleports", 8916261998)
+local teleTab = w:Tab("Teleports", 8916381379)
 
 teleTab:Button("Factory"," ", function()
     local plr = Player.Character.HumanoidRootPart
