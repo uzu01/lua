@@ -17,7 +17,7 @@ local blacklistedKeys = { --add or remove keys if you find the need to
 	Enum.KeyCode.Unknown,Enum.KeyCode.W,Enum.KeyCode.A,Enum.KeyCode.S,Enum.KeyCode.D,Enum.KeyCode.Slash,Enum.KeyCode.Tab,Enum.KeyCode.Backspace,Enum.KeyCode.Escape
 }
 local whitelistedMouseinputs = { --add or remove mouse inputs if you find the need to
-	Enum.UserInputType.MouseButton1,Enum.UserInputType.MouseButton2,Enum.UserInputType.MouseButton3
+	Enum.UserInputType.MouseButton1,Enum.UserInputType.MouseButton2,Enum.UserInputType.MouseButton3,Enum.UserInputType.Touch
 }
 
 --Functions
@@ -147,7 +147,7 @@ local function createOptionHolder(holderTitle, parent, parentTable, subHolder)
 		})
 		
 		title.InputBegan:connect(function(input)
-			if input.UserInputType == Enum.UserInputType.MouseButton1 then
+			if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
 				dragObject = parentTable.main
 				dragging = true
 				dragStart = input.Position
@@ -160,14 +160,14 @@ local function createOptionHolder(holderTitle, parent, parentTable, subHolder)
 			end
 		end)
 			title.InputEnded:connect(function(input)
-			if input.UserInputType == Enum.UserInputType.MouseButton1 then
+			if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
 				dragging = false
 			end
 		end)
 	end
 	
 	closeHolder.InputBegan:connect(function(input)
-		if input.UserInputType == Enum.UserInputType.MouseButton1 then
+		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
 			parentTable.open = not parentTable.open
 			tweenService:Create(close, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Rotation = parentTable.open and 90 or 180, ImageColor3 = parentTable.open and Color3.fromRGB(50, 50, 50) or Color3.fromRGB(30, 30, 30)}):Play()
 			if subHolder then
@@ -263,7 +263,7 @@ function createToggle(option, parent)
 	
 	local inContact
 	main.InputBegan:connect(function(input)
-		if input.UserInputType == Enum.UserInputType.MouseButton1 then
+		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
 			option:SetState(not option.state)
 		end
 		if input.UserInputType == Enum.UserInputType.MouseMovement then
@@ -340,7 +340,7 @@ function createButton(option, parent)
 	local inContact
 	local clicking
 	main.InputBegan:connect(function(input)
-		if input.UserInputType == Enum.UserInputType.MouseButton1 then
+		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
 			library.flags[option.flag] = true
 			clicking = true
 			tweenService:Create(round, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageColor3 = Color3.fromRGB(255, 65, 65)}):Play()
@@ -353,7 +353,7 @@ function createButton(option, parent)
 	end)
 	
 	main.InputEnded:connect(function(input)
-		if input.UserInputType == Enum.UserInputType.MouseButton1 then
+		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
 			clicking = false
 			if inContact then
 				tweenService:Create(round, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageColor3 = Color3.fromRGB(60, 60, 60)}):Play()
@@ -422,7 +422,7 @@ local function createBind(option, parent)
 	end)
 	 
 	main.InputEnded:connect(function(input)
-		if input.UserInputType == Enum.UserInputType.MouseButton1 then
+		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
 			binding = true
 			bindinput.Text = "..."
 			tweenService:Create(round, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageColor3 = Color3.fromRGB(255, 65, 65)}):Play()
@@ -585,7 +585,7 @@ local function createSlider(option, parent)
 	local sliding
 	local inContact
 	main.InputBegan:connect(function(input)
-		if input.UserInputType == Enum.UserInputType.MouseButton1 then
+		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
 			tweenService:Create(fill, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageColor3 = Color3.fromRGB(255, 65, 65)}):Play()
 			tweenService:Create(circle, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = UDim2.new(3.5, 0, 3.5, 0), ImageColor3 = Color3.fromRGB(255, 65, 65)}):Play()
 			sliding = true
@@ -607,7 +607,7 @@ local function createSlider(option, parent)
 	end)
 
 	main.InputEnded:connect(function(input)
-		if input.UserInputType == Enum.UserInputType.MouseButton1 then
+		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
 			sliding = false
 			if inContact then
 				tweenService:Create(fill, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageColor3 = Color3.fromRGB(100, 100, 100)}):Play()
@@ -748,7 +748,7 @@ local function createList(option, parent, holder)
 	
 	local inContact
 	round.InputBegan:connect(function(input)
-		if input.UserInputType == Enum.UserInputType.MouseButton1 then
+		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
 			if library.activePopup then
 				library.activePopup:Close()
 			end
@@ -802,7 +802,7 @@ local function createList(option, parent, holder)
 		local inContact
 		local clicking
 		label.InputBegan:connect(function(input)
-			if input.UserInputType == Enum.UserInputType.MouseButton1 then
+			if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
 				clicking = true
 				tweenService:Create(label, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(10, 10, 10)}):Play()
 				self:SetValue(value)
@@ -819,7 +819,7 @@ local function createList(option, parent, holder)
 		end)
 		
 		label.InputEnded:connect(function(input)
-			if input.UserInputType == Enum.UserInputType.MouseButton1 then
+			if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
 				clicking = false
 				tweenService:Create(label, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = inContact and Color3.fromRGB(20, 20, 20) or Color3.fromRGB(30, 30, 30)}):Play()
 			end
@@ -943,7 +943,7 @@ local function createBox(option, parent)
 	local inContact
 	local focused
 	main.InputBegan:connect(function(input)
-		if input.UserInputType == Enum.UserInputType.MouseButton1 then
+		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
 			if not focused then inputvalue:CaptureFocus() end
 		end
 		if input.UserInputType == Enum.UserInputType.MouseMovement then
@@ -1054,7 +1054,7 @@ local function createColorPickerWindow(option)
 	})
 	
 	option.hue.InputBegan:connect(function(Input)
-		if Input.UserInputType == Enum.UserInputType.MouseButton1 then
+		if Input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
 			editinghue = true
 			X = (option.hue.AbsolutePosition.X + option.hue.AbsoluteSize.X) - option.hue.AbsolutePosition.X
 			X = (Input.Position.X - option.hue.AbsolutePosition.X) / X
@@ -1073,7 +1073,7 @@ local function createColorPickerWindow(option)
 	end)
 	
 	option.hue.InputEnded:connect(function(Input)
-		if Input.UserInputType == Enum.UserInputType.MouseButton1 then
+		if Input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
 			editinghue = false
 		end
 	end)
@@ -1103,7 +1103,7 @@ local function createColorPickerWindow(option)
 	})
 	
 	option.satval.InputBegan:connect(function(Input)
-		if Input.UserInputType == Enum.UserInputType.MouseButton1 then
+		if Input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
 			editingsatval = true
 			X = (option.satval.AbsolutePosition.X + option.satval.AbsoluteSize.X) - option.satval.AbsolutePosition.X
 			Y = (option.satval.AbsolutePosition.Y + option.satval.AbsoluteSize.Y) - option.satval.AbsolutePosition.Y
@@ -1369,7 +1369,7 @@ local function createColor(option, parent, holder)
 	
 	local inContact
 	option.main.InputBegan:connect(function(input)
-		if input.UserInputType == Enum.UserInputType.MouseButton1 then
+		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
 			if not option.mainHolder then createColorPickerWindow(option) end
 			if library.activePopup then
 				library.activePopup:Close()
@@ -1645,7 +1645,7 @@ function library:Close()
 end
 
 inputService.InputBegan:connect(function(input)
-	if input.UserInputType == Enum.UserInputType.MouseButton1 then
+	if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
 		if library.activePopup then
 			if input.Position.X < library.activePopup.mainHolder.AbsolutePosition.X or input.Position.Y < library.activePopup.mainHolder.AbsolutePosition.Y then
 				library.activePopup:Close()
