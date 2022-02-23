@@ -19,7 +19,7 @@ local link = {
     [8540346411] = games.."RebirthChampionsX.lua",
     [7107498084] = games.."AnimeBattleTycoon.lua",
     [8357510970] = games.."Anime%20Punching%20Simulator.lua",
-    [8739926633] = games.."Woodcutter.lua"
+    [8739926633] = "https://rawscripts.net/raw/MWS-or-Tree-Farm_854"
 }
 
 for i, v in pairs(link) do
