@@ -1,4 +1,3 @@
-
 repeat wait() until game:IsLoaded()
 
 game:GetService("Players").LocalPlayer.Idled:Connect(function()
@@ -21,6 +20,8 @@ local Player = game:GetService("Players").LocalPlayer
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local VirtualUser = game:GetService("VirtualUser")
 local VirtualInputManager = game:GetService("VirtualInputManager")
+local MyLevel = Player.PlayerStats.Level
+local mobLevels = {}
 local mob = {}
 local tool = {}
 
@@ -32,6 +33,12 @@ local keys = {
 }
 
 for i, v in pairs(game:GetService("Workspace").Lives:GetChildren()) do
+    if v:IsA("Model") and v:FindFirstChild("Folder") and string.match(v.Name,"%d+") and not table.find(mobLevels,tonumber(string.match(v.Name,"%d+"))) then
+        table.insert(mobLevels,tonumber(string.match(v.Name,"%d+")))
+    end
+end
+
+for i, v in pairs(game:GetService("Workspace").Lives:GetChildren()) do
     if v:IsA("Model") and v:FindFirstChild("Folder") and not table.find(mob,v.Name) then
         table.insert(mob,v.Name)
     end
@@ -41,6 +48,16 @@ for i, v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
 	if v:IsA("Tool") then
 		table.insert(tool,v.Name)
 	end
+end
+
+function ClosestLowLevel()
+    local want = 0
+    for i, v in pairs(mobLevels) do
+        if v <= MyLevel.Value and want < v then
+            want = v
+        end
+    end
+    return want
 end
 
 function click()
@@ -81,7 +98,7 @@ local w = library:Window("Uzu Scripts", "Last Pirates", Color3.fromRGB(66, 134, 
 local HomeTab = w:Tab("Home", 6026568198)
 
 HomeTab:Button("Updates:", "", function()
-    library:Notification("[+] New Gui", "Thanks")
+    library:Notification("[+] Full Auto Farm", "Thanks")
 end)
 
 HomeTab:Line()
@@ -97,6 +114,34 @@ HomeTab:Button("Script by Uzu"," ", function()
 end)
 
 local FarmingTab = w:Tab("Farming", 6034287535)
+
+FarmingTab:Toggle("Full Auto Farm", "", false, function(t)
+    _G.Settings.fullfarm = t
+
+    task.spawn(function()
+        while task.wait() do
+            if not _G.Settings.fullfarm then break end
+            pcall(function()
+                local plr = Player.Character.HumanoidRootPart
+                local close = ClosestLowLevel()
+                for i, v in pairs(game:GetService("Workspace").Lives:GetChildren()) do
+                    if v:IsA("Model") and v:FindFirstChild("Humanoid") then
+                        if close == tonumber(string.match(v.Name,"%d+")) then
+                            _G.Settings.selectedMob = v.Name
+                            startQuest()
+                            autoHaki()
+                            plr.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0,7,0) * CFrame.Angles(math.rad(-90),0,0)
+                            equipTool()
+                            click()
+                        end
+                    end
+                end
+            end)
+        end
+    end)
+end)
+
+FarmingTab:Line()
 
 FarmingTab:Toggle("Auto Farm", "", false, function(t)
     _G.Settings.autofarm = t
@@ -139,6 +184,8 @@ FarmingTab:Button("Refresh Mob"," ", function()
         mobDrop:Add(v)
     end
 end)
+
+FarmingTab:Line()
 
 local toolDrop = FarmingTab:Dropdown("Select Tool", tool, function(v)
     _G.Settings.selectedTool = v
