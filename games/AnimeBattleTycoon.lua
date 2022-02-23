@@ -1,4 +1,3 @@
-
 repeat wait() until game:IsLoaded()
 
 game:GetService("Players").LocalPlayer.Idled:Connect(function()
@@ -464,7 +463,7 @@ StatsTab:Toggle("Defense", "", false, function(t)
     end)
 end)
 
-local TeleTab = w:Tab("Teleports", 6035202055)
+local TeleTab = w:Tab("Teleports", 8916381379)
 
 for i, v in pairs(game:GetService("Workspace").Zones:GetChildren()) do
     TeleTab:Button(v.Name, "", function()
