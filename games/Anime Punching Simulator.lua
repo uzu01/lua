@@ -299,7 +299,7 @@ ShopTab:Toggle("Auto Buy Grimoire", "", false, function(v)
     end)
 end)
 
-local TeleTab = w:Tab("Teleports", 6035202055)
+local TeleTab = w:Tab("Teleports", 8916381379)
 for i, v in pairs(game:GetService("Workspace"):GetChildren()) do
     if v.Name == "Part" and v:FindFirstChild("Gui") and v.Gui:FindFirstChild("Info") then
         TeleTab:Button(v.Gui.Info.Text, "", function()
