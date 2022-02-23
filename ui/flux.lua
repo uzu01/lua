@@ -2,6 +2,10 @@ if game.CoreGui:FindFirstChild("FluxLib") then
     game.CoreGui:FindFirstChild("FluxLib"):Destroy()
 end
 
+if game.CoreGui:FindFirstChild("MobileTog") then
+    game.CoreGui:FindFirstChild("MobileTog"):Destroy()
+end
+
 local Flux = {RainbowColorValue = 0, HueSelectionPosition = 0}
 local PresetColor = Color3.fromRGB(66, 134, 255)
 local UserInputService = game:GetService("UserInputService")
@@ -15,6 +19,47 @@ local FluxLib = Instance.new("ScreenGui")
 FluxLib.Name = "FluxLib"
 FluxLib.Parent = game.CoreGui
 FluxLib.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+if UserInputService.TouchEnabled and UserInputService.KeyboardEnabled == false then
+	local MobileTog = Instance.new("ScreenGui")
+	local MobileFrame = Instance.new("Frame")
+	local MobilePoint = Instance.new("ImageButton")
+	local MobileUiCorner = Instance.new("UICorner")
+
+	MobileTog.Name = "MobileTog"
+	MobileTog.Parent = game.CoreGui
+
+	MobileFrame.Name = "MobileFrame"
+	MobileFrame.Parent = MobileTog
+	MobileFrame.BackgroundColor3 = Color3.fromRGB(50, 53, 59)
+	MobileFrame.BorderSizePixel = 0
+	MobileFrame.Position = UDim2.new(0.138643891, 0, 0.14973262, 0)
+	MobileFrame.Size = UDim2.new(0, 50, 0, 50)
+
+	MobilePoint.Name = "MobilePoint"
+	MobilePoint.Parent = MobileFrame
+	MobilePoint.BackgroundTransparency = 1.000
+	MobilePoint.LayoutOrder = 5
+	MobilePoint.Position = UDim2.new(0.24000001, 0, 0.24000001, 0)
+	MobilePoint.Size = UDim2.new(0, 25, 0, 25)
+	MobilePoint.ZIndex = 2
+	MobilePoint.Image = "rbxassetid://3926305904"
+	MobilePoint.ImageRectOffset = Vector2.new(604, 764)
+	MobilePoint.ImageRectSize = Vector2.new(36, 36)
+
+	MobileUiCorner.Name = "MobileUiCorner"
+	MobileUiCorner.Parent = MobileFrame
+
+	MobilePoint.MouseButton1Click:Connect(function()
+		if game.CoreGui:FindFirstChild("FluxLib") then
+			if game.CoreGui:FindFirstChild("FluxLib").Enabled == true then
+				game.CoreGui:FindFirstChild("FluxLib").Enabled = false
+			else
+				game.CoreGui:FindFirstChild("FluxLib").Enabled = true
+			end
+		end
+	end)
+end
 
 coroutine.wrap(
 	function()
