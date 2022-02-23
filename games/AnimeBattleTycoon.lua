@@ -1,3 +1,4 @@
+
 repeat wait() until game:IsLoaded()
 
 game:GetService("Players").LocalPlayer.Idled:Connect(function()
@@ -24,6 +25,7 @@ local selectedMob = "G General"
 local Plot
 local mob = {}
 local egg = {}
+local zone = {}
 
 local keys = {
     "Z";
@@ -52,6 +54,10 @@ end
 
 for i, v in pairs(ReplicatedStorage.Assets.Prisms:GetChildren()) do
     table.insert(egg,v.Name)
+end
+
+for i, v in pairs(game:GetService("Workspace").Zones:GetChildren()) do
+    table.insert(zone,v.Name)
 end
 
 function GetNearestMob()
@@ -109,6 +115,32 @@ function noclip()
         end
     end
     Player.Character.HumanoidRootPart.Velocity =  Vector3.new(0,1,0)
+end
+
+function DoQuest()
+    local nearr = math.huge
+    local near
+    local plr = Player.Character.HumanoidRootPart
+    local Quest = game.Players.LocalPlayer.PlayerGui.Display.HUD.Right.Quest.Container.Description
+
+    for i, v in pairs(game:GetService("Workspace").Enemies:GetChildren()) do
+        if v:FindFirstChild("Units") then
+            for i2, v2 in pairs(v.Units:GetChildren()) do
+                if v2:FindFirstChild("Head") and v2.Head:FindFirstChild("Overhead") then
+                    for i3, v3 in pairs(v2.Head.Overhead:GetChildren()) do
+                        if v3.Name == "Name" and string.match(Quest.Text, v3.Text) then
+                            local mag = (plr.CFrame.p - v3.Parent.Parent.Parent.HumanoidRootPart.CFrame.p).Magnitude
+                            if mag < nearr then
+                                near = v3.Parent.Parent.Parent.HumanoidRootPart
+                                nearr = mag
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+    return near
 end
 
 game:GetService("RunService").Stepped:Connect(function()
@@ -266,6 +298,50 @@ end)
 
 FarmingTab:Line()
 
+FarmingTab:Toggle("Farm Boss", "", false, function(t)
+    _G.autoboss = t
+
+    task.spawn(function()
+        while task.wait() do
+            if not _G.autoboss then break end
+            pcall(function()
+                if GetNearestBoss() ~= nil then
+                    isBoss = true
+                    local plr = Player.Character.HumanoidRootPart
+                    plr.CFrame = GetNearestBoss().CFrame * CFrame.new(0,-10,0) * CFrame.Angles(math.rad(90),0,0)
+                    ReplicatedStorage.Modules.ServiceLoader.NetworkService.Events.Objects.UpdateMelee:FireServer("RequestAction","Combat","Combat")
+                    noclip()
+                else 
+                    isBoss = false
+                end
+            end)
+        end
+    end)
+end)
+
+FarmingTab:Toggle("Auto Quest", "", false, function(t)
+    _G.autoquest = t
+
+    task.spawn(function()
+        while task.wait() do
+            if not _G.autoquest then break end
+            pcall(function()
+                local plr = Player.Character.HumanoidRootPart
+                ReplicatedStorage.Modules.ServiceLoader.NetworkService.Events.Objects.UpdateQuest:FireServer("StartQuest",selectedZone)
+                plr.CFrame = DoQuest().CFrame
+                ReplicatedStorage.Modules.ServiceLoader.NetworkService.Events.Objects.UpdateMelee:FireServer("RequestAction","Combat","Combat")
+            end)
+        end
+    end)
+end)
+
+FarmingTab:Dropdown("Select Zone", zone, function(v)
+    selectedZone = v
+    ReplicatedStorage.Modules.ServiceLoader.NetworkService.Functions.Objects.TeleportPlayer:InvokeServer(game:GetService("Workspace").Zones[v].CFrame,v)
+end)
+
+FarmingTab:Line()
+
 FarmingTab:Toggle("Auto Punch", "", false, function(v)
     _G.autopunch = v
 
@@ -301,29 +377,6 @@ FarmingTab:Toggle("Auto Collect Yen", "", false, function(t)
                 for i, v in pairs(game.Workspace.Collectibles:GetChildren()) do 
                     v.CFrame = Player.Character.HumanoidRootPart.CFrame
                     ReplicatedStorage.Modules.ServiceLoader.NetworkService.Events.Objects.UpdateUnits:FireServer("CollectCollectible",v.Name)
-                end
-            end)
-        end
-    end)
-end)
-
-FarmingTab:Line()
-
-FarmingTab:Toggle("Farm All Boss", "", false, function(t)
-    _G.autoboss = t
-
-    task.spawn(function()
-        while task.wait() do
-            if not _G.autoboss then break end
-            pcall(function()
-                if GetNearestBoss() ~= nil then
-                    isBoss = true
-                    local plr = Player.Character.HumanoidRootPart
-                    plr.CFrame = GetNearestBoss().CFrame * CFrame.new(0,-10,0) * CFrame.Angles(math.rad(90),0,0)
-                    ReplicatedStorage.Modules.ServiceLoader.NetworkService.Events.Objects.UpdateMelee:FireServer("RequestAction","Combat","Combat")
-                    noclip()
-                else 
-                    isBoss = false
                 end
             end)
         end
@@ -422,6 +475,18 @@ for i, v in pairs(game:GetService("Workspace").Zones:GetChildren()) do
 end
 
 local MiscTab = w:Tab("Misc", 6031215984)
+
+MiscTab:Toggle("Auto Claim Chest", "", false, function(t)
+    _G.chest = t
+
+    task.spawn(function()
+        while task.wait() do
+            if not _G.chest then break end
+            ReplicatedStorage.Modules.ServiceLoader.NetworkService.Events.Objects.UpdateChests:FireServer("Daily Chest")
+            ReplicatedStorage.Modules.ServiceLoader.NetworkService.Events.Objects.UpdateChests:FireServer("Group Chest")
+        end
+    end)
+end)
 
 MiscTab:Toggle("Auto Hide Nametag", "", false, function(t)
     _G.nametag = t
