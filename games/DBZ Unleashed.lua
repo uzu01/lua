@@ -103,7 +103,7 @@ local w = library:Window("Uzu Scripts", "v1.0.0", Color3.fromRGB(66, 134, 245), 
 local HomeTab = w:Tab("Home", 6026568198)
 local FarmingTab = w:Tab("Farming", 6034287535)
 local ShopTab = w:Tab("Shop", 6031265987)
-local MiscTab = w:Tab("Misc", 6031215984)
+local MiscTab = w:Tab("Misc", 8916127218)
 
 HomeTab:Button("Update:", "", function()
     library:Notification("[+] New Gui [+] Shop Tab", "Thanks")
