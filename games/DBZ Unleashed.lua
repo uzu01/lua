@@ -89,7 +89,7 @@ function bring()
             for i2, v2 in pairs(game:GetService("Workspace").QuestMarkers:GetChildren()) do
                 if v2.Name == v.Quest.Value then
                     sethiddenproperty(game.Players.LocalPlayer, "SimulationRadius", 1000)
-                    plr.CFrame = v2.CFrame
+                    plr.CFrame = v2.CFrame * CFrame.new(0,-20,0)
                     v.HumanoidRootPart.CFrame = plr.CFrame * CFrame.new(0,0,-2)
                 end
             end
