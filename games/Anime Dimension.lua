@@ -113,7 +113,7 @@ if game.GameId == 2655311011 then
         end
     end)
 
-    local library = loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/uzu01/lua/main/ui/uwuware.lua"))()
+    local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/uzu01/lua/main/ui/uwuware.lua"))()
     local window = library:CreateWindow("Anime Dimension")
     local FarmingFolder = window:AddFolder("Farming")
     local SettingFolder = window:AddFolder("Settings")
