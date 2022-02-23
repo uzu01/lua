@@ -474,7 +474,7 @@ for i, v in pairs(game:GetService("Workspace").Zones:GetChildren()) do
     end)
 end
 
-local MiscTab = w:Tab("Misc", 6031215984)
+local MiscTab = w:Tab("Misc", 8916127218)
 
 MiscTab:Toggle("Auto Claim Chest", "", false, function(t)
     _G.chest = t
