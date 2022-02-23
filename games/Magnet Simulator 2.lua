@@ -345,7 +345,7 @@ ShopTab:Toggle("Auto Buy World", "", _G.Settings.buyWorld, function(t)
     end)
 end)
 
-local MiscTab = w:Tab("Misc", 6031215984)
+local MiscTab = w:Tab("Misc", 8916127218)
 
 MiscTab:Toggle("Auto Claim Daily Reward", "", _G.Settings.claimReward, function(t)
     _G.Settings.claimReward = t
