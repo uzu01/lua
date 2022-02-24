@@ -70,12 +70,10 @@ function equipTool()
 end
 
 function startQuest()
-    task.spawn(function()
-        if Player.PlayerGui.QuestGui.Enabled == false then
-            lol = string.split(_G.Settings.selectedMob," [")
-            ReplicatedStorage.FuncQuest:InvokeServer(lol[1])
-        end
-    end)
+	if Player.PlayerGui.QuestGui.Enabled == false then
+		lol = string.split(_G.Settings.selectedMob," [")
+		ReplicatedStorage.FuncQuest:InvokeServer(lol[1])
+	end
 end
 
 function autoHaki()
