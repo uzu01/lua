@@ -148,6 +148,22 @@ FarmingTab:Dropdown("Select Practice Area", area, function(v)
     selectedArea = string.match(v,"%d+")
 end)
 
+FarmingTab:Line()
+
+for i, v in pairs(game:GetService("Workspace")["__SETTINGS"]["__BOSS"]:GetChildren()) do
+    FarmingTab:Toggle("Farm Boss #"..i, "", false, function(value)
+        _G.i = value
+        
+        task.spawn(function()
+            while task.wait() do
+                if not _G.i then break end
+                teleport(v)
+                ReplicatedStorage.Remotes.TappingEvent:FireServer()
+            end
+        end)
+    end)
+end
+
 local HeroesTab = w:Tab("Heroes", 6031260792)
 
 HeroesTab:Toggle("Auto Open Egg v1", "You cant use auto delete", false, function(v)
