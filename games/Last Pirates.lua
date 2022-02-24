@@ -51,9 +51,9 @@ for i, v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
 end
 
 function ClosestLowLevel()
-    local want = 0
+    local want = 5
     for i, v in pairs(mobLevels) do
-        if v <= MyLevel.Value and want < v then
+        if v <= MyLevel.Value and want <= v then
             want = v
         end
     end
@@ -127,12 +127,14 @@ FarmingTab:Toggle("Full Auto Farm", "", false, function(t)
                 for i, v in pairs(game:GetService("Workspace").Lives:GetChildren()) do
                     if v:IsA("Model") and v:FindFirstChild("Humanoid") then
                         if close == tonumber(string.match(v.Name,"%d+")) then
-                            _G.Settings.selectedMob = v.Name
-                            startQuest()
-                            autoHaki()
-                            plr.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0,7,0) * CFrame.Angles(math.rad(-90),0,0)
-                            equipTool()
-                            click()
+                            repeat task.wait()
+                                _G.Settings.selectedMob = v.Name
+                                startQuest()
+                                autoHaki()
+                                plr.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0,7,0) * CFrame.Angles(math.rad(-90),0,0)
+                                equipTool()
+                                click()
+                            until v.Humanoid.Health <= 0 or not _G.Settings.fullfarm
                         end
                     end
                 end
@@ -155,9 +157,11 @@ FarmingTab:Toggle("Auto Farm", "", false, function(t)
                 autoHaki()
                 for i, v in pairs(game.Workspace.Lives:GetChildren()) do
                     if v.Name == _G.Settings.selectedMob and v:FindFirstChild("Humanoid") then
-                        plr.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0,7,0) * CFrame.Angles(math.rad(-90),0,0)
-                        equipTool()
-                        click()
+                        repeat task.wait()
+                            plr.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0,7,0) * CFrame.Angles(math.rad(-90),0,0)
+                            equipTool()
+                            click()
+                        until v.Humanoid.Health <= 0 or not _G.Settings.autofarm
                     end
                 end
             end)
