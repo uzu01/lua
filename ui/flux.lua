@@ -20,47 +20,6 @@ FluxLib.Name = "FluxLib"
 FluxLib.Parent = game.CoreGui
 FluxLib.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
-if UserInputService.TouchEnabled and UserInputService.KeyboardEnabled == false then
-	local MobileTog = Instance.new("ScreenGui")
-	local MobileFrame = Instance.new("Frame")
-	local MobilePoint = Instance.new("ImageButton")
-	local MobileUiCorner = Instance.new("UICorner")
-
-	MobileTog.Name = "MobileTog"
-	MobileTog.Parent = game.CoreGui
-
-	MobileFrame.Name = "MobileFrame"
-	MobileFrame.Parent = MobileTog
-	MobileFrame.BackgroundColor3 = Color3.fromRGB(50, 53, 59)
-	MobileFrame.BorderSizePixel = 0
-	MobileFrame.Position = UDim2.new(0.138643891, 0, 0.14973262, 0)
-	MobileFrame.Size = UDim2.new(0, 50, 0, 50)
-
-	MobilePoint.Name = "MobilePoint"
-	MobilePoint.Parent = MobileFrame
-	MobilePoint.BackgroundTransparency = 1.000
-	MobilePoint.LayoutOrder = 5
-	MobilePoint.Position = UDim2.new(0.24000001, 0, 0.24000001, 0)
-	MobilePoint.Size = UDim2.new(0, 25, 0, 25)
-	MobilePoint.ZIndex = 2
-	MobilePoint.Image = "rbxassetid://3926305904"
-	MobilePoint.ImageRectOffset = Vector2.new(604, 764)
-	MobilePoint.ImageRectSize = Vector2.new(36, 36)
-
-	MobileUiCorner.Name = "MobileUiCorner"
-	MobileUiCorner.Parent = MobileFrame
-
-	MobilePoint.MouseButton1Click:Connect(function()
-		if game.CoreGui:FindFirstChild("FluxLib") then
-			if game.CoreGui:FindFirstChild("FluxLib").Enabled == true then
-				game.CoreGui:FindFirstChild("FluxLib").Enabled = false
-			else
-				game.CoreGui:FindFirstChild("FluxLib").Enabled = true
-			end
-		end
-	end)
-end
-
 coroutine.wrap(
 	function()
 		while wait() do
@@ -254,6 +213,51 @@ function Flux:Window(text, bottom,mainclr,toclose)
 			end
 		end
 	)
+
+    if UserInputService.TouchEnabled and UserInputService.KeyboardEnabled == false then
+        local MobileTog = Instance.new("ScreenGui")
+        local MobileButton = Instance.new("TextButton")
+        local MobileUiCorner = Instance.new("UICorner")
+        local MobileImage = Instance.new("ImageLabel")
+
+        MobileTog.Name = "MobileTog"
+        MobileTog.Parent = game.CoreGui
+
+        MobileButton.Name = "MobileButton"
+        MobileButton.Parent = MobileTog
+        MobileButton.BackgroundColor3 = Color3.fromRGB(50, 53, 59)
+        MobileButton.BorderSizePixel = 0
+        MobileButton.Position = UDim2.new(0.101122171, 0, 0.286440343, 0)
+        MobileButton.Size = UDim2.new(0, 50, 0, 50)
+        MobileButton.Font = Enum.Font.SourceSans
+        MobileButton.Text = ""
+        MobileButton.TextColor3 = Color3.fromRGB(0, 0, 0)
+        MobileButton.TextSize = 14.000
+        MobileButton.Draggable = true
+
+        MobileUiCorner.Name = "MobileUiCorner"
+        MobileUiCorner.Parent = MobileButton
+
+        MobileImage.Name = "MobileImage"
+        MobileImage.Parent = MobileButton
+        MobileImage.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        MobileImage.BackgroundTransparency = 1.000
+        MobileImage.BorderSizePixel = 0
+        MobileImage.Position = UDim2.new(0.234619886, 0, 0.239034846, 0)
+        MobileImage.Size = UDim2.new(0, 25, 0, 25)
+        MobileImage.Image = "http://www.roblox.com/asset/?id=8916128316"
+
+        MobileButton.MouseButton1Click:Connect(function()
+            if game.CoreGui:FindFirstChild("FluxLib").Enabled == true then
+                MainFrame:TweenSize(UDim2.new(0, 0, 0, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quart, .6, true)
+                wait(.5)
+                game.CoreGui:FindFirstChild("FluxLib").Enabled = false
+            else
+                MainFrame:TweenSize(UDim2.new(0, 706, 0, 484), Enum.EasingDirection.Out, Enum.EasingStyle.Quart, .6, true)
+                game.CoreGui:FindFirstChild("FluxLib").Enabled = true	
+            end
+        end)
+    end
 	
 	function Flux:Notification(desc,buttontitle)
 		for i, v in next, MainFrame:GetChildren() do
