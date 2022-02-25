@@ -36,6 +36,7 @@ local Player = game:GetService("Players").LocalPlayer
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local VirtualInputManager = game:GetService("VirtualInputManager")
 local plr = Player.Character.HumanoidRootPart
+local selectedNum = 1
 local reb = {}
 local area = {}
 local egg = {}
@@ -129,17 +130,17 @@ FarmingTab:Toggle("Auto Practice", "", false, function(v)
     task.spawn(function()
         while task.wait() do
             if not _G.Settings.autoPractice then break end
-            for i, v in pairs(game.Workspace.__SETTINGS.__INTERACT:GetChildren()) do
-                if v.Name == "Practice" and v.Boost.Value == tonumber(selectedArea) then
-                    pcall(function() 
+            pcall(function() 
+                for i, v in pairs(game.Workspace.__SETTINGS.__INTERACT:GetChildren()) do
+                    if v.Name == "Practice" and v.Boost.Value == tonumber(selectedArea) then
                         teleport(v)
                         repeat task.wait()
                             VirtualInputManager:SendKeyEvent(true, "E", false, game) task.wait()
                             VirtualInputManager:SendKeyEvent(false, "E", false, game)
                         until not _G.Settings.autoPractice
-                    end)
+                    end
                 end
-            end
+            end)
         end
     end)
 end)
@@ -172,8 +173,10 @@ HeroesTab:Toggle("Auto Open Egg v1", "You cant use auto delete", false, function
     task.spawn(function()
         while task.wait() do
             if not _G.Settings.autoEgg then break end
-            plr.CFrame = selectedEgg.CFrame * CFrame.new(0,0,5)
-            ReplicatedStorage.Remotes.ClientRemote:InvokeServer("EGG",selectedEgg,_G.Settings.tripleEgg,{})
+            pcall(function()
+                plr.CFrame = selectedEgg.CFrame * CFrame.new(0,0,5)
+                ReplicatedStorage.Remotes.ClientRemote:InvokeServer("EGG",selectedEgg,_G.Settings.tripleEgg,{})
+            end)
         end
     end)
 end)
