@@ -161,29 +161,6 @@ FarmingTab:Toggle("Auto Skill", "", false, function(t)
     end)
 end)
 
-FarmingTab:Line()
-
-FarmingTab:Toggle("God Mode", "", false, function(t)
-    _G.godmode = t
-    
-    task.spawn(function()
-        while task.wait() do
-            if not _G.godmode then break end
-            pcall(function()
-                if Player.Character.CharacterValues.DamageDivider then
-                    Player.Character.CharacterValues.DamageDivider:Destroy()
-                end
-            end)
-        end
-    end)
-end)
-
-FarmingTab:Button("Disable Effects", "", function()
-    pcall(function() 
-        game.Workspace.Effects:Destroy() 
-    end)
-end)
-
 ShopTab:Toggle("Auto Buy Arrow", "", false, function(t)
     _G.autoArrow = t
 
@@ -261,6 +238,14 @@ MiscTab:Toggle("Auto Delete Rare Bag", "", false, function(v)
                 end
             end)
         end
+    end)
+end)
+
+MiscTab:Line()
+
+MiscTab:Button("Disable Effects", "", function()
+    pcall(function() 
+        game.Workspace.Effects:Destroy() 
     end)
 end)
 
