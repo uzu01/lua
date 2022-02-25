@@ -69,11 +69,26 @@ function equipTool()
 	Player.Character.Humanoid:EquipTool(Player.Backpack:FindFirstChild(_G.Settings.selectedTool))
 end
 
+local button = game:GetService("Players").LocalPlayer.PlayerGui.QuestGui.X
+local X = button.AbsolutePosition.X + button.AbsoluteSize.X
+local Y = button.AbsolutePosition.Y + button.AbsoluteSize.Y
+
 function startQuest()
 	if Player.PlayerGui.QuestGui.Enabled == false then
 		lol = string.split(_G.Settings.selectedMob," [")
 		ReplicatedStorage.FuncQuest:InvokeServer(lol[1])
 	end
+    task.spawn(function()
+        for i, v in pairs(Player.PlayerGui.QuestGui:GetChildren()) do
+            if i == 3 then
+                local eee = string.split(v.Text," ")
+                if not string.match(_G.Settings.selectedMob,eee[1]) then
+                    VirtualInputManager:SendMouseButtonEvent(X-20, Y+30, 0, true, game, 1)
+                    VirtualInputManager:SendMouseButtonEvent(X-20, Y+30, 0, false, game, 1)
+                end
+            end
+        end
+    end)
 end
 
 function autoHaki()
@@ -151,11 +166,11 @@ FarmingTab:Toggle("Auto Farm", "", false, function(t)
             if not _G.Settings.autofarm then break end
             pcall(function()
                 local plr = Player.Character.HumanoidRootPart
-                startQuest()
-                autoHaki()
                 for i, v in pairs(game.Workspace.Lives:GetChildren()) do
                     if v.Name == _G.Settings.selectedMob and v:FindFirstChild("Humanoid") then
                         repeat task.wait()
+                            startQuest()
+                            autoHaki()
                             plr.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0,7,0) * CFrame.Angles(math.rad(-90),0,0)
                             equipTool()
                             click()
