@@ -1,3 +1,5 @@
+
+
 repeat wait() until game:IsLoaded()
 
 game:GetService("Players").LocalPlayer.Idled:Connect(function()
@@ -14,6 +16,9 @@ _G.Settings = {
     defense = false,
     devil = false,
     autoget = false,
+    mommy = false,
+    factory = false,
+    seashit = false
 }
 
 local Player = game:GetService("Players").LocalPlayer
@@ -21,6 +26,11 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local VirtualUser = game:GetService("VirtualUser")
 local VirtualInputManager = game:GetService("VirtualInputManager")
 local MyLevel = Player.PlayerStats.Level
+
+local isMommy = false
+local isFactory = false
+local isBeast = false
+
 local mobLevels = {}
 local mob = {}
 local tool = {}
@@ -75,12 +85,12 @@ function equipTool()
     Player.Character.Humanoid:EquipTool(Player.Backpack:FindFirstChild(_G.Settings.selectedTool))
 end
 
-local button = game:GetService("Players").LocalPlayer.PlayerGui.QuestGui.X
-local X = button.AbsolutePosition.X + button.AbsoluteSize.X
-local Y = button.AbsolutePosition.Y + button.AbsoluteSize.Y
-
 function startQuest()
     task.spawn(function()
+        local button = Player.PlayerGui.QuestGui.X
+        local X = button.AbsolutePosition.X + button.AbsoluteSize.X
+        local Y = button.AbsolutePosition.Y + button.AbsoluteSize.Y
+
         lol = string.split(_G.Settings.selectedMob," [")
         if Player.PlayerGui.QuestGui.Enabled == false then
             ReplicatedStorage.FuncQuest:InvokeServer(lol[1])
@@ -96,6 +106,14 @@ function autoHaki()
     if not Player.Character:FindFirstChild("Buso") then
         ReplicatedStorage.Haki:FireServer("Buso")
         ReplicatedStorage.HakiRemote:FireServer("Ken")
+    end
+end
+
+function notSpawned()
+    if not isMommy or not isFactory or not isBeast then
+        return true
+    else
+        return false
     end
 end
 
@@ -129,27 +147,55 @@ end)
 
 local FarmingTab = w:Tab("Farming", 6034287535)
 
-FarmingTab:Toggle("Full Auto Farm", "", false, function(t)
+FarmingTab:Toggle("Auto Level Farm", "Farms mob from Level 1 to Max Level", false, function(t)
     _G.Settings.fullfarm = t
 
     task.spawn(function()
         while task.wait() do
             if not _G.Settings.fullfarm then break end
             pcall(function()
-				local plr = Player.Character.HumanoidRootPart
-				local close = ClosestLowLevel()
-				for i, v in pairs(game:GetService("Workspace").Lives:GetChildren()) do
-					if v:IsA("Model") and v:FindFirstChild("Humanoid") then
-						if close == tonumber(string.match(v.Name,"%d+")) then
-							repeat task.wait()
-								_G.Settings.selectedMob = v.Name
-								startQuest()
-								autoHaki()
-								plr.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0,7,0) * CFrame.Angles(math.rad(-90),0,0)
-								equipTool()
-								click()
-							until v.Humanoid.Health <= 0 or not _G.Settings.fullfarm
-						end
+                if notSpawned() then
+                    local plr = Player.Character.HumanoidRootPart
+                    local close = ClosestLowLevel()
+                    for i, v in pairs(game:GetService("Workspace").Lives:GetChildren()) do
+                        if v:IsA("Model") and v:FindFirstChild("Humanoid") then
+                            if close == tonumber(string.match(v.Name,"%d+")) then
+                                repeat task.wait()
+                                    _G.Settings.selectedMob = v.Name
+                                    startQuest()
+                                    autoHaki()
+                                    plr.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0,7,0) * CFrame.Angles(math.rad(-90),0,0)
+                                    equipTool()
+                                    click()
+                                until v.Humanoid.Health <= 0 or not _G.Settings.fullfarm or notSpawned() == false
+                            end
+                        end
+                    end
+                end
+            end)
+        end
+    end)
+end)
+
+FarmingTab:Toggle("Auto Farm Selected Mob", "Farms Selected Mob", false, function(t)
+    _G.Settings.autofarm = t
+
+    task.spawn(function()
+        while task.wait() do
+            if not _G.Settings.autofarm then break end
+            pcall(function()
+                if notSpawned() then
+                    local plr = Player.Character.HumanoidRootPart
+                    for i, v in pairs(game.Workspace.Lives:GetChildren()) do
+                        if v.Name == _G.Settings.selectedMob and v:FindFirstChild("Humanoid") then
+                            repeat task.wait()
+                                startQuest()
+                                autoHaki()
+                                plr.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0,7,0) * CFrame.Angles(math.rad(-90),0,0)
+                                equipTool()
+                                click()
+                            until v.Humanoid.Health <= 0 or not _G.Settings.autofarm or notSpawned() == false
+                        end
                     end
                 end
             end)
@@ -159,35 +205,82 @@ end)
 
 FarmingTab:Line()
 
-FarmingTab:Toggle("Auto Farm", "", false, function(t)
-    _G.Settings.autofarm = t
+FarmingTab:Toggle("Auto Farm Big Mom", "", false, function(t)
+    _G.Settings.mommy = t
 
     task.spawn(function()
         while task.wait() do
-            if not _G.Settings.autofarm then break end
+            if not _G.Settings.mommy then break end
             pcall(function()
-				local plr = Player.Character.HumanoidRootPart
-				for i, v in pairs(game.Workspace.Lives:GetChildren()) do
-					if v.Name == _G.Settings.selectedMob and v:FindFirstChild("Humanoid") then
-						repeat task.wait()
-							startQuest()
-							autoHaki()
-							plr.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0,7,0) * CFrame.Angles(math.rad(-90),0,0)
-							equipTool()
-							click()
-						until v.Humanoid.Health <= 0 or not _G.Settings.autofarm
-					end
-				end
+                local plr = Player.Character.HumanoidRootPart
+                for i, v in pairs(game:GetService("Workspace").Lives:GetChildren()) do
+                    if v:IsA("Model") and v:FindFirstChild("Folder") and v.Name == "Soul Boss" then
+                        isMommy = true
+                        autoHaki()
+                        plr.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0,-7,0) * CFrame.Angles(math.rad(90),0,0)
+                        equipTool()
+                        click()
+                    end
+                end
+                isMommy = false
             end)
         end
     end)
 end)
 
+FarmingTab:Toggle("Auto Farm Factory", "", false, function(t)
+    _G.Settings.factory = t
+
+    task.spawn(function()
+        while task.wait() do
+            if not _G.Settings.factory then break end
+            pcall(function()
+                local plr = Player.Character.HumanoidRootPart
+                for i, v in pairs(game:GetService("Workspace").Lives:GetChildren()) do
+                    if v:IsA("Model") and v:FindFirstChild("Folder") and v.Name == "Factory" then
+                        isFactory = true
+                        autoHaki()
+                        plr.CFrame = v.HumanoidRootPart.CFrame
+                        equipTool()
+                        click()
+                    end
+                end
+                isFactory = false
+            end)
+        end
+    end)
+end)
+
+FarmingTab:Toggle("Auto Farm Sea Beast", "", false, function(t)
+    _G.Settings.seashit = t
+
+    task.spawn(function()
+        while task.wait() do
+            if not _G.Settings.seashit then break end
+            pcall(function()
+                local plr = Player.Character.HumanoidRootPart
+                for i, v in pairs(game:GetService("Workspace").Lives:GetChildren()) do
+                    if v:IsA("Model") and v:FindFirstChild("Folder") and v.Name == "Sea Beast" then
+                        isBeast = true
+                        autoHaki()
+                        plr.CFrame = v.HumanoidRootPart.CFrame
+                        equipTool()
+                        click()
+                    end
+                end
+                isBeast = false
+            end)
+        end
+    end)
+end)
+
+FarmingTab:Line()
+
 local mobDrop = FarmingTab:Dropdown("Select Mob", mob, function(v)
     _G.Settings.selectedMob = v
 end)
 
-FarmingTab:Button("Refresh Mob"," ", function()
+FarmingTab:Button("Refresh Mob","", function()
     mobDrop:Clear()
 
     local mob = {}
