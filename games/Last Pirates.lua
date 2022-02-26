@@ -21,8 +21,6 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local VirtualUser = game:GetService("VirtualUser")
 local VirtualInputManager = game:GetService("VirtualInputManager")
 local MyLevel = Player.PlayerStats.Level
-local isBoss = false
-local isSeaBeast = false
 local mobLevels = {}
 local mob = {}
 local tool = {}
@@ -138,22 +136,20 @@ FarmingTab:Toggle("Full Auto Farm", "", false, function(t)
         while task.wait() do
             if not _G.Settings.fullfarm then break end
             pcall(function()
-                if isBoss == false and isSeaBeast == false then
-                    local plr = Player.Character.HumanoidRootPart
-                    local close = ClosestLowLevel()
-                    for i, v in pairs(game:GetService("Workspace").Lives:GetChildren()) do
-                        if v:IsA("Model") and v:FindFirstChild("Humanoid") then
-                            if close == tonumber(string.match(v.Name,"%d+")) then
-                                repeat task.wait()
-                                    _G.Settings.selectedMob = v.Name
-                                    startQuest()
-                                    autoHaki()
-                                    plr.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0,7,0) * CFrame.Angles(math.rad(-90),0,0)
-                                    equipTool()
-                                    click()
-                                until v.Humanoid.Health <= 0 or not _G.Settings.fullfarm
-                            end
-                        end
+				local plr = Player.Character.HumanoidRootPart
+				local close = ClosestLowLevel()
+				for i, v in pairs(game:GetService("Workspace").Lives:GetChildren()) do
+					if v:IsA("Model") and v:FindFirstChild("Humanoid") then
+						if close == tonumber(string.match(v.Name,"%d+")) then
+							repeat task.wait()
+								_G.Settings.selectedMob = v.Name
+								startQuest()
+								autoHaki()
+								plr.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0,7,0) * CFrame.Angles(math.rad(-90),0,0)
+								equipTool()
+								click()
+							until v.Humanoid.Health <= 0 or not _G.Settings.fullfarm
+						end
                     end
                 end
             end)
@@ -170,20 +166,18 @@ FarmingTab:Toggle("Auto Farm", "", false, function(t)
         while task.wait() do
             if not _G.Settings.autofarm then break end
             pcall(function()
-                if isBoss == false and isSeaBeast == false then
-                    local plr = Player.Character.HumanoidRootPart
-                    for i, v in pairs(game.Workspace.Lives:GetChildren()) do
-                        if v.Name == _G.Settings.selectedMob and v:FindFirstChild("Humanoid") then
-                            repeat task.wait()
-                                startQuest()
-                                autoHaki()
-                                plr.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0,7,0) * CFrame.Angles(math.rad(-90),0,0)
-                                equipTool()
-                                click()
-                            until v.Humanoid.Health <= 0 or not _G.Settings.autofarm
-                        end
-                    end
-                end
+				local plr = Player.Character.HumanoidRootPart
+				for i, v in pairs(game.Workspace.Lives:GetChildren()) do
+					if v.Name == _G.Settings.selectedMob and v:FindFirstChild("Humanoid") then
+						repeat task.wait()
+							startQuest()
+							autoHaki()
+							plr.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0,7,0) * CFrame.Angles(math.rad(-90),0,0)
+							equipTool()
+							click()
+						until v.Humanoid.Health <= 0 or not _G.Settings.autofarm
+					end
+				end
             end)
         end
     end)
@@ -239,32 +233,6 @@ FarmingTab:Toggle("Auto Skill", "", false, function(t)
         while task.wait() do
             if not _G.Settings.autoskill then break end
             useSkill()
-        end
-    end)
-end)
-
-FarmingTab:Line()
-
-FarmingTab:Toggle("Auto Sea Beast", "", false, function(t)
-    _G.Settings.sb = t
-
-    task.spawn(function()
-        while task.wait() do
-            if not _G.Settings.sb then break end
-            pcall(function()
-                for i, v in pairs(game:GetService("Workspace").Lives:GetChildren()) do
-                    if v:IsA("Model") and v:FindFirstChild("Folder") and v.Name == "Sea Beast" then
-                        isSeaBeast = true
-                        repeat task.wait()
-                            autoHaki()
-                            plr.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0,7,0) * CFrame.Angles(math.rad(-90),0,0)
-                            equipTool()
-                            click()
-                        until v.Humanoid.Health <= 0 or not _G.Settings.sb
-                        isSeaBeast = false
-                    end
-                end
-            end)
         end
     end)
 end)
