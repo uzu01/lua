@@ -167,7 +167,7 @@ end
 
 local HeroesTab = w:Tab("Heroes", 6031260792)
 
-HeroesTab:Toggle("Auto Open Egg v1", "You cant use auto delete", false, function(v)
+HeroesTab:Toggle("Auto Open Egg #1", "You cant use auto delete", false, function(v)
     _G.Settings.autoEgg = v
 
     task.spawn(function()
@@ -181,7 +181,7 @@ HeroesTab:Toggle("Auto Open Egg v1", "You cant use auto delete", false, function
     end)
 end)
 
-HeroesTab:Toggle("Auto Open Egg v2", "You can use auto delete", false, function(v)
+HeroesTab:Toggle("Auto Open Egg #2", "You can use auto delete", false, function(v)
     _G.Settings.autoEgg2 = v
 
     task.spawn(function()
@@ -190,8 +190,9 @@ HeroesTab:Toggle("Auto Open Egg v2", "You can use auto delete", false, function(
             pcall(function() 
                 teleport(selectedEgg)
                 repeat task.wait()
-                    VirtualInputManager:SendKeyEvent(true, "E", false, game) task.wait()
+                    VirtualInputManager:SendKeyEvent(true, "E", false, game)
                     VirtualInputManager:SendKeyEvent(false, "E", false, game)
+                    task.wait(.5)
                     if _G.Settings.tripleEgg == "1" then
                         firesignal(Player.PlayerGui.Ui.CenterFrame.BuyEgg.Frame.Buy1.Button.MouseButton1Click)
                     elseif _G.Settings.tripleEgg == "2" then
