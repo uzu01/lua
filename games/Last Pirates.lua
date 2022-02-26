@@ -82,14 +82,16 @@ local X = button.AbsolutePosition.X + button.AbsoluteSize.X
 local Y = button.AbsolutePosition.Y + button.AbsoluteSize.Y
 
 function startQuest()
-    lol = string.split(_G.Settings.selectedMob," [")
-	if Player.PlayerGui.QuestGui.Enabled == false then
-		ReplicatedStorage.FuncQuest:InvokeServer(lol[1])
-	end
-    if lol[1] ~= Player.Quest.Doing.Value and Player.Quest.Doing.Value ~= "None" then
-        VirtualInputManager:SendMouseButtonEvent(X-20, Y+30, 0, true, game, 1)
-        VirtualInputManager:SendMouseButtonEvent(X-20, Y+30, 0, false, game, 1)
-    end
+    task.spawn(function()
+        lol = string.split(_G.Settings.selectedMob," [")
+        if Player.PlayerGui.QuestGui.Enabled == false then
+            ReplicatedStorage.FuncQuest:InvokeServer(lol[1])
+        end
+        if lol[1] ~= Player.Quest.Doing.Value and Player.Quest.Doing.Value ~= "None" then
+            VirtualInputManager:SendMouseButtonEvent(X-20, Y+30, 0, true, game, 1)
+            VirtualInputManager:SendMouseButtonEvent(X-20, Y+30, 0, false, game, 1)
+        end
+    end)
 end
 
 function autoHaki()
@@ -242,30 +244,6 @@ FarmingTab:Toggle("Auto Skill", "", false, function(t)
 end)
 
 FarmingTab:Line()
-
-FarmingTab:Toggle("Auto Farm Boss", "", false, function(t)
-    _G.Settings.autoboss = t
-
-    task.spawn(function()
-        while task.wait() do
-            if not _G.Settings.autoboss then break end
-            pcall(function()
-                for i, v in pairs(game:GetService("Workspace").Lives:GetChildren()) do
-                    if v:IsA("Model") and v:FindFirstChild("Folder") and not string.match(v.Name,"SkyBandit") and not string.match(v.Name,"Fishman") and string.match(v.Name,"Boss") then
-                        isBoss = true
-                        repeat task.wait()
-                            autoHaki()
-                            plr.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0,7,0) * CFrame.Angles(math.rad(-90),0,0)
-                            equipTool()
-                            click()
-                        until v.Humanoid.Health <= 0 or not _G.Settings.autoboss
-                        isBoss = false
-                    end
-                end
-            end)
-        end
-    end)
-end)
 
 FarmingTab:Toggle("Auto Sea Beast", "", false, function(t)
     _G.Settings.sb = t
