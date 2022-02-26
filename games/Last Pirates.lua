@@ -192,14 +192,11 @@ FarmingTab:Button("Refresh Mob"," ", function()
 
     local mob = {}
 
-    for i, v in pairs(game:GetService("Workspace").Lives:GetChildren()) do
-        if v:IsA("Model") and v:FindFirstChild("Folder") and string.match(v.Name,"%d+") and not table.find(mob,v.Name) then
-            table.insert(mob,v.Name)
-        end
-    end
-
-    table.sort(mob, function(a,b) return tonumber(string.match(a,"%d+")) < tonumber(string.match(b,"%d+")) end)
-
+   for i, v in pairs(game:GetService("Workspace").Lives:GetChildren()) do
+		if v:IsA("Model") and v:FindFirstChild("Folder") and not table.find(mob,v.Name) then
+			table.insert(mob,v.Name)
+		end
+	end
 
     for i, v in pairs(mob) do
         mobDrop:Add(v)
