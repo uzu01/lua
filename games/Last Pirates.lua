@@ -41,12 +41,10 @@ for i, v in pairs(game:GetService("Workspace").Lives:GetChildren()) do
 end
 
 for i, v in pairs(game:GetService("Workspace").Lives:GetChildren()) do
-    if v:IsA("Model") and v:FindFirstChild("Folder") and string.match(v.Name,"%d+") and not table.find(mob,v.Name) then
+    if v:IsA("Model") and v:FindFirstChild("Folder" not table.find(mob,v.Name) then
         table.insert(mob,v.Name)
     end
 end
-
-table.sort(mob, function(a,b) return tonumber(string.match(a,"%d+")) < tonumber(string.match(b,"%d+")) end)
 
 for i, v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
 	if v:IsA("Tool") then
@@ -76,7 +74,7 @@ function click()
 end
 
 function equipTool()
-	Player.Character.Humanoid:EquipTool(Player.Backpack:FindFirstChild(_G.Settings.selectedTool))
+    Player.Character.Humanoid:EquipTool(Player.Backpack:FindFirstChild(_G.Settings.selectedTool))
 end
 
 local button = game:GetService("Players").LocalPlayer.PlayerGui.QuestGui.X
@@ -245,7 +243,7 @@ end)
 
 FarmingTab:Line()
 
-FarmingTab:Toggle("Auto Boss", "", false, function(t)
+FarmingTab:Toggle("Auto Farm Boss", "", false, function(t)
     _G.Settings.autoboss = t
 
     task.spawn(function()
