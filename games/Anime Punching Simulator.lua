@@ -364,16 +364,6 @@ end)
 
 MiscTab:Line()
 
-MiscTab:Slider("Walk Speed", "",18, 100, 0, function(v)
-    Player.Character.Humanoid.WalkSpeed = v
-end)
-
-MiscTab:Slider("Jump Height", "", 7.5, 100, 0, function(v)
-    Player.Character.Humanoid.JumpPower = v
-end)
-
-MiscTab:Line()
-
 MiscTab:Button("Rejoin", "", function()
     game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId,game.JobId,game.Players.LocalPlayer)
 end)
