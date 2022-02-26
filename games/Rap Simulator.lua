@@ -28,8 +28,8 @@ for i, v in pairs(game:GetService("Workspace"):GetDescendants()) do
     end
 end
 
-table.sort(prod, function(a,b) return string.match(a,"%d") < string.match(b,"%d") end)
-table.sort(comp, function(a,b) return string.match(a,"%d") < string.match(b,"%d") end)
+table.sort(prod, function(a,b) return tonumber(string.match(a,"%d")) < tonumber(string.match(b,"%d")) end)
+table.sort(comp, function(a,b) return tonumber(string.match(a,"%d")) < tonumber(string.match(b,"%d")) end)
  
 local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/uzu01/lua/main/ui/wallyv2.lua", true))()
 local w = library:CreateWindow("Farming")
