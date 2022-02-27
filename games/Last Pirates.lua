@@ -127,7 +127,7 @@ function autoHaki()
 end
 
 function notSpawned()
-    if not isMommy or not isFactory or not isBeast or not isTree or not isGolem or not isTurtle or not isGhost then
+    if not isMommy and not isFactory and not isBeast and not isTree and not isGolem and not isTurtle and not isGhost then
         return true
     else
         return false
