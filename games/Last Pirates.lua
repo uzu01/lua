@@ -285,7 +285,7 @@ FarmingTab:Toggle("Auto Farm Big Mom", "", false, function(t)
             pcall(function()
                 local plr = Player.Character.HumanoidRootPart
                 for i, v in pairs(game:GetService("Workspace").Lives:GetChildren()) do
-                    if v:IsA("Model") and v:FindFirstChild("Folder") and v.Name == "Soul Boss" then
+                    if v:IsA("Model") and v:FindFirstChild("Folder") and string.match(v.Name,"Soul Boss") then
                         repeat task.wait()
                             isMommy = true
                             autoHaki()
@@ -310,7 +310,7 @@ FarmingTab:Toggle("Auto Farm Sea Beast", "", false, function(t)
             pcall(function()
                 local plr = Player.Character.HumanoidRootPart
                 for i, v in pairs(game:GetService("Workspace").Lives:GetChildren()) do
-                    if v:IsA("Model") and v:FindFirstChild("Folder") and v.Name == "Sea Beast" then
+                    if v:IsA("Model") and v:FindFirstChild("Folder") and string.match(v.Name,"Sea Beast") then
                         repeat task.wait()
                             isBeast = true
                             autoHaki()
@@ -335,7 +335,7 @@ FarmingTab:Toggle("Auto Farm Golem", "", false, function(t)
             pcall(function()
                 local plr = Player.Character.HumanoidRootPart
                 for i, v in pairs(game:GetService("Workspace").Lives:GetChildren()) do
-                    if v:IsA("Model") and v:FindFirstChild("Folder") and v.Name == "Golem" then
+                    if v:IsA("Model") and v:FindFirstChild("Folder") and string.match("Golem") then
                         repeat task.wait()
                             isGolem = true
                             autoHaki()
@@ -360,7 +360,7 @@ FarmingTab:Toggle("Auto Farm Tree Monster", "", false, function(t)
             pcall(function()
                 local plr = Player.Character.HumanoidRootPart
                 for i, v in pairs(game:GetService("Workspace").Lives:GetChildren()) do
-                    if v:IsA("Model") and v:FindFirstChild("Folder") and v.Name == "Tree Monster" then
+                    if v:IsA("Model") and v:FindFirstChild("Folder") and string.match(v.Name,"Tree Monster") then
                         repeat task.wait()
                             isTree = true
                             autoHaki()
