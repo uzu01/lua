@@ -184,7 +184,7 @@ FarmingTab:Toggle("Auto Level Farm", "Farms mob from Level 1 to Max Level", fals
                                     plr.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0,7,0) * CFrame.Angles(math.rad(-90),0,0)
                                     equipTool()
                                     click()
-                                until v.Humanoid.Health <= 0 or not _G.Settings.fullfarm or notSpawned() == false
+                                until v.Humanoid.Health <= 0 or not v.HumanoidRootPart or not _G.Settings.fullfarm or notSpawned() == false
                             end
                         end
                     end
@@ -211,7 +211,7 @@ FarmingTab:Toggle("Auto Farm Selected Mob", "Farms Selected Mob", false, functio
                                 plr.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0,7,0) * CFrame.Angles(math.rad(-90),0,0)
                                 equipTool()
                                 click()
-                            until v.Humanoid.Health <= 0 or not _G.Settings.autofarm or notSpawned() == false
+                            until v.Humanoid.Health <= 0 or not v.HumanoidRootPart or not _G.Settings.autofarm or notSpawned() == false
                         end
                     end
                 end
@@ -292,7 +292,7 @@ FarmingTab:Toggle("Auto Farm Big Mom", "", false, function(t)
                             plr.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0,-7,0) * CFrame.Angles(math.rad(90),0,0)
                             equipTool()
                             click()
-                        until v.Humanoid.Health <= 0 or not _G.Settings.mommy
+                        until v.Humanoid.Health <= 0 or not v.HumanoidRootPart or not _G.Settings.mommy
                     end
                 end
                 isMommy = false
@@ -317,7 +317,7 @@ FarmingTab:Toggle("Auto Farm Sea Beast", "", false, function(t)
                             plr.CFrame = v.HumanoidRootPart.CFrame
                             equipTool()
                             click()
-                        until v.Humanoid.Health <= 0 or not _G.Settings.seashit
+                        until v.Humanoid.Health <= 0 or not v.HumanoidRootPart or not _G.Settings.seashit
                     end
                 end
                 isBeast = false
@@ -342,7 +342,7 @@ FarmingTab:Toggle("Auto Farm Golem", "", false, function(t)
                             plr.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0,10,0) * CFrame.Angles(math.rad(-90),0,0)
                             equipTool()
                             click()
-                        until v.Humanoid.Health <= 0 or not _G.Settings.golem
+                        until v.Humanoid.Health <= 0 or not v.HumanoidRootPart or not _G.Settings.golem
                     end
                 end
                 isGolem = false
@@ -367,7 +367,7 @@ FarmingTab:Toggle("Auto Farm Tree Monster", "", false, function(t)
                             plr.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0,7,0) * CFrame.Angles(math.rad(-90),0,0)
                             equipTool()
                             click()
-                        until v.Humanoid.Health <= 0 or not _G.Settings.tree
+                        until v.Humanoid.Health <= 0 or not v.HumanoidRootPart or not _G.Settings.tree
                     end
                 end
                 isTree = false
@@ -392,7 +392,7 @@ FarmingTab:Toggle("Auto Farm Duke Turtle", "", false, function(t)
                             plr.CFrame = v.HumanoidRootPart.CFrame
                             equipTool()
                             click()
-                        until v.Humanoid.Health <= 0 or not _G.Settings.turtle
+                        until v.Humanoid.Health <= 0 or not v.HumanoidRootPart or not _G.Settings.turtle
                     end
                 end
                 isTurtle = false
