@@ -376,6 +376,31 @@ FarmingTab:Toggle("Auto Farm Tree Monster", "", false, function(t)
     end)
 end)
 
+FarmingTab:Toggle("Auto Farm Duke Turtle", "", false, function(t)
+    _G.Settings.turtle = t
+
+    task.spawn(function()
+        while task.wait() do
+            if not _G.Settings.turtle then break end
+            pcall(function()
+                local plr = Player.Character.HumanoidRootPart
+                for i, v in pairs(game:GetService("Workspace").Lives:GetChildren()) do
+                    if v:IsA("Model") and v:FindFirstChild("Folder") and v.Name == "Duke Turtle" then
+                        repeat task.wait()
+                            isTurtle = true
+                            autoHaki()
+                            plr.CFrame = v.HumanoidRootPart.CFrame
+                            equipTool()
+                            click()
+                        until v.Humanoid.Health <= 0 or not _G.Settings.turtle
+                    end
+                end
+                isTurtle = false
+            end)
+        end
+    end)
+end)
+
 FarmingTab:Line()
 
 FarmingTab:Toggle("Auto Farm Factory", "", false, function(t)
