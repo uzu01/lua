@@ -245,7 +245,7 @@ function Flux:Window(text, bottom,mainclr,toclose)
         MobileImage.BorderSizePixel = 0
         MobileImage.Position = UDim2.new(0.234619886, 0, 0.239034846, 0)
         MobileImage.Size = UDim2.new(0, 25, 0, 25)
-        MobileImage.Image = "http://www.roblox.com/asset/?id=8916128316"
+        MobileImage.Image = "rbxthumb://type=Asset&id=8916128316&w=420&h=420"
 
         MobileButton.MouseButton1Click:Connect(function()
             if game.CoreGui:FindFirstChild("FluxLib").Enabled == true then
