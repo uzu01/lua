@@ -1,5 +1,3 @@
-
-
 repeat wait() until game:IsLoaded()
 
 game:GetService("Players").LocalPlayer.Idled:Connect(function()
@@ -21,6 +19,8 @@ _G.Settings = {
     seashit = false,
     golem = false,
     tree = false,
+    turtle = false,
+    ghost = false,
     lp = false,
 }
 
@@ -35,6 +35,8 @@ local isFactory = false
 local isBeast = false
 local isTree = false
 local isGolem = false
+local isTurtle = false
+local isGhost = false
 local isHaki = false
 
 local mobLevels = {}
@@ -125,7 +127,7 @@ function autoHaki()
 end
 
 function notSpawned()
-    if not isMommy or not isFactory or not isBeast or not isTree or not isGolem then
+    if not isMommy or not isFactory or not isBeast or not isTree or not isGolem or not isTurtle or not isGhost then
         return true
     else
         return false
@@ -244,24 +246,21 @@ local toolDrop = FarmingTab:Dropdown("Select Tool", tool, function(v)
     _G.Settings.selectedTool = v
 end)
 
-pcall(function()
-    Player.Backpack.ChildAdded:Connect(function(asd)
-        if asd:IsA("Tool") then
-            toolDrop:Clear()
 
-            local tool = {}
+FarmingTab:Button("Refresh Tool","", function()
+    toolDrop:Clear()
 
-            for i, v in pairs(Player.Backpack:GetChildren()) do
-                if v:IsA("Tool") then
-                    table.insert(tool,v.Name)
-                end
-            end
+   local tool = {}
 
-            for i, v in pairs(tool) do
-                toolDrop:Add(v)
-            end
+    for i, v in pairs(Player.Backpack:GetChildren()) do
+        if v:IsA("Tool") then
+            table.insert(tool,v.Name)
         end
-    end)
+    end
+
+    for i, v in pairs(tool) do
+        toolDrop:Add(v)
+    end
 end)
 
 FarmingTab:Toggle("Auto Skill", "", false, function(t)
@@ -287,11 +286,13 @@ FarmingTab:Toggle("Auto Farm Big Mom", "", false, function(t)
                 local plr = Player.Character.HumanoidRootPart
                 for i, v in pairs(game:GetService("Workspace").Lives:GetChildren()) do
                     if v:IsA("Model") and v:FindFirstChild("Folder") and v.Name == "Soul Boss" then
-                        isMommy = true
-                        autoHaki()
-                        plr.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0,-7,0) * CFrame.Angles(math.rad(90),0,0)
-                        equipTool()
-                        click()
+                        repeat task.wait()
+                            isMommy = true
+                            autoHaki()
+                            plr.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0,-7,0) * CFrame.Angles(math.rad(90),0,0)
+                            equipTool()
+                            click()
+                        until v.Humanoid.Health <= 0 or not _G.Settings.mommy
                     end
                 end
                 isMommy = false
@@ -310,11 +311,13 @@ FarmingTab:Toggle("Auto Farm Sea Beast", "", false, function(t)
                 local plr = Player.Character.HumanoidRootPart
                 for i, v in pairs(game:GetService("Workspace").Lives:GetChildren()) do
                     if v:IsA("Model") and v:FindFirstChild("Folder") and v.Name == "Sea Beast" then
-                        isBeast = true
-                        autoHaki()
-                        plr.CFrame = v.HumanoidRootPart.CFrame
-                        equipTool()
-                        click()
+                        repeat task.wait()
+                            isBeast = true
+                            autoHaki()
+                            plr.CFrame = v.HumanoidRootPart.CFrame
+                            equipTool()
+                            click()
+                        until v.Humanoid.Health <= 0 or not _G.Settings.seashit
                     end
                 end
                 isBeast = false
@@ -333,11 +336,13 @@ FarmingTab:Toggle("Auto Farm Golem", "", false, function(t)
                 local plr = Player.Character.HumanoidRootPart
                 for i, v in pairs(game:GetService("Workspace").Lives:GetChildren()) do
                     if v:IsA("Model") and v:FindFirstChild("Folder") and v.Name == "Golem" then
-                        isGolem= true
-                        autoHaki()
-                        plr.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0,10,0) * CFrame.Angles(math.rad(-90),0,0)
-                        equipTool()
-                        click()
+                        repeat task.wait()
+                            isGolem = true
+                            autoHaki()
+                            plr.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0,10,0) * CFrame.Angles(math.rad(-90),0,0)
+                            equipTool()
+                            click()
+                        until v.Humanoid.Health <= 0 or not _G.Settings.golem
                     end
                 end
                 isGolem = false
@@ -356,11 +361,13 @@ FarmingTab:Toggle("Auto Farm Tree Monster", "", false, function(t)
                 local plr = Player.Character.HumanoidRootPart
                 for i, v in pairs(game:GetService("Workspace").Lives:GetChildren()) do
                     if v:IsA("Model") and v:FindFirstChild("Folder") and v.Name == "Tree Monster" then
-                        isTree = true
-                        autoHaki()
-                        plr.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0,7,0) * CFrame.Angles(math.rad(-90),0,0)
-                        equipTool()
-                        click()
+                        repeat task.wait()
+                            isTree = true
+                            autoHaki()
+                            plr.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0,7,0) * CFrame.Angles(math.rad(-90),0,0)
+                            equipTool()
+                            click()
+                        until v.Humanoid.Health <= 0 or not _G.Settings.tree
                     end
                 end
                 isTree = false
@@ -381,11 +388,13 @@ FarmingTab:Toggle("Auto Farm Factory", "", false, function(t)
                 local plr = Player.Character.HumanoidRootPart
                 for i, v in pairs(game:GetService("Workspace").Lives:GetChildren()) do
                     if v:IsA("Model") and v:FindFirstChild("Folder") and v.Name == "Factory" then
-                        isFactory = true
-                        autoHaki()
-                        plr.CFrame = v.HumanoidRootPart.CFrame
-                        equipTool()
-                        click()
+                        repeat task.wait() 
+                            isFactory = true
+                            autoHaki()
+                            plr.CFrame = v.HumanoidRootPart.CFrame
+                            equipTool()
+                            click()
+                        until v.Humanoid.Health <= 0 or not _G.Settings.factory
                     end
                 end
                 isFactory = false
