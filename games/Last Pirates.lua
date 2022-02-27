@@ -29,6 +29,7 @@ local MyLevel = Player.PlayerStats.Level
 local isMommy = false
 local isFactory = false
 local isBeast = false
+local isHaki = false
 
 local mobLevels = {}
 local mob = {}
@@ -102,13 +103,17 @@ function startQuest()
 end
 
 function autoHaki()
-    if not Player.Character:FindFirstChild("Buso") then
-        ReplicatedStorage.Haki:FireServer("Buso")
+	if not isHaki then
+        isHaki = true
+        if not Player.Character:FindFirstChild("Buso") then
+            ReplicatedStorage.Haki:FireServer("Buso")
+        end
+        wait(2)
+        if not Player.Character:FindFirstChild("Dodge") then
+            ReplicatedStorage.HakiRemote:FireServer("Ken")
+        end
+        isHaki = false
     end
-	wait(2)
-	if not Player.Character:FindFirstChild("Dodge") then
-		ReplicatedStorage.HakiRemote:FireServer("Ken")
-	end
 end
 
 function notSpawned()
