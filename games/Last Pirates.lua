@@ -1,5 +1,3 @@
-
-
 repeat wait() until game:IsLoaded()
 
 game:GetService("Players").LocalPlayer.Idled:Connect(function()
@@ -18,7 +16,8 @@ _G.Settings = {
     autoget = false,
     mommy = false,
     factory = false,
-    seashit = false
+    seashit = false,
+    lp = false
 }
 
 local Player = game:GetService("Players").LocalPlayer
@@ -392,7 +391,12 @@ end)
 
 shopTab:Button("Random Fruit"," ", function()
     local plr = Player.Character.HumanoidRootPart
-    plr.CFrame = game:GetService("Workspace").RandomFruit.HumanoidRootPart.CFrame
+    plr.CFrame = game:GetService("Workspace")["Random Fruit LP"].HumanoidRootPart.CFrame
+end)
+
+shopTab:Button("Random Cupid Box", "", function()
+    local plr = Player.Character.HumanoidRootPart
+    plr.CFrame = CFrame.new(-5117.9814453125, 59.019378662109375, -5767.9091796875)
 end)
 
 shopTab:Button("Black Leg"," ", function()
@@ -450,6 +454,24 @@ for i, v in pairs(game:GetService("Workspace")["Spawn island"]:GetChildren()) do
 end
 
 local MiscTab = w:Tab("Misc", 8916127218)
+
+MiscTab:Toggle("Auto Get LP", "", false, function(t)
+    _G.Settings.lp = t
+
+    task.spawn(function()
+        while task.wait() do
+            if not _G.Settings.lp then break end
+            for i, v in pairs(game:GetService("Workspace"):GetChildren()) do
+                if v.Name == "Part" and v:FindFirstChild("ProximityPrompt") then
+                    if not v.ProximityPrompt:FindFirstChild("Script") then
+                        Player.Character.HumanoidRootPart.CFrame = v.CFrame
+                        fireproximityprompt(v.ProximityPrompt)
+                    end
+                end
+            end
+        end
+    end)
+end)
 
 MiscTab:Toggle("Auto Get Devil Fruit", "", false, function(t)
     _G.Settings.autoget = t
