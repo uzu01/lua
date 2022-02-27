@@ -314,7 +314,10 @@ ShopTab:Toggle("Auto Buy Grimoire", "", false, function(v)
     task.spawn(function()
         while task.wait() do
             if not _G.Settings.autoGrimoire then break end
-            ReplicatedStorage.Remotes.ClientRemote:InvokeServer("GRIMOIRE")
+            pcall(function()
+                Player.Character.HumanoidRootPart.CFrame = game:GetService("Workspace")["__SETTINGS"]["__INTERACT"].Grimoire.CFrame
+                ReplicatedStorage.Remotes.ClientRemote:InvokeServer("GRIMOIRE")
+            end)
         end
     end)
 end)
