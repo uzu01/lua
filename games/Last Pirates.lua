@@ -105,6 +105,7 @@ function autoHaki()
     if not Player.Character:FindFirstChild("Buso") then
         ReplicatedStorage.Haki:FireServer("Buso")
     end
+	wait(2)
 	if not Player.Character:FindFirstChild("Dodge") then
 		ReplicatedStorage.HakiRemote:FireServer("Ken")
 	end
