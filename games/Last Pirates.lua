@@ -142,6 +142,15 @@ function useSkill()
     end
 end
 
+function getBoss(asd)
+    for i, v in pairs(game:GetService("Workspace").Lives:GetChildren()) do
+        if v:IsA("Model") and v:FindFirstChild("Folder") and v.Name == asd then
+            return v.HumanoidRootPart
+        end
+    end
+    return false
+end
+
 local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/uzu01/lua/main/ui/flux.lua"))()
 local w = library:Window("Uzu Scripts", "Last Pirates", Color3.fromRGB(66, 134, 245), Enum.KeyCode.LeftControl)
 local HomeTab = w:Tab("Home", 6026568198)
@@ -184,7 +193,7 @@ FarmingTab:Toggle("Auto Level Farm", "Farms mob from Level 1 to Max Level", fals
                                     plr.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0,7,0) * CFrame.Angles(math.rad(-90),0,0)
                                     equipTool()
                                     click()
-                                until v.Humanoid.Health <= 0 or not v.HumanoidRootPart or not _G.Settings.fullfarm or notSpawned() == false
+                                until v.Humanoid.Health <= 0 or not _G.Settings.fullfarm or notSpawned() == false
                             end
                         end
                     end
@@ -211,7 +220,7 @@ FarmingTab:Toggle("Auto Farm Selected Mob", "Farms Selected Mob", false, functio
                                 plr.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0,7,0) * CFrame.Angles(math.rad(-90),0,0)
                                 equipTool()
                                 click()
-                            until v.Humanoid.Health <= 0 or not v.HumanoidRootPart or not _G.Settings.autofarm or notSpawned() == false
+                            until v.Humanoid.Health <= 0 or not _G.Settings.autofarm or notSpawned() == false
                         end
                     end
                 end
@@ -231,7 +240,7 @@ FarmingTab:Button("Refresh Mob","", function()
 
     local mob = {}
 
-   for i, v in pairs(game:GetService("Workspace").Lives:GetChildren()) do
+    for i, v in pairs(game:GetService("Workspace").Lives:GetChildren()) do
 		if v:IsA("Model") and v:FindFirstChild("Folder") and not table.find(mob,v.Name) then
 			table.insert(mob,v.Name)
 		end
@@ -250,7 +259,7 @@ end)
 FarmingTab:Button("Refresh Tool","", function()
     toolDrop:Clear()
 
-   local tool = {}
+    local tool = {}
 
     for i, v in pairs(Player.Backpack:GetChildren()) do
         if v:IsA("Tool") then
@@ -284,18 +293,15 @@ FarmingTab:Toggle("Auto Farm Big Mom", "", false, function(t)
             if not _G.Settings.mommy then break end
             pcall(function()
                 local plr = Player.Character.HumanoidRootPart
-                for i, v in pairs(game:GetService("Workspace").Lives:GetChildren()) do
-                    if v:IsA("Model") and v:FindFirstChild("Folder") and string.match(v.Name,"Soul Boss") then
-                        repeat task.wait()
-                            isMommy = true
-                            autoHaki()
-                            plr.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0,-7,0) * CFrame.Angles(math.rad(90),0,0)
-                            equipTool()
-                            click()
-                        until v.Humanoid.Health <= 0 or not v.HumanoidRootPart or not _G.Settings.mommy
-                    end
+                if getBoss("Soul Boss") then
+                    isMommy = true
+                    autoHaki()
+                    plr.CFrame = getBoss("Soul Boss").CFrame * CFrame.new(0,-7,0) * CFrame.Angles(math.rad(90),0,0)
+                    equipTool()
+                    click()
+                else
+                    isMommy = false
                 end
-                isMommy = false
             end)
         end
     end)
@@ -309,18 +315,15 @@ FarmingTab:Toggle("Auto Farm Sea Beast", "", false, function(t)
             if not _G.Settings.seashit then break end
             pcall(function()
                 local plr = Player.Character.HumanoidRootPart
-                for i, v in pairs(game:GetService("Workspace").Lives:GetChildren()) do
-                    if v:IsA("Model") and v:FindFirstChild("Folder") and string.match(v.Name,"Sea Beast") then
-                        repeat task.wait()
-                            isBeast = true
-                            autoHaki()
-                            plr.CFrame = v.HumanoidRootPart.CFrame
-                            equipTool()
-                            click()
-                        until v.Humanoid.Health <= 0 or not v.HumanoidRootPart or not _G.Settings.seashit
-                    end
+                if getBoss("Sea Beast") then
+                    isBeast = true
+                    autoHaki()
+                    plr.CFrame = getBoss("Sea Beast").CFrame
+                    equipTool()
+                    click()
+                else
+                    isBeast = false
                 end
-                isBeast = false
             end)
         end
     end)
@@ -334,18 +337,15 @@ FarmingTab:Toggle("Auto Farm Golem", "", false, function(t)
             if not _G.Settings.golem then break end
             pcall(function()
                 local plr = Player.Character.HumanoidRootPart
-                for i, v in pairs(game:GetService("Workspace").Lives:GetChildren()) do
-                    if v:IsA("Model") and v:FindFirstChild("Folder") and string.match("Golem") then
-                        repeat task.wait()
-                            isGolem = true
-                            autoHaki()
-                            plr.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0,10,0) * CFrame.Angles(math.rad(-90),0,0)
-                            equipTool()
-                            click()
-                        until v.Humanoid.Health <= 0 or not v.HumanoidRootPart or not _G.Settings.golem
-                    end
+                if getBoss("Golem") then
+                    isGolem = true
+                    autoHaki()
+                    plr.CFrame = getBoss("Golem").CFrame * CFrame.new(0,10,0) * CFrame.Angles(math.rad(-90),0,0)
+                    equipTool()
+                    click()
+                else
+                    isGolem = false
                 end
-                isGolem = false
             end)
         end
     end)
@@ -359,18 +359,15 @@ FarmingTab:Toggle("Auto Farm Tree Monster", "", false, function(t)
             if not _G.Settings.tree then break end
             pcall(function()
                 local plr = Player.Character.HumanoidRootPart
-                for i, v in pairs(game:GetService("Workspace").Lives:GetChildren()) do
-                    if v:IsA("Model") and v:FindFirstChild("Folder") and string.match(v.Name,"Tree Monster") then
-                        repeat task.wait()
-                            isTree = true
-                            autoHaki()
-                            plr.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0,7,0) * CFrame.Angles(math.rad(-90),0,0)
-                            equipTool()
-                            click()
-                        until v.Humanoid.Health <= 0 or not v.HumanoidRootPart or not _G.Settings.tree
-                    end
+                if getBoss("Tree Monster") then
+                    isTree = true
+                    autoHaki()
+                    plr.CFrame = getBoss("Tree Monster").CFrame * CFrame.new(0,7,0) * CFrame.Angles(math.rad(-90),0,0)
+                    equipTool()
+                    click()
+                else
+                    isTree = false
                 end
-                isTree = false
             end)
         end
     end)
@@ -384,18 +381,15 @@ FarmingTab:Toggle("Auto Farm Duke Turtle", "", false, function(t)
             if not _G.Settings.turtle then break end
             pcall(function()
                 local plr = Player.Character.HumanoidRootPart
-                for i, v in pairs(game:GetService("Workspace").Lives:GetChildren()) do
-                    if v:IsA("Model") and v:FindFirstChild("Folder") and v.Name == "Duke Turtle" then
-                        repeat task.wait()
-                            isTurtle = true
-                            autoHaki()
-                            plr.CFrame = v.HumanoidRootPart.CFrame
-                            equipTool()
-                            click()
-                        until v.Humanoid.Health <= 0 or not v.HumanoidRootPart or not _G.Settings.turtle
-                    end
+                if getBoss("Duke Turtle") then
+                    isTurtle = true
+                    autoHaki()
+                    plr.CFrame = getBoss("Duke Turtle").CFrame
+                    equipTool()
+                    click()
+                else
+                    isTurtle = false
                 end
-                isTurtle = false
             end)
         end
     end)
@@ -411,18 +405,15 @@ FarmingTab:Toggle("Auto Farm Factory", "", false, function(t)
             if not _G.Settings.factory then break end
             pcall(function()
                 local plr = Player.Character.HumanoidRootPart
-                for i, v in pairs(game:GetService("Workspace").Lives:GetChildren()) do
-                    if v:IsA("Model") and v:FindFirstChild("Folder") and v.Name == "Factory" then
-                        repeat task.wait() 
-                            isFactory = true
-                            autoHaki()
-                            plr.CFrame = v.HumanoidRootPart.CFrame
-                            equipTool()
-                            click()
-                        until v.Humanoid.Health <= 0 or not _G.Settings.factory
-                    end
+                if getBoss("Factory") then
+                    isFactory = true
+                    autoHaki()
+                    plr.CFrame = getBoss("Factory").CFrame
+                    equipTool()
+                    click()
+                else
+                    isFactory = false
                 end
-                isFactory = false
             end)
         end
     end)
