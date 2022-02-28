@@ -359,7 +359,7 @@ FarmingTab:Toggle("Auto Farm Tree Monster", "", false, function(t)
             if not _G.Settings.tree then break end
             pcall(function()
                 local plr = Player.Character.HumanoidRootPart
-                if getBoss("Tree Monster") then
+                if getBoss("TreeMonster") then
                     isTree = true
                     autoHaki()
                     plr.CFrame = getBoss("Tree Monster").CFrame * CFrame.new(0,7,0) * CFrame.Angles(math.rad(-90),0,0)
