@@ -572,11 +572,12 @@ MiscTab:Toggle("Auto Get Devil Fruit", "", false, function(t)
     task.spawn(function()
         while task.wait() do
             if not _G.Settings.autoget then break end
-            for i, v in pairs(game.Workspace.Maps:GetDescendants()) do
-                if v.Name == "ProximityPrompt" then
-                    local plr = Player.Character.HumanoidRootPart
-                    plr.CFrame = v.Parent.CFrame    
-                    fireproximityprompt(v)
+            for i, v in pairs(game:GetService("Workspace"):GetChildren()) do
+                if v:IsA("Part") and v:FindFirstChild("Part") and v:FindFirstChild("ProximityPrompt") then
+                    if not v.ProximityPrompt:FindFirstChild("Script") then
+                        Player.Character.HumanoidRootPart.CFrame = v.CFrame
+                        fireproximityprompt(v.ProximityPrompt)
+                    end
                 end
             end
         end
