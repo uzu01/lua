@@ -151,7 +151,26 @@ function getBoss(asd)
     return false
 end
 
-local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/uzu01/lua/main/ui/flux.lua"))()
+function isCollector()
+    for i, v in pairs(game:GetService("Workspace"):GetChildren()) do
+        if v.Name == "Model" and v:FindFirstChild("Head") then
+            return true
+        end
+    end
+    return false
+end
+
+function isBossSpawn()
+    local boss = {}
+    for i, v in pairs(game:GetService("Workspace").Lives:GetChildren()) do
+        if v:IsA("Model") and v:FindFirstChild("Folder") and not string.match(v.Name,"%d+") then
+            table.insert(boss,v.Name)
+        end
+    end
+    return boss
+end
+
+local library = loadstring(game:HttpGet("https://pastebin.com/raw/4vZh2sLg"))()
 local w = library:Window("Uzu Scripts", "Last Pirates", Color3.fromRGB(66, 134, 245), Enum.KeyCode.LeftControl)
 local HomeTab = w:Tab("Home", 6026568198)
 
@@ -169,6 +188,50 @@ end)
 HomeTab:Button("Script by Uzu"," ", function()
     setclipboard("discord.gg/waAsQFwcBn")
     library:Notification("discord.gg/waAsQFwcBn", "Alright")
+end)
+
+HomeTab:Line()
+
+local Time = workspace.Time
+local Hour = Time.Hour
+local Minute = Time.Minute
+local Second = Time.Second
+
+local now = HomeTab:Label("Server Time : "..Hour.Value.." Hour "..Minute.Value.." Minute "..Second.Value.." Second")
+
+local collector = HomeTab:Label("Collector Spawned : "..tostring(isCollector()))
+
+local iBoss = HomeTab:Label("Boss Spawned : ")
+
+task.spawn(function()
+    while task.wait(1) do
+        now:Change("Server Time : "..Hour.Value.." Hour "..Minute.Value.." Minute "..Second.Value.." Second")
+    end
+end)
+
+task.spawn(function()
+    while task.wait(1) do
+        collector:Change("Collector Spawned : Refreshing.") task.wait(1)
+        collector:Change("Collector Spawned : Refreshing..") task.wait(1)
+        collector:Change("Collector Spawned : Refreshing...") task.wait(1)
+        collector:Change("Collector Spawned : "..tostring(isCollector()))
+    end
+end)
+
+task.spawn(function()
+    while task.wait(1) do
+        local ddd = "Boss Spawned :"
+        for i, v in pairs(isBossSpawn()) do
+            ddd = ddd..' '..v
+        end
+        iBoss:Change("Boss Spawned : Refreshing.")
+        task.wait(1)
+        iBoss:Change("Boss Spawned : Refreshing..")
+        task.wait(1)
+        iBoss:Change("Boss Spawned : Refreshing...")
+        task.wait(1)
+        iBoss:Change(ddd)
+    end
 end)
 
 local FarmingTab = w:Tab("Farming", 6034287535)
@@ -475,6 +538,15 @@ end)
 shopTab:Button("Ken Haki"," ", function()
     local plr = Player.Character.HumanoidRootPart
     plr.CFrame = CFrame.new(-6278.6826171875, 32.993167877197, 3832.9084472656)
+end)
+
+shopTab:Button("Collector"," ", function()
+    local plr = Player.Character.HumanoidRootPart
+    for i, v in pairs(game:GetService("Workspace"):GetChildren()) do
+        if v.Name == "Model" and v:FindFirstChild("Head") then
+            plr.CFrame = v.Head.CFrame
+        end
+    end
 end)
 
 shopTab:Button("Random Color Haki"," ", function()
