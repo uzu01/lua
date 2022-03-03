@@ -109,7 +109,7 @@ end
 
 function AutoHaki()
 	task.spawn(function()
-        if isHaki then
+        if not isHaki then
             isHaki = true
             if not Player.Character:FindFirstChild("Buso") then
                 ReplicatedStorage.Haki:FireServer("Buso")
