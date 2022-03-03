@@ -234,7 +234,7 @@ function DoStats(asd)
     ReplicatedStorage.okStats:FireServer(1,asd)
 end
 
-local library = loadstring(game:HttpGet("https://pastebin.com/raw/4vZh2sLg"))()
+local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/uzu01/lua/main/ui/flux.lua"))()
 local w = library:Window("Uzu Scripts", "Last Pirates", Color3.fromRGB(66, 134, 245), Enum.KeyCode.LeftControl)
 local HomeTab = w:Tab("Home", 6026568198)
 
