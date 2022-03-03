@@ -1,77 +1,74 @@
+
 repeat wait() until game:IsLoaded()
 
 game:GetService("Players").LocalPlayer.Idled:Connect(function()
     game:GetService("VirtualUser"):ClickButton2(Vector2.new())
 end)
 
-_G.Settings = {
-    autofarm = false,
-    selectedMob = "Bandit [Lv:5]",
-    selectedTool = "Combat",
-    autoskill = false,
-    melee = false,
-    sword = false,
-    defense = false,
-    devil = false,
-    autoget = false,
-    mommy = false,
-    factory = false,
-    seashit = false,
-    golem = false,
-    tree = false,
-    turtle = false,
-    ghost = false,
-    lp = false,
+_G.Config = {
+    Mob =       "Bandit [Lv:5]",
+    Tool =      "Combat",
+    Level =     false,
+    Farm =      false,
+    Skill =     false,
+    Melee =     false,
+    Sword =     false,
+    Defense =   false,
+    Devil =     false,
+    AutoGet =   false,
+    BigMom =    false,
+    Factory =   false,
+    SeaBeast =  false,
+    Golem =     false,
+    Tree =      false,
+    Turtle =    false,
+    LP =        false
 }
 
 local Player = game:GetService("Players").LocalPlayer
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local VirtualUser = game:GetService("VirtualUser")
 local VirtualInputManager = game:GetService("VirtualInputManager")
-local MyLevel = Player.PlayerStats.Level
 
-local isMommy = false
-local isFactory = false
-local isBeast = false
-local isTree = false
-local isGolem = false
-local isTurtle = false
-local isGhost = false
+local MyLevel = Player.PlayerStats.Level
+local Time = workspace.Time
+local Hour = Time.Hour
+local Minute = Time.Minute
+local Second = Time.Second
 local isHaki = false
+local isBoss = false
 
 local mobLevels = {}
-local mob = {}
-local tool = {}
-
-local keys = {
-    "Z";
-    "X";
-    "C";
-    "V"
-}
-
 for i, v in pairs(game:GetService("Workspace").Lives:GetChildren()) do
     if v:IsA("Model") and v:FindFirstChild("Folder") and string.match(v.Name,"%d+") and not table.find(mobLevels,tonumber(string.match(v.Name,"%d+"))) then
         table.insert(mobLevels,tonumber(string.match(v.Name,"%d+")))
     end
 end
 
-for i, v in pairs(game:GetService("Workspace").Lives:GetChildren()) do
-    if v:IsA("Model") and v:FindFirstChild("Folder") and not table.find(mob,v.Name) then
-        table.insert(mob,v.Name)
-    end
-end
-
-for i, v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
-	if v:IsA("Tool") then
-		table.insert(tool,v.Name)
-	end
-end
-
 for i, v in pairs(game:GetService("Workspace").Maps:GetChildren()) do
     if v.Name == "Part" then
         v:Destroy()
     end
+end
+
+function GetMob()
+    local mob = {}
+    for i, v in pairs(game:GetService("Workspace").Lives:GetChildren()) do
+        if v:IsA("Model") and v:FindFirstChild("Folder") and not table.find(mob,v.Name) then
+            table.insert(mob,v.Name)
+        end
+    end
+    return mob
+end
+
+function GetTool()
+    local tool = {}
+    for i, v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
+        if v:IsA("Tool") then
+            table.insert(tool,v.Name)
+        end
+    end
+    return tool
 end
 
 function ClosestLowLevel()
@@ -84,22 +81,22 @@ function ClosestLowLevel()
     return want
 end
 
-function click()
+function Click()
     VirtualUser:CaptureController()
     VirtualUser:Button1Down(Vector2.new(69, 69))		
 end
 
-function equipTool()
-    Player.Character.Humanoid:EquipTool(Player.Backpack:FindFirstChild(_G.Settings.selectedTool))
+function EquipTool()
+    Player.Character.Humanoid:EquipTool(Player.Backpack:FindFirstChild(_G.Config.Tool))
 end
 
-function startQuest()
+function StartQuest()
     task.spawn(function()
         local button = Player.PlayerGui.QuestGui.X
         local X = button.AbsolutePosition.X + button.AbsoluteSize.X
         local Y = button.AbsolutePosition.Y + button.AbsoluteSize.Y
 
-        lol = string.split(_G.Settings.selectedMob," [")
+        lol = string.split(_G.Config.Mob," [")
         if Player.PlayerGui.QuestGui.Enabled == false then
             ReplicatedStorage.FuncQuest:InvokeServer(lol[1])
         end
@@ -110,9 +107,9 @@ function startQuest()
     end)
 end
 
-function autoHaki()
+function AutoHaki()
 	task.spawn(function()
-        if not isHaki then
+        if isHaki then
             isHaki = true
             if not Player.Character:FindFirstChild("Buso") then
                 ReplicatedStorage.Haki:FireServer("Buso")
@@ -126,23 +123,24 @@ function autoHaki()
     end)
 end
 
-function notSpawned()
-    if not isMommy and not isFactory and not isBeast and not isTree and not isGolem and not isTurtle and not isGhost then
-        return true
-    else
+function NotSpawned()
+    if isBoss == true then
         return false
     end
+    return true
 end
 
-function useSkill()
-    for i, v in pairs(keys) do
-        VirtualInputManager:SendKeyEvent(true, v, false, game) 
-        VirtualInputManager:SendKeyEvent(false, v, false, game)
-        task.wait()
-    end
+function UseSkill()
+    task.spawn(function()
+        for i, v in pairs({"Z", "X", "C", "V"}) do
+            VirtualInputManager:SendKeyEvent(true, v, false, game) 
+            VirtualInputManager:SendKeyEvent(false, v, false, game)
+            task.wait()
+        end
+    end)
 end
 
-function getBoss(asd)
+function GetBoss(asd)
     for i, v in pairs(game:GetService("Workspace").Lives:GetChildren()) do
         if v:IsA("Model") and v:FindFirstChild("Folder") and v.Name == asd then
             return v.HumanoidRootPart
@@ -151,7 +149,7 @@ function getBoss(asd)
     return false
 end
 
-function isCollector()
+function IsCollector()
     for i, v in pairs(game:GetService("Workspace"):GetChildren()) do
         if v.Name == "Model" and v:FindFirstChild("Head") then
             return true
@@ -160,7 +158,7 @@ function isCollector()
     return false
 end
 
-function isBossSpawn()
+function IsBossSpawn()
     local boss = {}
     for i, v in pairs(game:GetService("Workspace").Lives:GetChildren()) do
         if v:IsA("Model") and v:FindFirstChild("Folder") and not string.match(v.Name,"%d+") then
@@ -170,93 +168,26 @@ function isBossSpawn()
     return boss
 end
 
-local library = loadstring(game:HttpGet("https://pastebin.com/raw/4vZh2sLg"))()
-local w = library:Window("Uzu Scripts", "Last Pirates", Color3.fromRGB(66, 134, 245), Enum.KeyCode.LeftControl)
-local HomeTab = w:Tab("Home", 6026568198)
+function Teleport(mob)
+    local plr = Player.Character.HumanoidRootPart
+    plr.CFrame = mob
+end
 
-HomeTab:Button("Updates:", "", function()
-    library:Notification("[+] Auto Refresh Tool [+] - Auto Farm Boss \n [+] - Auto Get LP", "Thanks")
-end)
-
-HomeTab:Line()
-
-HomeTab:Button("Discord"," ", function()
-    setclipboard("discord.gg/waAsQFwcBn")
-    library:Notification("discord.gg/waAsQFwcBn", "Alright")
-end)
-
-HomeTab:Button("Script by Uzu"," ", function()
-    setclipboard("discord.gg/waAsQFwcBn")
-    library:Notification("discord.gg/waAsQFwcBn", "Alright")
-end)
-
-HomeTab:Line()
-
-local Time = workspace.Time
-local Hour = Time.Hour
-local Minute = Time.Minute
-local Second = Time.Second
-
-local now = HomeTab:Label("Server Time : "..Hour.Value.." Hour "..Minute.Value.." Minute "..Second.Value.." Second")
-
-local collector = HomeTab:Label("Collector Spawned : "..tostring(isCollector()))
-
-local iBoss = HomeTab:Label("Boss Spawned : ")
-
-task.spawn(function()
-    while task.wait(1) do
-        now:Change("Server Time : "..Hour.Value.." Hour "..Minute.Value.." Minute "..Second.Value.." Second")
-    end
-end)
-
-task.spawn(function()
-    while task.wait(1) do
-        collector:Change("Collector Spawned : Refreshing.") task.wait(1)
-        collector:Change("Collector Spawned : Refreshing..") task.wait(1)
-        collector:Change("Collector Spawned : Refreshing...") task.wait(1)
-        collector:Change("Collector Spawned : "..tostring(isCollector()))
-    end
-end)
-
-task.spawn(function()
-    while task.wait(1) do
-        local ddd = "Boss Spawned :"
-        for i, v in pairs(isBossSpawn()) do
-            ddd = ddd..' '..v
-        end
-        iBoss:Change("Boss Spawned : Refreshing.")
-        task.wait(1)
-        iBoss:Change("Boss Spawned : Refreshing..")
-        task.wait(1)
-        iBoss:Change("Boss Spawned : Refreshing...")
-        task.wait(1)
-        iBoss:Change(ddd)
-    end
-end)
-
-local FarmingTab = w:Tab("Farming", 6034287535)
-
-FarmingTab:Toggle("Auto Level Farm", "Farms mob from Level 1 to Max Level", false, function(t)
-    _G.Settings.fullfarm = t
-
+function FullAutoFarm()
     task.spawn(function()
         while task.wait() do
-            if not _G.Settings.fullfarm then break end
+            if not _G.Config.Level then break end
             pcall(function()
-                if notSpawned() then
-                    local plr = Player.Character.HumanoidRootPart
+                if NotSpawned() then
                     local close = ClosestLowLevel()
                     for i, v in pairs(game:GetService("Workspace").Lives:GetChildren()) do
                         if v:IsA("Model") and v:FindFirstChild("Humanoid") then
                             if close == tonumber(string.match(v.Name,"%d+")) then
                                 repeat task.wait()
-                                    _G.Settings.selectedMob = v.Name
-                                    startQuest()
-                                    autoHaki()
-                                    plr.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0,7,0) * CFrame.Angles(math.rad(-90),0,0)
-                                    equipTool()
-                                    click()
-                                until v.Humanoid.Health <= 0 or not _G.Settings.fullfarm or notSpawned() == false
+                                    _G.Config.Mob = v.Name
+                                    StartQuest()AutoHaki()EquipTool()Click()
+                                    Teleport(v.HumanoidRootPart.CFrame * CFrame.new(0,7,0) * CFrame.Angles(math.rad(-90),0,0))
+                                until v.Humanoid.Health <= 0 or not _G.Config.Level or not NotSpawned()
                             end
                         end
                     end
@@ -264,195 +195,177 @@ FarmingTab:Toggle("Auto Level Farm", "Farms mob from Level 1 to Max Level", fals
             end)
         end
     end)
-end)
+end
 
-FarmingTab:Toggle("Auto Farm Selected Mob", "Farms Selected Mob", false, function(t)
-    _G.Settings.autofarm = t
-
+function SelectedFarm()
     task.spawn(function()
         while task.wait() do
-            if not _G.Settings.autofarm then break end
+            if not _G.Config.Farm then break end
             pcall(function()
-                if notSpawned() then
-                    local plr = Player.Character.HumanoidRootPart
+                if NotSpawned() then
                     for i, v in pairs(game.Workspace.Lives:GetChildren()) do
-                        if v.Name == _G.Settings.selectedMob and v:FindFirstChild("Humanoid") then
+                        if v.Name == _G.Config.Mob and v:FindFirstChild("Humanoid") then
                             repeat task.wait()
-                                startQuest()
-                                autoHaki()
-                                plr.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0,7,0) * CFrame.Angles(math.rad(-90),0,0)
-                                equipTool()
-                                click()
-                            until v.Humanoid.Health <= 0 or not _G.Settings.autofarm or notSpawned() == false
+                                if _G.Config.Skill then
+                                    UseSkill()
+                                end
+                                StartQuest()AutoHaki()EquipTool()Click()
+                                Teleport(v.HumanoidRootPart.CFrame * CFrame.new(0,7,0) * CFrame.Angles(math.rad(-90),0,0))
+                            until v.Humanoid.Health <= 0 or not _G.Config.Farm or not NotSpawned()
                         end
                     end
                 end
             end)
         end
     end)
+end
+
+function AttackBoss(mob)
+    if GetBoss(mob) then
+        isBoss = true
+        AutoHaki()EquipTool()Click()
+        Teleport(GetBoss(mob).CFrame * CFrame.new(0,-7,0) * CFrame.Angles(math.rad(90),0,0))
+    else
+        isBoss = false
+    end
+end
+
+function DoStats(asd)
+    ReplicatedStorage.okStats:FireServer(1,asd)
+end
+
+local library = loadstring(game:HttpGet("https://pastebin.com/raw/4vZh2sLg"))()
+local w = library:Window("Uzu Scripts", "Last Pirates", Color3.fromRGB(66, 134, 245), Enum.KeyCode.LeftControl)
+local HomeTab = w:Tab("Home", 6026568198)
+
+HomeTab:Button("Updates:", "", function()
+    library:Notification("[+] - Auto Farm Boss \n [+] - Auto Get LP", "Thanks")
+end)
+
+HomeTab:Line()
+
+HomeTab:Button("discord.gg/waAsQFwcBn"," ", function()
+    setclipboard("discord.gg/waAsQFwcBn")
+    library:Notification("discord.gg/waAsQFwcBn", "Alright")
+end)
+
+HomeTab:Button("Script by Uzu#8575"," ", function()
+    setclipboard("Uzu#8575")
+    library:Notification("Uzu#8575", "Alright")
+end)
+
+HomeTab:Line()
+
+local now = HomeTab:Label("Server Time : "..Hour.Value.." Hour "..Minute.Value.." Minute "..Second.Value.." Second")
+
+local collector = HomeTab:Label("Collector Spawned : "..tostring(IsCollector()))
+
+local iBoss = HomeTab:Label("Boss Spawned : ")
+
+local FarmingTab = w:Tab("Farming", 6034287535)
+
+FarmingTab:Toggle("Auto Level Farm", "Farms mob from Level 1 to Max Level", false, function(t)
+    _G.Config.Level = t
+
+    FullAutoFarm()
+end)
+
+FarmingTab:Toggle("Auto Farm Selected Mob", "Farms Selected Mob", false, function(t)
+    _G.Config.Farm = t
+
+    SelectedFarm()
 end)
 
 FarmingTab:Line()
 
-local mobDrop = FarmingTab:Dropdown("Select Mob", mob, function(v)
-    _G.Settings.selectedMob = v
+local MobDropdown = FarmingTab:Dropdown("Select Mob", GetMob(), function(v)
+    _G.Config.Mob = v
 end)
 
 FarmingTab:Button("Refresh Mob","", function()
-    mobDrop:Clear()
-
-    local mob = {}
-
-    for i, v in pairs(game:GetService("Workspace").Lives:GetChildren()) do
-		if v:IsA("Model") and v:FindFirstChild("Folder") and not table.find(mob,v.Name) then
-			table.insert(mob,v.Name)
-		end
-	end
-
-    for i, v in pairs(mob) do
-        mobDrop:Add(v)
+    MobDropdown:Clear()
+    for i, v in pairs(GetMob()) do
+        MobDropdown:Add(v)
     end
 end)
 
-local toolDrop = FarmingTab:Dropdown("Select Tool", tool, function(v)
-    _G.Settings.selectedTool = v
+local ToolDropdown = FarmingTab:Dropdown("Select Tool", GetTool(), function(v)
+    _G.Config.Tool = v
 end)
-
 
 FarmingTab:Button("Refresh Tool","", function()
-    toolDrop:Clear()
-
-    local tool = {}
-
-    for i, v in pairs(Player.Backpack:GetChildren()) do
-        if v:IsA("Tool") then
-            table.insert(tool,v.Name)
-        end
-    end
-
-    for i, v in pairs(tool) do
-        toolDrop:Add(v)
+    ToolDropdown:Clear()
+    for i, v in pairs(GetTool()) do
+        ToolDropdown:Add(v)
     end
 end)
 
 FarmingTab:Toggle("Auto Skill", "", false, function(t)
-    _G.Settings.autoskill = t
-
-    task.spawn(function()
-        while task.wait() do
-            if not _G.Settings.autoskill then break end
-            useSkill()
-        end
-    end)
+    _G.Config.Skill = t
 end)
 
 FarmingTab:Line()
 
 FarmingTab:Toggle("Auto Farm Big Mom", "", false, function(t)
-    _G.Settings.mommy = t
+    _G.Config.BigMom = t
 
     task.spawn(function()
         while task.wait() do
-            if not _G.Settings.mommy then break end
+            if not _G.Config.BigMom then break end
             pcall(function()
-                local plr = Player.Character.HumanoidRootPart
-                if getBoss("Soul Boss") then
-                    isMommy = true
-                    autoHaki()
-                    plr.CFrame = getBoss("Soul Boss").CFrame * CFrame.new(0,-7,0) * CFrame.Angles(math.rad(90),0,0)
-                    equipTool()
-                    click()
-                else
-                    isMommy = false
-                end
+                AttackBoss("Soul Boss")
             end)
         end
     end)
 end)
 
 FarmingTab:Toggle("Auto Farm Sea Beast", "", false, function(t)
-    _G.Settings.seashit = t
+    _G.Config.SeaBeast = t
 
     task.spawn(function()
         while task.wait() do
-            if not _G.Settings.seashit then break end
+            if not _G.Config.SeaBeast then break end
             pcall(function()
-                local plr = Player.Character.HumanoidRootPart
-                if getBoss("Sea Beast") then
-                    isBeast = true
-                    autoHaki()
-                    plr.CFrame = getBoss("Sea Beast").CFrame
-                    equipTool()
-                    click()
-                else
-                    isBeast = false
-                end
+                AttackBoss("Sea Beast")
             end)
         end
     end)
 end)
 
 FarmingTab:Toggle("Auto Farm Golem", "", false, function(t)
-    _G.Settings.golem = t
+    _G.Config.Golem = t
 
     task.spawn(function()
         while task.wait() do
-            if not _G.Settings.golem then break end
+            if not _G.Config.Golem then break end
             pcall(function()
-                local plr = Player.Character.HumanoidRootPart
-                if getBoss("Golem") then
-                    isGolem = true
-                    autoHaki()
-                    plr.CFrame = getBoss("Golem").CFrame * CFrame.new(0,10,0) * CFrame.Angles(math.rad(-90),0,0)
-                    equipTool()
-                    click()
-                else
-                    isGolem = false
-                end
+                AttackBoss("Golem")
             end)
         end
     end)
 end)
 
 FarmingTab:Toggle("Auto Farm Tree Monster", "", false, function(t)
-    _G.Settings.tree = t
+    _G.Config.Tree = t
 
     task.spawn(function()
         while task.wait() do
-            if not _G.Settings.tree then break end
+            if not _G.Config.Tree then break end
             pcall(function()
-                local plr = Player.Character.HumanoidRootPart
-                if getBoss("TreeMonster") then
-                    isTree = true
-                    autoHaki()
-                    plr.CFrame = getBoss("Tree Monster").CFrame * CFrame.new(0,7,0) * CFrame.Angles(math.rad(-90),0,0)
-                    equipTool()
-                    click()
-                else
-                    isTree = false
-                end
+                AttackBoss("TreeMoster")
             end)
         end
     end)
 end)
 
 FarmingTab:Toggle("Auto Farm Duke Turtle", "", false, function(t)
-    _G.Settings.turtle = t
+    _G.Config.Turtle = t
 
     task.spawn(function()
         while task.wait() do
-            if not _G.Settings.turtle then break end
+            if not _G.Config.Turtle then break end
             pcall(function()
-                local plr = Player.Character.HumanoidRootPart
-                if getBoss("Duke Turtle") then
-                    isTurtle = true
-                    autoHaki()
-                    plr.CFrame = getBoss("Duke Turtle").CFrame
-                    equipTool()
-                    click()
-                else
-                    isTurtle = false
-                end
+                AttackBoss("Turtle")
             end)
         end
     end)
@@ -461,22 +374,13 @@ end)
 FarmingTab:Line()
 
 FarmingTab:Toggle("Auto Farm Factory", "", false, function(t)
-    _G.Settings.factory = t
+    _G.Config.Factory = t
 
     task.spawn(function()
         while task.wait() do
-            if not _G.Settings.factory then break end
+            if not _G.Config.Factory then break end
             pcall(function()
-                local plr = Player.Character.HumanoidRootPart
-                if getBoss("Factory") then
-                    isFactory = true
-                    autoHaki()
-                    plr.CFrame = getBoss("Factory").CFrame
-                    equipTool()
-                    click()
-                else
-                    isFactory = false
-                end
+                AttackBoss("Factory")
             end)
         end
     end)
@@ -485,45 +389,45 @@ end)
 local StatsTab = w:Tab("Stats", 6035078901)
 
 StatsTab:Toggle("Melee", "", false, function(t)
-    _G.Settings.melee = t
+    _G.Config.Melee = t
 
     task.spawn(function()
         while task.wait() do
-            if not _G.Settings.melee then break end
-            ReplicatedStorage.okStats:FireServer(1,"1")
+            if not _G.Config.Melee then break end
+            DoStats("1")
         end
     end)
 end)
 
 StatsTab:Toggle("Sword", "", false, function(t)
-    _G.Settings.sword = t
+    _G.Config.Sword = t
 
     task.spawn(function()
         while task.wait() do
-            if not _G.Settings.sword then break end
-            ReplicatedStorage.okStats:FireServer(1,"2")
+            if not _G.Config.Sword then break end
+            DoStats("2")
         end
     end)
 end)
 
 StatsTab:Toggle("Defense", "", false, function(t)
-    _G.Settings.defense = t
+    _G.Config.Defense = t
 
     task.spawn(function()
         while task.wait() do
-            if not _G.Settings.defense then break end
-            ReplicatedStorage.okStats:FireServer(1,"3")
+            if not _G.Config.Defense then break end
+            DoStats("3")
         end
     end)
 end)
 
 StatsTab:Toggle("Devil Fruit", "", false, function(t)
-    _G.Settings.devil = t
+    _G.Config.Devil = t
 
     task.spawn(function()
         while task.wait() do
-            if not _G.Settings.devil then break end
-            ReplicatedStorage.okStats:FireServer(1,"4")
+            if not _G.Config.Devil then break end
+            DoStats("4")
         end
     end)
 end)
@@ -531,105 +435,89 @@ end)
 local shopTab = w:Tab("Shop", 6031265987)
 
 shopTab:Button("Buso Haki"," ", function()
-    local plr = Player.Character.HumanoidRootPart
-    plr.CFrame = game:GetService("Workspace").HakiSeller.AAA.BusoHaki.CFrame
+    Teleport(game:GetService("Workspace").HakiSeller.AAA.BusoHaki.CFrame)
 end)
 
 shopTab:Button("Ken Haki"," ", function()
-    local plr = Player.Character.HumanoidRootPart
-    plr.CFrame = CFrame.new(-6278.6826171875, 32.993167877197, 3832.9084472656)
+    Teleport(CFrame.new(-6278.6826171875, 32.993167877197, 3832.9084472656))
 end)
 
 shopTab:Button("Collector"," ", function()
-    local plr = Player.Character.HumanoidRootPart
     for i, v in pairs(game:GetService("Workspace"):GetChildren()) do
         if v.Name == "Model" and v:FindFirstChild("Head") then
-            plr.CFrame = v.Head.CFrame
+            Teleport(v.Head.CFrame)
         end
     end
 end)
 
 shopTab:Button("Random Color Haki"," ", function()
-    local plr = Player.Character.HumanoidRootPart
-    plr.CFrame = game:GetService("Workspace")["Random Color haki"]["Random Color haki"].Head.CFrame
+    Teleport(game:GetService("Workspace")["Random Color haki"]["Random Color haki"].Head.CFrame)
 end)
 
 shopTab:Button("Random Fruit"," ", function()
-    local plr = Player.Character.HumanoidRootPart
-    plr.CFrame = game:GetService("Workspace")["Random Fruit LP"].HumanoidRootPart.CFrame
+    Teleport(game:GetService("Workspace")["Random Fruit LP"].HumanoidRootPart.CFrame)
 end)
 
 shopTab:Button("Random Cupid Box", "", function()
-    local plr = Player.Character.HumanoidRootPart
-    plr.CFrame = CFrame.new(-5117.9814453125, 59.019378662109375, -5767.9091796875)
+    Teleport(CFrame.new(-5117.9814453125, 59.019378662109375, -5767.9091796875))
 end)
 
-shopTab:Button("Black Leg"," ", function()
-    local plr = Player.Character.HumanoidRootPart
-    plr.CFrame = game:GetService("Workspace").Blackleg.Click.CFrame
+shopTab:Button("Black Leg", "", function()
+    Teleport(game:GetService("Workspace").Blackleg.Click.CFrame)
 end)
 
-shopTab:Button("Pole"," ", function()
-    local plr = Player.Character.HumanoidRootPart
-    plr.CFrame = game:GetService("Workspace")["Pole Seller"].PoleClick.CFrame
+shopTab:Button("Pole", "", function()
+    Teleport(game:GetService("Workspace")["Pole Seller"].PoleClick.CFrame)
 end)
 
-shopTab:Button("Cutlass"," ", function()
-    local plr = Player.Character.HumanoidRootPart
-    plr.CFrame = game:GetService("Workspace").cutlass.Click.CFrame
+shopTab:Button("Cutlass", "", function()
+    Teleport(game:GetService("Workspace").cutlass.Click.CFrame)
 end)
 
-shopTab:Button("Bisento"," ", function()
-    local plr = Player.Character.HumanoidRootPart
-    plr.CFrame = game:GetService("Workspace").Bisento.Part.CFrame
+shopTab:Button("Bisento", "", function()
+    Teleport(game:GetService("Workspace").Bisento.Part.CFrame)
 end)
 
-shopTab:Button("Bisento v2"," ", function()
-    local plr = Player.Character.HumanoidRootPart
-    plr.CFrame = game:GetService("Workspace")["BisenV2 NPC"].Model.Model.BisenV2["Right Leg"].CFrame
+shopTab:Button("Bisento v2", "", function()
+    Teleport(game:GetService("Workspace")["BisenV2 NPC"].Model.Model.BisenV2["Right Leg"].CFrame)
 end)
 
-shopTab:Button("Saber"," ", function()
-    local plr = Player.Character.HumanoidRootPart
-    plr.CFrame = CFrame.new(3138.58984375, 71.283683776855, -2338.1533203125)
+shopTab:Button("Saber", "", function()
+    Teleport(CFrame.new(3138.58984375, 71.283683776855, -2338.1533203125))
 end)
 
-shopTab:Button("Shisui"," ", function()
-    local plr = Player.Character.HumanoidRootPart
-    plr.CFrame = game:GetService("Workspace").MISC.Handle.CFrame
+shopTab:Button("Shisui", "", function()
+    Teleport(game:GetService("Workspace").MISC.Handle.CFrame)
 end)
 
-shopTab:Button("Katana"," ", function()
-    local plr = Player.Character.HumanoidRootPart
-    plr.CFrame = game:GetService("Workspace").KatanaShop.KatanaShop.Head.CFrame
+shopTab:Button("Katana", "", function()
+    Teleport(game:GetService("Workspace").KatanaShop.KatanaShop.Head.CFrame)
 end)
 
 local teleTab = w:Tab("Teleports", 8916381379)
 
-teleTab:Button("Factory"," ", function()
-    local plr = Player.Character.HumanoidRootPart
-    plr.CFrame = game:GetService("Workspace").Factory.Block.CFrame
+teleTab:Button("Factory", "", function()
+    Teleport(game:GetService("Workspace").Factory.Block.CFrame)
 end)
 
 for i, v in pairs(game:GetService("Workspace")["Spawn island"]:GetChildren()) do
-    teleTab:Button(v.Name," ", function()
-        local plr = Player.Character.HumanoidRootPart
-        plr.CFrame = v.CFrame
+    teleTab:Button(v.Name, "", function()
+        Teleport(v.CFrame)
     end)
 end
 
 local MiscTab = w:Tab("Misc", 8916127218)
 
 MiscTab:Toggle("Auto Get LP", "", false, function(t)
-    _G.Settings.lp = t
+    _G.Config.LP = t
 
     task.spawn(function()
         while task.wait() do
-            if not _G.Settings.lp then break end
+            if not _G.Config.LP then break end
             for i, v in pairs(game:GetService("Workspace"):GetChildren()) do
                 if v.Name == "Part" and v:FindFirstChild("ProximityPrompt") then
                     if not v.ProximityPrompt:FindFirstChild("Script") then
-                        Player.Character.HumanoidRootPart.CFrame = v.CFrame
+                        Teleport(v.CFrame)
                         fireproximityprompt(v.ProximityPrompt)
                     end
                 end
@@ -639,15 +527,15 @@ MiscTab:Toggle("Auto Get LP", "", false, function(t)
 end)
 
 MiscTab:Toggle("Auto Get Devil Fruit", "", false, function(t)
-    _G.Settings.autoget = t
+    _G.Config.AutoGet = t
 
     task.spawn(function()
         while task.wait() do
-            if not _G.Settings.autoget then break end
+            if not _G.Config.AutoGet then break end
             for i, v in pairs(game:GetService("Workspace"):GetChildren()) do
                 if v:IsA("Part") and v:FindFirstChild("Part") and v:FindFirstChild("ProximityPrompt") then
                     if not v.ProximityPrompt:FindFirstChild("Script") then
-                        Player.Character.HumanoidRootPart.CFrame = v.CFrame
+                        Teleport(v.CFrame)
                         fireproximityprompt(v.ProximityPrompt)
                     end
                 end
@@ -657,8 +545,7 @@ MiscTab:Toggle("Auto Get Devil Fruit", "", false, function(t)
 end)
 
 MiscTab:Button("Inventory"," ", function()
-    local plr = Player.Character.HumanoidRootPart
-    plr.CFrame = CFrame.new(413.05569458008, 40.559078216553, -1830.5759277344)
+    Teleport(CFrame.new(413.05569458008, 40.559078216553, -1830.5759277344))
 end)
 
 MiscTab:Line()
@@ -698,5 +585,33 @@ MiscTab:Button("Serverhop Low Server", "", function()
                 game:GetService('TeleportService'):TeleportToPlaceInstance(game.PlaceId, v.id)
             end
         end
+    end
+end)
+
+task.spawn(function()
+    while task.wait(1) do
+        now:Change("Server Time : "..Hour.Value.." Hour "..Minute.Value.." Minute "..Second.Value.." Second")
+    end
+end)
+
+task.spawn(function()
+    while task.wait(2) do
+        collector:Change("Collector Spawned : Refreshing.") task.wait(1)
+        collector:Change("Collector Spawned : Refreshing..") task.wait(1)
+        collector:Change("Collector Spawned : Refreshing...") task.wait(1)
+        collector:Change("Collector Spawned : "..tostring(IsCollector()))
+    end
+end)
+
+task.spawn(function()
+    while task.wait(2) do
+        local ddd = "Boss Spawned :"
+        for i, v in pairs(IsBossSpawn()) do
+            ddd = ddd..' '..v
+        end
+        iBoss:Change("Boss Spawned : Refreshing.") task.wait(1)
+        iBoss:Change("Boss Spawned : Refreshing..") task.wait(1)
+        iBoss:Change("Boss Spawned : Refreshing...") task.wait(1)
+        iBoss:Change(ddd)
     end
 end)
