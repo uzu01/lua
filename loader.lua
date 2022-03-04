@@ -1,6 +1,7 @@
 local games = "https://raw.githubusercontent.com/uzu01/lua/main/games/"
 
 local link = {
+    [8739926633] = "https://rawscripts.net/raw/MWS-or-Tree-Farm_854",
     [2655311011] = games.."Anime%20Dimension.lua",
     [8357510970] = games.."Anime%20Punching%20Simulator.lua",
     [8592863835] = games.."Magnet%20Simulator%202.lua",
@@ -19,7 +20,7 @@ local link = {
     [8540346411] = games.."RebirthChampionsX.lua",
     [7107498084] = games.."AnimeBattleTycoon.lua",
     [8357510970] = games.."Anime%20Punching%20Simulator.lua",
-    [8739926633] = "https://rawscripts.net/raw/MWS-or-Tree-Farm_854"
+    [8472242071] = games.."HeroFightersSimulator.lua"
 }
 
 for i, v in pairs(link) do
