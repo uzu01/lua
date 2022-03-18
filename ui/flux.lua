@@ -203,9 +203,11 @@ function Flux:Window(text, bottom, mainclr)
 
         ImageButton.Parent = MobTog
         ImageButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        ImageButton.BackgroundTransparency = 1
         ImageButton.Position = UDim2.new(0.0437499993, 0, 0.200557113, 0)
         ImageButton.Size = UDim2.new(0, 50, 0, 50)
         ImageButton.Image = "http://www.roblox.com/asset/?id=9129266571"
+        ImageButton.Draggable = true
         ImageButton.MouseButton1Click:Connect(
             function()
                 if game.CoreGui:FindFirstChild("FluxLib").Enabled == true then
