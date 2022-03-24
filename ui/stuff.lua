@@ -3,7 +3,7 @@ local playerr = 3
 local PlaceID = game.PlaceId
 local foundAnything = ""
 
-function TPReturner()
+function uzu_uzu_uzu()
 	local Site
 	if foundAnything == "" then
 		Site = game.HttpService:JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/' .. PlaceID .. '/servers/Public?sortOrder=Asc&limit=100'))
@@ -26,12 +26,12 @@ function TPReturner()
 	end
 end
  
-function Teleport()
+function uzu_uzu_uzu2()
 	while task.wait() do
 		pcall(function()
-			TPReturner()
+			uzu_uzu_uzu()
 			if foundAnything ~= "" then
-				TPReturner()
+				uzu_uzu_uzu()
 			end
 		end)
 	end
@@ -44,11 +44,11 @@ function Util:Rejoin()
 end
 
 function Util:ServerHop()
-	Teleport()
+	uzu_uzu_uzu2()
 end
 
 function Util:ServerhopLow()
-	Teleport()
+	uzu_uzu_uzu2()
 end
 
 return Util
