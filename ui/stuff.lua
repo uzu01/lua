@@ -1,4 +1,41 @@
 local TeleportService = game:GetService("TeleportService")
+local playerr = 3
+local PlaceID = game.PlaceId
+local foundAnything = ""
+
+function TPReturner()
+	local Site
+	if foundAnything == "" then
+		Site = game.HttpService:JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/' .. PlaceID .. '/servers/Public?sortOrder=Asc&limit=100'))
+	else
+		Site = game.HttpService:JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/' .. PlaceID .. '/servers/Public?sortOrder=Asc&limit=100&cursor=' .. foundAnything))
+	end
+	local ID = ""
+	if Site.nextPageCursor and Site.nextPageCursor ~= "null" and Site.nextPageCursor ~= nil then
+		foundAnything = Site.nextPageCursor
+	end
+	local num = 0;
+	for i,v in pairs(Site.data) do
+		local Possible = true
+		ID = tostring(v.id)
+		if v.playing <= playerr then
+			pcall(function()
+                game:GetService("TeleportService"):TeleportToPlaceInstance(PlaceID, ID, game.Players.LocalPlayer)
+            end)
+		end
+	end
+end
+ 
+function Teleport()
+	while task.wait() do
+		pcall(function()
+			TPReturner()
+			if foundAnything ~= "" then
+				TPReturner()
+			end
+		end)
+	end
+end
 
 local Util = {}
 
@@ -7,27 +44,11 @@ function Util:Rejoin()
 end
 
 function Util:ServerHop()
-    while task.wait() do
-        local Servers = game.HttpService:JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/' .. game.PlaceId .. '/servers/Public?sortOrder=Asc&limit=100'))
-        for i,v in pairs(Servers.data) do
-            if v.id ~= game.JobId then
-                task.wait()
-                TeleportService:TeleportToPlaceInstance(game.PlaceId, v.id)
-            end
-        end
-    end
+	Teleport()
 end
 
 function Util:ServerhopLow()
-    while task.wait() do
-        local Servers = game.HttpService:JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/' .. game.PlaceId .. '/servers/Public?sortOrder=Asc&limit=100'))
-        for i,v in pairs(Servers.data) do
-            if v.id ~= game.JobId and v.playing <= 3 then
-                task.wait()
-                TeleportService:TeleportToPlaceInstance(game.PlaceId, v.id)
-            end
-        end
-    end
+	Teleport()
 end
 
 return Util
