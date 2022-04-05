@@ -1,3 +1,4 @@
+if game.CoreGui:FindFirstChild("Pepsi") then game.CoreGui.Pepsi:Destroy() end
 --[[ Pepsi's UI Library
 Library v0.33 [
     CreateWindow: Function (
@@ -1185,7 +1186,7 @@ function library:CreateWindow(options, ...)
 	library.globals["__Window" .. options.Name] = {
 		submenuOpen = submenuOpen
 	}
-	pepsiLibrary.Name = "     "
+	pepsiLibrary.Name = "Pepsi"
 	pepsiLibrary.Parent = library.gui_parent
 	pepsiLibrary.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 	pepsiLibrary.DisplayOrder = 10
