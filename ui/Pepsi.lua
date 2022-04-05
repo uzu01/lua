@@ -3320,7 +3320,7 @@ function library:CreateWindow(options, ...)
 					end
 				end)
 				library.signals[1 + #library.signals] = userInputService.InputChanged:Connect(function(input)
-					if not library.colorpicker and sliderDragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+					if not library.colorpicker and sliderDragging and input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
 						sliding(input, sliderInner, sliderColored)
 					end
 				end)
