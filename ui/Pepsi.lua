@@ -1105,7 +1105,7 @@ local function makeDraggable(topBarObject, object)
 		end
 	end)
 	library.signals[1 + #library.signals] = topBarObject.InputChanged:Connect(function(input)
-		if input.UserInputType == Enum.UserInputType.MouseMovement then
+		if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
 			dragInput = input
 		end
 	end)
