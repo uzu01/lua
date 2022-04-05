@@ -476,7 +476,7 @@ local library = {
 		easingDirection = Enum.EasingDirection.Out
 	},
 	colors = {
-		main = Color3.fromRGB(255, 39, 39),
+		main = Color3.fromRGB(0, 255, 255),
 		background = Color3.fromRGB(40, 40, 40),
 		outerBorder = Color3.fromRGB(15, 15, 15),
 		innerBorder = Color3.fromRGB(73, 63, 73),
@@ -6154,7 +6154,7 @@ function library:CreateWindow(options, ...)
 				Return = colorsection:AddColorpicker({
 					Name = nam,
 					Flag = cflag,
-					Value = Color3.new(0, 255, 255),
+					Value = library.colors[codename],
 					Callback = function(v, y)
 						library.colors[codename] = v or y
 					end,
