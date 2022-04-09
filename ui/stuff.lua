@@ -1,9 +1,9 @@
 local TeleportService = game:GetService("TeleportService")
-local playerr = 3
+local playerr = 10
 local PlaceID = game.PlaceId
 local foundAnything = ""
 
-function uzu_uzu_uzu()
+local function uzu_uzu_uzu()
 	local Site
 	if foundAnything == "" then
 		Site = game.HttpService:JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/' .. PlaceID .. '/servers/Public?sortOrder=Asc&limit=100'))
@@ -26,7 +26,7 @@ function uzu_uzu_uzu()
 	end
 end
  
-function uzu_uzu_uzu2()
+local function uzu_uzu_uzu2()
 	while task.wait() do
 		pcall(function()
 			uzu_uzu_uzu()
