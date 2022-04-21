@@ -40,11 +40,13 @@ function Util:Rejoin()
 end
 
 function Util:ServerHop(a)
-	Serverhop2(a)
+	local lol = a or game.PlaceId
+	Serverhop2(lol)
 end
 
 function Util:ServerhopLow(a)
-	Serverhop2(a)
+	local lol = a or game.PlaceId
+	Serverhop2(lol)
 end
 
 return Util
