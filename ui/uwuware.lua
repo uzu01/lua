@@ -155,7 +155,7 @@ local function createOptionHolder(holderTitle, parent, parentTable, subHolder)
 			end
 		end)
 		title.InputChanged:connect(function(input)
-			if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+			if dragging and input.UserInputType == Enum.UserInputType.MouseMovement or dragging and input.UserInputType == Enum.UserInputType.Touch then
 				dragInput = input
 			end
 		end)
