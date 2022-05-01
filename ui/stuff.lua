@@ -14,11 +14,13 @@ local function Serverhop1(PlaceID)
     end
     local num = 0;
     for i,v in pairs(Site.data) do
-        local Possible = true
-        ID = tostring(v.id)
-        pcall(function()
-            game:GetService("TeleportService"):TeleportToPlaceInstance(PlaceID, ID, game.Players.LocalPlayer)
-        end)
+        if v.playing > 0 then
+            local Possible = true
+            ID = tostring(v.id)
+            pcall(function()
+                game:GetService("TeleportService"):TeleportToPlaceInstance(PlaceID, ID, game.Players.LocalPlayer)
+            end)
+        end
     end
 end
 
