@@ -1,5 +1,7 @@
-if game:GetService("CoreGui"):FindFirstChild("ScreenGui") then
-    game:GetService("CoreGui"):FindFirstChild("ScreenGui"):Destroy()
+for i, v in pairs(game:GetService("CoreGui"):GetChildren()) do
+	if v.Name == "ScreenGui" then
+		v:Destroy()
+	end
 end
 
 local library = {flags = {}, windows = {}, open = true}
