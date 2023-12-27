@@ -29,6 +29,7 @@ local function Serverhop2(PlaceID)
             Serverhop1(PlaceID)
             if foundAnything ~= "" then
                 Serverhop1(PlaceID)
+					return
             end
         end)
     end
